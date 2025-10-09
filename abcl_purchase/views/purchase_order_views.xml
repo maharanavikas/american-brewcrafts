@@ -15,7 +15,7 @@
             </xpath>
             <xpath expr="//header" position="inside">
                 <button name="action_get_alternative_vendors" string="Alternative Vendors" type="object"
-                        class="btn-primary" invisible="origin != 'MPS' or state != 'draft'"/>
+                        class="btn-primary" invisible="origin != 'MPS' or state != 'draft' or approval_line_ids"/>
                 <button name="action_generate_approval_lines" string="Send For Approval" type="object"
                         class="btn-primary" invisible="approval_line_ids"/>
                 <button name="action_open_approval_form" type="object" string="Approve" class="btn-primary"
