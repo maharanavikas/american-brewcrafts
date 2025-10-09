@@ -59,27 +59,27 @@
     
                                                 <div class="col-md-6">
                                                     <label for="vehicle_type" class="form-label text-accent fw-bold">Vehicle Type</label>
-                                                    <select id="vehicle_type" name="vehicle_type" class="form-controls input-wrapper">
+                                                    <select id="vehicle_type" name="vehicle_type" class="form-controls input-wrapper" t-att-value="vehicle_type">
                                                         <option value="">-- Select Type --</option>
-                                                        <option value="internal">Internal</option>
-                                                        <option value="external">External</option>
+                                                        <option value="internal" t-att-selected="'selected' if picking.vehicle_type == 'internal' else None">Internal</option>
+                                                        <option value="external" t-att-selected="'selected' if picking.vehicle_type == 'external' else None">External</option>
                                                     </select>
                                                     <div id="select_vehicle_div">
                                                         <label for="select_vehicle_name" class="mb-2"><i class="text-danger"> * </i>Select Vehicle :</label>
                                                         <select class="form-controls" id="select_vehicle_name" name="select_vehicle_name">
                                                             <option value="">Select Vehicle</option>
-                                                            <option t-foreach="vehicles" t-as="vehicle" t-att-value="vehicle.id" t-att-data-number="vehicle.license_plate" t-esc="vehicle.name"/>
+                                                            <option t-foreach="vehicles" t-as="vehicle" t-att-value="vehicle.id" t-att-data-number="vehicle.license_plate" t-esc="vehicle.name" t-att-selected="'selected' if picking.vehicle_type == 'internal' and vehicle.license_plate == picking.vehicle_no else None"/>
                                                         </select>
                                                     </div>
                                                     <div id="vehicle_number_div">
                                                         <label for="select_vehicle_name" class="mb-2">
                                                             Selected Vehicle Number :
                                                         </label>
-                                                        <input type="text" class="form-controls input-wrapper" id="vehicle_no" name="vehicle_no" disabled="disabled"/>
+                                                        <input type="text" class="form-controls input-wrapper" id="vehicle_no" name="vehicle_no" disabled="disabled" t-att-value="picking.vehicle_no or ''"/>
                                                     </div>
                                                     <div id="enter_vehicle_details">
                                                         <label for="enter_vehicle_details" class="form-label"><i class="text-danger"> * </i> Enter Vehicle Details :</label>
-                                                        <input type="text" class="form-controls input-wrapper" name="enter_vehicle_details" id="enter_vehicle_details" placeholder="Vehicle Details"/>
+                                                        <input type="text" class="form-controls input-wrapper" name="enter_vehicle_details" id="enter_vehicle_details" placeholder="Vehicle Details" t-att-value="picking.vehicle_no or ''"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -128,10 +128,11 @@
                                                                 t-att-value="picking.gp_p_no_date or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="gp_p_no_date_check" name="gp_p_no_date_check"/>
+                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="gp_p_no_date_check" name="gp_p_no_date_check" t-att-checked="'checked' if picking.gp_p_no_date_status else None"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="gp_p_no_date_remarks" name="gp_p_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="gp_p_no_date_remarks" name="gp_p_no_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.gp_p_no_date_remarks or ''"/>
                                                             </div>
                                                         </div>
 
@@ -144,10 +145,11 @@
                                                                 t-att-value="picking.gp_party_name or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="gp_party_name_check" name="gp_party_name_check"/>
+                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.gp_party_name_status else None" type="checkbox" id="gp_party_name_check" name="gp_party_name_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="gp_party_name_remarks" name="gp_party_name_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="gp_party_name_remarks" name="gp_party_name_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.gp_party_name_remarks or ''"/>
                                                             </div>
                                                         </div>
 
@@ -166,10 +168,11 @@
                                                                 </select>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="gp_pack_size_check" name="gp_pack_size_check"/>
+                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.gp_pack_size_status else None" type="checkbox" id="gp_pack_size_check" name="gp_pack_size_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="gp_pack_size_remarks" name="gp_pack_size_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="gp_pack_size_remarks" name="gp_pack_size_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.gp_pack_size_remarks or ''"/>
                                                             </div>
                                                         </div>
 
@@ -182,10 +185,11 @@
                                                                 t-att-value="picking.gp_quantity or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="gp_quantity_check" name="gp_quantity_check"/>
+                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.gp_quantity_status else None" type="checkbox" id="gp_quantity_check" name="gp_quantity_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="gp_quantity_remarks" name="gp_quantity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="gp_quantity_remarks" name="gp_quantity_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.gp_quantity_remarks or ''"/>
                                                             </div>
                                                         </div>
 
@@ -199,10 +203,11 @@
                                                                 <input type="hidden" name="gp_brand_specifications" t-att-value="brand_names"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="gp_brand_check" name="gp_brand_check"/>
+                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.gp_brand_status else None" type="checkbox" id="gp_brand_check" name="gp_brand_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="gp_brand_remarks" name="gp_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="gp_brand_remarks" name="gp_brand_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.gp_brand_remarks or ''"/>
                                                             </div>
                                                         </div>
 
@@ -215,10 +220,11 @@
                                                                 t-att-value="picking.gp_vehicle_no_date or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="gp_vehicle_no_date_check" name="gp_vehicle_no_date_check"/>
+                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.gp_vehicle_no_date_status else None" type="checkbox" id="gp_vehicle_no_date_check" name="gp_vehicle_no_date_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="gp_vehicle_no_date_remarks" name="gp_vehicle_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="gp_vehicle_no_date_remarks" name="gp_vehicle_no_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.gp_vehicle_no_date_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -263,10 +269,11 @@
                                                                     <input id="lrc_lr_no_specifications" name="lrc_lr_no_specifications" type="text" class="form-controls input-wrapper" t-att-value="picking.lrc_lr_no or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="lrc_lr_no_check" name="lrc_lr_no_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.lrc_lr_no_status else None" type="checkbox" id="lrc_lr_no_check" name="lrc_lr_no_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="lrc_lr_no_remarks" name="lrc_lr_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="lrc_lr_no_remarks" name="lrc_lr_no_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.lrc_lr_no_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -277,10 +284,11 @@
                                                                     <input id="lrc_lr_date_specifications" name="lrc_lr_date_specifications" type="text" class="form-controls input-wrapper" t-att-value="picking.lrc_lr_date or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="lrc_lr_date_check" name="lrc_lr_date_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.lrc_lr_date_status else None" type="checkbox" id="lrc_lr_date_check" name="lrc_lr_date_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="lrc_lr_date_remarks" name="lrc_lr_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="lrc_lr_date_remarks" name="lrc_lr_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.lrc_lr_date_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -291,10 +299,11 @@
                                                                     <input id="lrc_lr_vehicle_no_address_specifications" name="lrc_lr_vehicle_no_address_specifications" type="text" class="form-controls input-wrapper" t-att-value="picking.lrc_lr_vehicle_no_address or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="lrc_lr_vehicle_no_address_check" name="lrc_lr_vehicle_no_address_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.lrc_lr_vehicle_no_address_status else None" type="checkbox" id="lrc_lr_vehicle_no_address_check" name="lrc_lr_vehicle_no_address_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="lrc_lr_vehicle_no_address_remarks" name="lrc_lr_vehicle_no_address_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="lrc_lr_vehicle_no_address_remarks" name="lrc_lr_vehicle_no_address_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.lrc_lr_vehicle_no_address_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -305,10 +314,11 @@
                                                                     <input id="lrc_lr_quantity_specifications" name="lrc_lr_quantity_specifications" type="text" class="form-controls input-wrapper" t-att-value="picking.lrc_lr_quantity or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="lrc_lr_quantity_check" name="lrc_lr_quantity_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.lrc_lr_quantity_status else None" type="checkbox" id="lrc_lr_quantity_check" name="lrc_lr_quantity_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="lrc_lr_quantity_remarks" name="lrc_lr_quantity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="lrc_lr_quantity_remarks" name="lrc_lr_quantity_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.lrc_lr_quantity_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -319,10 +329,11 @@
                                                                     <input id="lrc_lr_invoice_no_date_specifications" name="lrc_lr_invoice_no_date_specifications" type="text" class="form-controls input-wrapper" t-att-value="picking.lrc_lr_invoice_no_date or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="lrc_lr_invoice_no_date_check" name="lrc_lr_invoice_no_date_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.lrc_lr_invoice_no_date_status else None" type="checkbox" id="lrc_lr_invoice_no_date_check" name="lrc_lr_invoice_no_date_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="lrc_lr_invoice_no_date_remarks" name="lrc_lr_invoice_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="lrc_lr_invoice_no_date_remarks" name="lrc_lr_invoice_no_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.lrc_lr_invoice_no_date_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -355,7 +366,7 @@
                                                                 <button type="button" class="btn btn-sm btn-outline-primary ms-2 check-all-btn">
                                                                     Check All
                                                                 </button>
-                                                            </div>/
+                                                            </div>
                                                             <div class="col-sm-3 fs-6 fw-bold">
                                                                 Remarks
                                                             </div>
@@ -426,10 +437,11 @@
                                                                 t-att-value="picking.tp_date or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_date_check" name="tp_date_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_date_status else None" type="checkbox" id="tp_date_check" name="tp_date_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="tp_date_remarks" name="tp_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="tp_date_remarks" name="tp_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_date_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -443,10 +455,11 @@
                                                                 <input type="hidden" name="tp_brand_specifications" t-att-value="brand_names"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_brand_check" name="tp_brand_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_brand_status else None" type="checkbox" id="tp_brand_check" name="tp_brand_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="tp_brand_remarks" name="tp_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="tp_brand_remarks" name="tp_brand_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_brand_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -457,10 +470,11 @@
                                                                 t-att-value="picking.tp_batch_no or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_batch_no_check" name="tp_batch_no_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_batch_no_status else None" type="checkbox" id="tp_batch_no_check" name="tp_batch_no_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="tp_batch_no_remarks" name="tp_batch_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="tp_batch_no_remarks" name="tp_batch_no_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_batch_no_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -471,10 +485,11 @@
                                                                 t-att-value="picking.tp_po_no_date or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_po_no_date_check" name="tp_po_no_date_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_po_no_date_status else None" type="checkbox" id="tp_po_no_date_check" name="tp_po_no_date_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="tp_po_no_date_remarks" name="tp_po_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="tp_po_no_date_remarks" name="tp_po_no_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_po_no_date_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -485,10 +500,11 @@
                                                                 t-att-value="picking.tp_quantity or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_quantity_check" name="tp_quantity_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_quantity_status else None" type="checkbox" id="tp_quantity_check" name="tp_quantity_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="tp_quantity_remarks" name="tp_quantity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="tp_quantity_remarks" name="tp_quantity_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_quantity_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -505,10 +521,11 @@
                                                                 </select>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_pack_size_check" name="tp_pack_size_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_pack_size_status else None" type="checkbox" id="tp_pack_size_check" name="tp_pack_size_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="tp_pack_size_remarks" name="tp_pack_size_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="tp_pack_size_remarks" name="tp_pack_size_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_pack_size_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -519,10 +536,11 @@
                                                                 t-att-value="picking.tp_bulk_litre or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_bulk_litre_check" name="tp_bulk_litre_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_bulk_litre_status else None" type="checkbox" id="tp_bulk_litre_check" name="tp_bulk_litre_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="tp_bulk_litre_remarks" name="tp_bulk_litre_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="tp_bulk_litre_remarks" name="tp_bulk_litre_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_bulk_litre_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -533,10 +551,11 @@
                                                                 t-att-value="picking.tp_alcohol_percent or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_alcohol_percent_check" name="tp_alcohol_percent_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_alcohol_percent_status else None" type="checkbox" id="tp_alcohol_percent_check" name="tp_alcohol_percent_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="tp_alcohol_percent_remarks" name="tp_alcohol_percent_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="tp_alcohol_percent_remarks" name="tp_alcohol_percent_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_alcohol_percent_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -547,10 +566,11 @@
                                                                 t-att-value="picking.tp_excise_duty_challan_no_date or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_excise_duty_challan_no_date_check" name="tp_excise_duty_challan_no_date_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_excise_duty_challan_no_date_status else None" type="checkbox" id="tp_excise_duty_challan_no_date_check" name="tp_excise_duty_challan_no_date_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="tp_excise_duty_challan_no_date_remarks" name="tp_excise_duty_challan_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="tp_excise_duty_challan_no_date_remarks" name="tp_excise_duty_challan_no_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_excise_duty_challan_no_date_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -561,10 +581,11 @@
                                                                 t-att-value="picking.tp_excise_duty or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_excise_duty_check" name="tp_excise_duty_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_excise_duty_status else None" type="checkbox" id="tp_excise_duty_check" name="tp_excise_duty_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="tp_excise_duty_remarks" name="tp_excise_duty_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="tp_excise_duty_remarks" name="tp_excise_duty_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_excise_duty_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -575,10 +596,11 @@
                                                                 t-att-value="picking.partner_id.name or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_depot_check" name="tp_depot_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_depot_status else None" type="checkbox" id="tp_depot_check" name="tp_depot_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="tp_depot_name_remarks" name="tp_depot_name_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="tp_depot_name_remarks" name="tp_depot_name_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_depot_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -589,10 +611,11 @@
                                                                 t-att-value="picking.tp_vehicle_route or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_vehicle_route_check" name="tp_vehicle_route_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_vehicle_route_status else None" type="checkbox" id="tp_vehicle_route_check" name="tp_vehicle_route_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="tp_vehicle_route_remarks" name="tp_vehicle_route_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="tp_vehicle_route_remarks" name="tp_vehicle_route_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_vehicle_route_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -603,10 +626,11 @@
                                                                 t-att-value="picking.tp_permit_validity_date or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_permit_validity_date_check" name="tp_permit_validity_date_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_permit_validity_date_status else None" type="checkbox" id="tp_permit_validity_date_check" name="tp_permit_validity_date_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="tp_permit_validity_date_remarks" name="tp_permit_validity_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="tp_permit_validity_date_remarks" name="tp_permit_validity_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_permit_validity_date_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -652,10 +676,11 @@
                                                                         t-att-value="picking.e_pass_permit_no or ''"/>
                                                                     </div>
                                                                     <div class="col-sm-2">
-                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_permit_no_check" name="e_pass_permit_no_check"/>
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_pass_permit_no_status else None" type="checkbox" id="e_pass_permit_no_check" name="e_pass_permit_no_check"/>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <input id="e_pass_permit_no_remarks" name="e_pass_permit_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                        <input id="e_pass_permit_no_remarks" name="e_pass_permit_no_remarks" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.e_pass_permit_no_remarks or ''"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row mb-2">
@@ -667,10 +692,11 @@
                                                                         t-att-value="picking.e_pass_dispatch_date_time or ''"/>
                                                                     </div>
                                                                     <div class="col-sm-2">
-                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_dispatch_date_time_check" name="e_pass_dispatch_date_time_check"/>
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_pass_dispatch_date_time_status else None" type="checkbox" id="e_pass_dispatch_date_time_check" name="e_pass_dispatch_date_time_check"/>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <input id="e_pass_dispatch_date_time_remarks" name="e_pass_dispatch_date_time_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                        <input id="e_pass_dispatch_date_time_remarks" name="e_pass_dispatch_date_time_remarks" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.e_pass_dispatch_date_time_remarks or ''"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row mb-2">
@@ -682,10 +708,11 @@
                                                                         t-att-value="picking.e_pass_import_validity or ''"/>
                                                                     </div>
                                                                     <div class="col-sm-2">
-                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_import_validity_check" name="e_pass_import_validity_check"/>
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_pass_import_validity_status else None" type="checkbox" id="e_pass_import_validity_check" name="e_pass_import_validity_check"/>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <input id="e_pass_import_validity_remarks" name="e_pass_import_validity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                        <input id="e_pass_import_validity_remarks" name="e_pass_import_validity_remarks" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.e_pass_import_validity_remarks or ''"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row mb-2">
@@ -697,10 +724,11 @@
                                                                         t-att-value="picking.e_pass_quantity or ''"/>
                                                                     </div>
                                                                     <div class="col-sm-2">
-                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_quantity_check" name="e_pass_quantity_check"/>
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_pass_quantity_status else None" type="checkbox" id="e_pass_quantity_check" name="e_pass_quantity_check"/>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <input id="e_pass_quantity_remarks" name="e_pass_quantity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                        <input id="e_pass_quantity_remarks" name="e_pass_quantity_remarks" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.e_pass_quantity_remarks or ''"/>
                                                                     </div>
                                                                 </div>
                                                             </t>
@@ -715,10 +743,11 @@
                                                                     <input type="hidden" name="e_pass_brand_specifications" t-att-value="brand_names"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_brand_check" name="e_pass_brand_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_pass_brand_status else None" type="checkbox" id="e_pass_brand_check" name="e_pass_brand_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="e_pass_brand_remarks" name="e_pass_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="e_pass_brand_remarks" name="e_pass_brand_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.e_pass_brand_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -736,10 +765,11 @@
                                                                 </select>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_size_check" name="e_pass_size_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_pass_size_status else None" type="checkbox" id="e_pass_size_check" name="e_pass_size_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="e_pass_size_remarks" name="e_pass_size_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="e_pass_size_remarks" name="e_pass_size_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.e_pass_size_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -751,10 +781,11 @@
                                                                     t-att-value="picking.e_pass_alcohol_strength or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_alcohol_strength_check" name="e_pass_alcohol_strength_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_pass_alcohol_strength_status else None" type="checkbox" id="e_pass_alcohol_strength_check" name="e_pass_alcohol_strength_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="e_pass_alcohol_strength_remarks" name="e_pass_alcohol_strength_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="e_pass_alcohol_strength_remarks" name="e_pass_alcohol_strength_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.e_pass_alcohol_strength_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -766,10 +797,11 @@
                                                                     t-att-value="picking.e_pass_route_validity or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_route_validity_check" name="e_pass_route_validity_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_pass_route_validity_status else None" type="checkbox" id="e_pass_route_validity_check" name="e_pass_route_validity_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="e_pass_route_validity_remarks" name="e_pass_route_validity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="e_pass_route_validity_remarks" name="e_pass_route_validity_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.e_pass_route_validity_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -815,10 +847,11 @@
                                                                     t-att-value="picking.evc_quantity or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="evc_quantity_check" name="evc_quantity_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.evc_quantity_status else None" type="checkbox" id="evc_quantity_check" name="evc_quantity_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="evc_quantity_remarks" name="evc_quantity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="evc_quantity_remarks" name="evc_quantity_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.evc_quantity_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -831,10 +864,11 @@
                                                                     <input type="hidden" name="evc_brand_specifications" t-att-value="brand_names"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="evc_brand_check" name="evc_brand_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.evc_brand_status else None" type="checkbox" id="evc_brand_check" name="evc_brand_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="evc_brand_remarks" name="evc_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="evc_brand_remarks" name="evc_brand_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.evc_brand_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -845,10 +879,11 @@
                                                                     t-att-value="picking.evc_export_permit_no_date or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="evc_export_permit_no_date_check" name="evc_export_permit_no_date_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.evc_export_permit_no_date_status else None" type="checkbox" id="evc_export_permit_no_date_check" name="evc_export_permit_no_date_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="evc_export_permit_no_date_remarks" name="evc_export_permit_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="evc_export_permit_no_date_remarks" name="evc_export_permit_no_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.evc_export_permit_no_date_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -859,10 +894,11 @@
                                                                     t-att-value="picking.evc_import_permit_no_date or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="evc_import_permit_no_date_check" name="evc_import_permit_no_date_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.evc_import_permit_no_date_status else None" type="checkbox" id="evc_import_permit_no_date_check" name="evc_import_permit_no_date_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="evc_import_permit_no_date_remarks" name="evc_import_permit_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="evc_import_permit_no_date_remarks" name="evc_import_permit_no_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.evc_import_permit_no_date_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -873,10 +909,11 @@
                                                                     t-att-value="picking.evc_tp_no_date or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="evc_tp_no_date_check" name="evc_tp_no_date_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.evc_tp_no_date_status else None" type="checkbox" id="evc_tp_no_date_check" name="evc_tp_no_date_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="evc_tp_no_date_remarks" name="evc_tp_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="evc_tp_no_date_remarks" name="evc_tp_no_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.evc_tp_no_date_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -887,10 +924,11 @@
                                                                     t-att-value="picking.evc_vehicle_no or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="evc_vehicle_no_check" name="evc_vehicle_no_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.evc_vehicle_no_status else None" type="checkbox" id="evc_vehicle_no_check" name="evc_vehicle_no_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="evc_vehicle_no_remarks" name="evc_vehicle_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="evc_vehicle_no_remarks" name="evc_vehicle_no_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.evc_vehicle_no_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -938,10 +976,11 @@
                                                                         t-att-value="picking.e_permit_ofs_no_date or ''"/>
                                                                     </div>
                                                                     <div class="col-sm-2">
-                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_permit_ofs_no_datecheck" name="e_permit_ofs_no_datecheck"/>
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_permit_ofs_no_date_status else None" type="checkbox" id="e_permit_ofs_no_datecheck" name="e_permit_ofs_no_datecheck"/>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <input id="e_permit_ofs_no_dateremarks" name="e_permit_ofs_no_dateremarks" type="text" class="form-controls input-wrapper"/>
+                                                                        <input id="e_permit_ofs_no_dateremarks" name="e_permit_ofs_no_dateremarks" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.e_permit_ofs_no_date_remarks or ''"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row mb-2">
@@ -953,10 +992,11 @@
                                                                         t-att-value="picking.e_permit_lr_copy_no_date or ''"/>
                                                                     </div>
                                                                     <div class="col-sm-2">
-                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_permit_lr_copy_no_date_datecheck" name="e_permit_lr_copy_no_date_datecheck"/>
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_permit_lr_copy_no_date_date_status else None" type="checkbox" id="e_permit_lr_copy_no_date_datecheck" name="e_permit_lr_copy_no_date_datecheck"/>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <input id="e_permit_lr_copy_no_date_dateremarks" name="e_permit_lr_copy_no_date_dateremarks" type="text" class="form-controls input-wrapper"/>
+                                                                        <input id="e_permit_lr_copy_no_date_dateremarks" name="e_permit_lr_copy_no_date_dateremarks" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.e_permit_lr_copy_no_date_date_remarks or ''"/>
                                                                     </div>
                                                                 </div>
                                                             </t>
@@ -969,10 +1009,11 @@
                                                                     t-att-value="picking.e_permit_vehicle_no or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_permit_vehicle_no_check" name="e_permit_vehicle_no_check"/>
+                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_permit_vehicle_no_status else None" type="checkbox" id="e_permit_vehicle_no_check" name="e_permit_vehicle_no_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="e_permit_vehicle_no_remarks" name="e_permit_vehicle_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="e_permit_vehicle_no_remarks" name="e_permit_vehicle_no_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.e_permit_vehicle_no_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -984,10 +1025,11 @@
                                                                     t-att-value="picking.e_permit_deport_name or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_permit_deport_name_check" name="e_permit_deport_name_check"/>
+                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_permit_deport_name_status else None" type="checkbox" id="e_permit_deport_name_check" name="e_permit_deport_name_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="e_permit_deport_name_remarks" name="e_permit_deport_name_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="e_permit_deport_name_remarks" name="e_permit_deport_name_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.e_permit_deport_name_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -1001,10 +1043,11 @@
                                                                     <input type="hidden" name="e_permit_brand_specifications" t-att-value="brand_names"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_permit_brand_check" name="e_permit_brand_check"/>
+                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_permit_brand_status else None" type="checkbox" id="e_permit_brand_check" name="e_permit_brand_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="e_permit_brand_remarks" name="e_permit_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="e_permit_brand_remarks" name="e_permit_brand_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.e_permit_brand_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -1016,10 +1059,11 @@
                                                                     t-att-value="picking.e_permit_batch_qty_size or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_permit_batch_qty_size_check" name="e_permit_batch_qty_size_check"/>
+                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_permit_batch_qty_size_status else None" type="checkbox" id="e_permit_batch_qty_size_check" name="e_permit_batch_qty_size_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="e_permit_batch_qty_size_remarks" name="e_permit_batch_qty_size_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="e_permit_batch_qty_size_remarks" name="e_permit_batch_qty_size_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.e_permit_batch_qty_size_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <t t-if="picking.partner_id.state_id.code in ['JH']">
@@ -1032,10 +1076,11 @@
                                                                         t-att-value="picking.export_permit_id or ''"/>
                                                                     </div>
                                                                     <div class="col-sm-2">
-                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="export_permit_no_check" name="export_permit_no_check"/>
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.export_permit_no_status else None" type="checkbox" id="export_permit_no_check" name="export_permit_no_check"/>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <input id="export_permit_no_remarks" name="export_permit_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                        <input id="export_permit_no_remarks" name="export_permit_no_remarks" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.export_permit_no_remarks or ''"/>
                                                                     </div>
                                                                 </div>
                                                             </t>
@@ -1083,10 +1128,11 @@
                                                                     t-att-value="picking.i_permit_no_date or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="i_permit_no_date_check" name="i_permit_no_date_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.i_permit_no_date_status else None" type="checkbox" id="i_permit_no_date_check" name="i_permit_no_date_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="i_permit_no_date_remarks" name="i_permit_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="i_permit_no_date_remarks" name="i_permit_no_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.i_permit_no_date_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -1098,10 +1144,11 @@
                                                                     t-att-value="picking.i_permit_validity or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="i_permit_validity_check" name="i_permit_validity_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.i_permit_validity_status else None" type="checkbox" id="i_permit_validity_check" name="i_permit_validity_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="i_permit_validity_remarks" name="i_permit_validity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="i_permit_validity_remarks" name="i_permit_validity_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.i_permit_validity_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -1115,10 +1162,11 @@
                                                                     <input type="hidden" name="i_permit_brand_specifications" t-att-value="brand_names"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="i_permit_brand_check" name="i_permit_brand_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.i_permit_brand_status else None" type="checkbox" id="i_permit_brand_check" name="i_permit_brand_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="i_permit_brand_remarks" name="i_permit_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="i_permit_brand_remarks" name="i_permit_brand_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.i_permit_brand_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -1136,10 +1184,11 @@
                                                                 </select>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="i_permit_size_check" name="i_permit_size_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.i_permit_size_status else None" type="checkbox" id="i_permit_size_check" name="i_permit_size_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="i_permit_size_remarks" name="i_permit_size_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="i_permit_size_remarks" name="i_permit_size_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.i_permit_size_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -1151,10 +1200,11 @@
                                                                     t-att-value="picking.i_permit_qty_sign_stamp or ''"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="i_permit_qty_sign_stamp_check" name="i_permit_qty_sign_stamp_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.i_permit_qty_sign_stamp_status else None" type="checkbox" id="i_permit_qty_sign_stamp_check" name="i_permit_qty_sign_stamp_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="i_permit_qty_sign_stamp_remarks" name="i_permit_qty_sign_stamp_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="i_permit_qty_sign_stamp_remarks" name="i_permit_qty_sign_stamp_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.i_permit_qty_sign_stamp_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1200,10 +1250,11 @@
                                                                 t-att-value="picking.invoice_no_date or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_no_date_check" name="invoice_no_date_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.invoice_no_date_status else None" type="checkbox" id="invoice_no_date_check" name="invoice_no_date_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="invoice_no_date_remarks" name="invoice_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="invoice_no_date_remarks" name="invoice_no_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_no_date_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -1215,10 +1266,11 @@
                                                                 t-att-value="picking.invoice_gate_pass_date or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_gate_pass_date_check" name="invoice_gate_pass_date_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.invoice_gate_pass_date_status else None" type="checkbox" id="invoice_gate_pass_date_check" name="invoice_gate_pass_date_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="invoice_gate_pass_date_remarks" name="invoice_gate_pass_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="invoice_gate_pass_date_remarks" name="invoice_gate_pass_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_gate_pass_date_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -1230,10 +1282,11 @@
                                                                 t-att-value="picking.invoice_transport or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_transport_check" name="invoice_transport_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.invoice_transport_status else None" type="checkbox" id="invoice_transport_check" name="invoice_transport_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="invoice_transport_remarks" name="invoice_transport_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="invoice_transport_remarks" name="invoice_transport_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_transport_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -1245,10 +1298,11 @@
                                                                 t-att-value="picking.invoice_vehicle_no or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_vehicle_no_check" name="invoice_vehicle_no_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.invoice_vehicle_no_status else None" type="checkbox" id="invoice_vehicle_no_check" name="invoice_vehicle_no_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="invoice_vehicle_no_remarks" name="invoice_vehicle_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="invoice_vehicle_no_remarks" name="invoice_vehicle_no_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_vehicle_no_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -1260,10 +1314,11 @@
                                                                 t-att-value="picking.invoice_tp_lr_no or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_tp_lr_no_check" name="invoice_tp_lr_no_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.invoice_tp_lr_no_status else None" type="checkbox" id="invoice_tp_lr_no_check" name="invoice_tp_lr_no_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="invoice_tp_lr_no_remarks" name="invoice_tp_lr_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="invoice_tp_lr_no_remarks" name="invoice_tp_lr_no_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_tp_lr_no_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -1275,10 +1330,11 @@
                                                                 t-att-value="picking.invoice_ofs_no_date or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_ofs_no_date_check" name="invoice_ofs_no_date_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.invoice_ofs_no_date_status else None" type="checkbox" id="invoice_ofs_no_date_check" name="invoice_ofs_no_date_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="invoice_ofs_no_date_remarks" name="invoice_ofs_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="invoice_ofs_no_date_remarks" name="invoice_ofs_no_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_ofs_no_date_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -1292,10 +1348,11 @@
                                                                 <input type="hidden" name="invoice_brand_specifications" t-att-value="brand_names"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_brand_check" name="invoice_brand_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.invoice_brand_status else None" type="checkbox" id="invoice_brand_check" name="invoice_brand_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="invoice_brand_remarks" name="invoice_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="invoice_brand_remarks" name="invoice_brand_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_brand_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -1307,10 +1364,11 @@
                                                                 t-att-value="picking.invoice_batch_no or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_batch_no_check" name="invoice_batch_no_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.invoice_batch_no_status else None" type="checkbox" id="invoice_batch_no_check" name="invoice_batch_no_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="invoice_batch_no_remarks" name="invoice_batch_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="invoice_batch_no_remarks" name="invoice_batch_no_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_batch_no_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -1322,10 +1380,11 @@
                                                                 t-att-value="picking.invoice_quantity or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_quantity_check" name="invoice_quantity_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.invoice_quantity_status else None" type="checkbox" id="invoice_quantity_check" name="invoice_quantity_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="invoice_quantity_remarks" name="invoice_quantity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="invoice_quantity_remarks" name="invoice_quantity_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_quantity_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -1337,10 +1396,11 @@
                                                                 t-att-value="picking.invoice_basic_price or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_basic_price_check" name="invoice_basic_price_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.invoice_basic_price_status else None" type="checkbox" id="invoice_basic_price_check" name="invoice_basic_price_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="invoice_basic_price_remarks" name="invoice_basic_price_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="invoice_basic_price_remarks" name="invoice_basic_price_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_basic_price_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -1352,10 +1412,11 @@
                                                                 t-att-value="picking.inovice_excise_duty or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="inovice_excise_duty_check" name="inovice_excise_duty_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.inovice_excise_duty_status else None" type="checkbox" id="inovice_excise_duty_check" name="inovice_excise_duty_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="inovice_excise_duty_remarks" name="inovice_excise_duty_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="inovice_excise_duty_remarks" name="inovice_excise_duty_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.inovice_excise_duty_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
@@ -1367,10 +1428,11 @@
                                                                 t-att-value="picking.inovice_liter_total_value or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="inovice_liter_total_value_check" name="inovice_liter_total_value_check"/>
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.inovice_liter_total_value_status else None" type="checkbox" id="inovice_liter_total_value_check" name="inovice_liter_total_value_check"/>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="inovice_liter_total_value_remarks" name="inovice_liter_total_value_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                <input id="inovice_liter_total_value_remarks" name="inovice_liter_total_value_remarks" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.inovice_liter_total_value_remarks or ''"/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1418,10 +1480,11 @@
                                                                     <input type="hidden" name="invoice_brand_specifications" t-att-value="brand_names"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="dn_brand_check" name="dn_brand_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.dn_brand_status else None" type="checkbox" id="dn_brand_check" name="dn_brand_check"/>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <input id="dn_brand_remarks" name="dn_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                        <input id="dn_brand_remarks" name="dn_brand_remarks" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.dn_brand_remarks or ''"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row mb-2">
@@ -1439,10 +1502,11 @@
                                                                 </select>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="dn_size_check" name="dn_size_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.dn_size_status else None" type="checkbox" id="dn_size_check" name="dn_size_check"/>
                                                                     </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="dn_size_remarks" name="dn_size_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="dn_size_remarks" name="dn_size_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.dn_size_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -1454,10 +1518,11 @@
                                                                     t-att-value="picking.dn_qty or ''" readonly="readonly"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="dn_qty_check" name="dn_qty_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.dn_qty_status else None" type="checkbox" id="dn_qty_check" name="dn_qty_check"/>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <input id="dn_qty_remarks" name="dn_qty_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                        <input id="dn_qty_remarks" name="dn_qty_remarks" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.dn_qty_remarks or ''"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row mb-2">
@@ -1469,10 +1534,11 @@
                                                                         t-att-value="picking.partner_id.name or ''" readonly="readonly"/>
                                                                     </div>
                                                                     <div class="col-sm-2">
-                                                                        <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="dn_depot_name_check" name="dn_depot_name_check"/>
+                                                                        <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.dn_depot_name_status else None" type="checkbox" id="dn_depot_name_check" name="dn_depot_name_check"/>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                    <input id="dn_depot_name_remarks" name="dn_depot_name_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="dn_depot_name_remarks" name="dn_depot_name_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.dn_depot_name_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -1484,10 +1550,11 @@
                                                                     t-att-value="picking.dn_permit_no or ''" readonly="readonly"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="dn_permit_no_check" name="dn_permit_no_check"/>
+                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.dn_permit_no_status else None" type="checkbox" id="dn_permit_no_check" name="dn_permit_no_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="dn_permit_no_remarks" name="dn_permit_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="dn_permit_no_remarks" name="dn_permit_no_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.dn_permit_no_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -1498,10 +1565,11 @@
                                                                     t-att-value="picking.dn_transportor_add or ''" readonly="readonly"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="dn_transportor_add_check" name="dn_transportor_add_check"/>
+                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.dn_transportor_add_status else None" type="checkbox" id="dn_transportor_add_check" name="dn_transportor_add_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="dn_transportor_add_remarks" name="dn_transportor_add_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="dn_transportor_add_remarks" name="dn_transportor_add_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.dn_transportor_add_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -1513,10 +1581,11 @@
                                                                     t-att-value="picking.dn_vehicle_godown_add or ''" readonly="readonly"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="dn_vehicle_godown_add_check" name="dn_vehicle_godown_add_check"/>
+                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.dn_vehicle_godown_add_status else None" type="checkbox" id="dn_vehicle_godown_add_check" name="dn_vehicle_godown_add_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="dn_vehicle_godown_add_remarks" name="dn_vehicle_godown_add_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="dn_vehicle_godown_add_remarks" name="dn_vehicle_godown_add_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.dn_vehicle_godown_add_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1563,10 +1632,11 @@
                                                                     t-att-value="picking.rp_doc_availability or ''" readonly="readonly"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="rp_doc_availability_check" name="rp_doc_availability_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.rp_doc_availability_status else None" type="checkbox" id="rp_doc_availability_check" name="rp_doc_availability_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="rp_doc_availability_remarks" name="rp_doc_availability_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="rp_doc_availability_remarks" name="rp_doc_availability_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.rp_doc_availability_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1613,10 +1683,11 @@
                                                                     <input type="hidden" name="invoice_brand_specifications" t-att-value="brand_names"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="uc_brand_check" name="uc_brand_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.uc_brand_status else None" type="checkbox" id="uc_brand_check" name="uc_brand_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="uc_brand_remarks" name="uc_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="uc_brand_remarks" name="uc_brand_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.uc_brand_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -1628,10 +1699,11 @@
                                                                     t-att-value="picking.uc_qty_depot or ''" readonly="readonly"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="uc_qty_depot_check" name="uc_qty_depot_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.uc_qty_depot_status else None" type="checkbox" id="uc_qty_depot_check" name="uc_qty_depot_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="uc_qty_depot_remarks" name="uc_qty_depot_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="uc_qty_depot_remarks" name="uc_qty_depot_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.uc_qty_depot_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1675,10 +1747,11 @@
                                                                     <input id="br_availability_specifications" name="br_availability_specifications" type="text" class="form-controls input-wrapper"/>
                                                                 </div>
                                                                 <div class="col-sm-2">
-                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="br_availability_check" name="br_availability_check"/>
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.br_availability_status else None" type="checkbox" id="br_availability_check" name="br_availability_check"/>
                                                                 </div>
                                                                 <div class="col-sm-3">
-                                                                    <input id="br_availability_remarks" name="br_availability_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    <input id="br_availability_remarks" name="br_availability_remarks" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.br_availability_remarks or ''"/>
                                                                 </div>
                                                             </div>
                                                         </div>
