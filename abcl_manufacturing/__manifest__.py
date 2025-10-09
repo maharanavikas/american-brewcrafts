@@ -1,0 +1,31 @@
+# -*- coding: utf-8 -*-
+{
+    'name': "ABCL Manufacturing",
+    'summary': "American Brew Crafts Manufacturing Module",
+    'description': """ABCL stock module customization for Manufacturing orders.""",
+
+    'author': "Linkfields Innovations",
+    'website': "https://www.linkfields.com",
+    'maintainer': 'Linkfields Innovations',
+
+    'sequence': 121,
+    'category': 'Manufacturing/Manufacturing',
+    'version': '18.0',
+
+    'depends': ['mrp', 'mrp_mps', 'stock'],
+    'data': [
+        'views/mrp_production_views.xml',
+        "views/mrp_bom_views.xml",
+        'views/mrp_production_schedule.xml',
+        'views/stock_quant_views.xml',
+
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'abcl_manufacturing/static/src/widgets/lots_dialog.js',
+            'abcl_manufacturing/static/src/widgets/lots_dialog.xml',
+        ],
+    },
+    'license': 'LGPL-3',
+    'images': ['description/icon.svg']
+}

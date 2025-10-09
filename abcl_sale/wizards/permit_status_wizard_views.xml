@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="permit_status_wizard_wizard_form_view" model="ir.ui.view">
+        <field name="name">permit.status.wizard.form.view</field>
+        <field name="model">permit.status.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Update Permit Status">
+                <group>
+                    <field name="import_permit_line_id" invisible="1"/> 
+                    <field name="export_permit_line_id" invisible="1"/> 
+                    <field name="permit_type" invisible="1"/>
+                    <field name="import_permit_no" invisible="permit_type != 'import'"/>
+                    <field name="import_permit_date" invisible="permit_type != 'import'"/>
+                    <field name="import_permit_status" invisible="permit_type != 'import'"/>
+                    <field name="export_permit_no" invisible="permit_type != 'export'"/>
+                    <field name="export_permit_date" invisible="permit_type != 'export'"/>
+                    <field name="export_permit_status" invisible="permit_type != 'export'"/>
+                </group>
+                <footer>
+                    <button string="Update" type="object" name="action_update_permit_status" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

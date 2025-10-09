@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="sale_quotation_approval_line_wizard_view_form" model="ir.ui.view">
+    <field name="name">sale.quotation.approval.line.wizard.view.form</field>
+    <field name="model">sale.quotation.approval.line.wizard</field>
+    <field name="arch" type="xml">
+        <form string="Approve Sale Quotation Order">
+            <group>
+                <field name="action_type" invisible="1"/>
+                <field name="sale_id" invisible="1"/>
+                <field name="comment"/>
+            </group>
+            <footer>
+                <button name="action_submit" type="object" string="Submit" class="btn-primary"/>
+                <button string="Cancel" class="btn-secondary" special="cancel"/>
+            </footer>
+        </form>
+    </field>
+</record>
+</odoo>

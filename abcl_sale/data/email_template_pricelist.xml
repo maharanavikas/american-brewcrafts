@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Email template for pricelist approval -->
+        <record id="email_template_product_pricelist" model="mail.template">
+            <field name="name">Pricelist Approval Request</field>
+            <field name="model_id" ref="product.model_product_pricelist"/>
+            <field name="email_from">{{ object.company_id.email_formatted or '' }}</field>
+            <field name="subject">Pricelist Approval Required: {{ object.name }}</field>
+            <field name="body_html" type="html">
+                <table>
+                    <tbody>
+                        <!-- HEADER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="middle">
+                                            <p style="font-size: 14px;font-weight:bold;">Pricelist Approval</p>
+                                        </td>
+                                        <td valign="middle" align="right">
+                                            <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                 style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                 t-att-alt="object.company_id.name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="text-align:center;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- CONTENT -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="top" style="font-size: 13px;">
+                                            <div>
+                                                <p>Hello Team,</p>
+                
+                                                <p>This to inform you that <strong><t t-out='object.user_id.name'/></strong> has submitted the pricelist 
+                                                <strong><t t-out='object.name'/></strong> for your review and approval.
+                                                Kindly review the details and approve it at your earliest convenience.</p>
+
+                                                <p>If you have any questions or require further details, please do not hesitate to reach out.</p>
+
+                                                <p>Thank you for your time and attention to this matter.</p>
+
+                                               <p>
+                                                    Regards,
+                                                        <p>
+                                                            <span t-out="object.company_id.name"/>
+                                                        </p>
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="text-align:center;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- FOOTER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="middle" align="left" style="opacity: 0.7;">
+                                            <t t-out="object.company_id.phone or ''"/>
+                                            <t t-if="object.company_id.email">
+                                                |
+                                                <a t-att-href="'mailto:%s' % object.company_id.email"
+                                                   style="text-decoration:none; color: #454748;">
+                                                    <t t-out="object.company_id.email or ''"/>
+                                                </a>
+                                            </t>
+                                            <t t-if="object.company_id.website">
+                                                |
+                                                <a t-att-href="'%s' % object.company_id.website"
+                                                   style="text-decoration:none; color: #454748;">
+                                                    <t t-out="object.company_id.website or ''"/>
+                                                </a>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </field>
+        </record>
+
+        <!--Email template after approved-->
+        <record id="email_template_pricelist_approved" model="mail.template">
+            <field name="name">product.Pricelist.Approved</field>
+            <field name="model_id" ref="product.model_product_pricelist"/>
+            <field name="email_from">{{ object.company_id.email_formatted or '' }}</field>
+            <field name="email_to">{{ object.user_id.email or '' }}</field>
+            <field name="subject">Pricelist Approved: {{ object.name }}</field>
+            <field name="body_html" type="html">
+                <table>
+                    <tbody>
+                        <!-- HEADER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="middle">
+                                            <p style="font-size: 14px;font-weight:bold;">Pricelist Approval</p>
+                                        </td>
+                                        <td valign="middle" align="right">
+                                            <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                 style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                 t-att-alt="object.company_id.name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="text-align:center;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- CONTENT -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="top" style="font-size: 13px;">
+                                            <div>
+                                                <p>Dear <t t-out="object.user_id.name or ''"/>,</p>
+
+                                                <p>This to inform you that your submitted pricelist titled <strong><t t-out='object.name'/></strong> has been successfully reviewed and approved by <strong><t t-out="ctx.get('action_user') and ctx.get('action_user').name or ''"/></strong>.</p>
+
+                                                <p>You may now proceed with the next steps as per the company’s pricing and sales procedures.</p>
+
+                                                <p>If you have any further questions or need assistance, please feel free to reach out.</p>
+
+                                                <p>Thank you for your contribution and attention to detail.</p>
+                                                <p>
+                                                    Regards,
+                                                        <p>
+                                                            <span t-out="object.company_id.name"/>
+                                                        </p>
+                                                </p> 
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="text-align:center;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- FOOTER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="middle" align="left" style="opacity: 0.7;">
+                                            <t t-out="object.company_id.phone or ''"/>
+                                            <t t-if="object.company_id.email">
+                                                |
+                                                <a t-att-href="'mailto:%s' % object.company_id.email"
+                                                   style="text-decoration:none; color: #454748;">
+                                                    <t t-out="object.company_id.email or ''"/>
+                                                </a>
+                                            </t>
+                                            <t t-if="object.company_id.website">
+                                                |
+                                                <a t-att-href="'%s' % object.company_id.website"
+                                                   style="text-decoration:none; color: #454748;">
+                                                    <t t-out="object.company_id.website or ''"/>
+                                                </a>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </field>
+        </record>
+
+         <!--Email template on Hold-->
+        <record id="email_template_pricelist_hold" model="mail.template">
+            <field name="name">product.Pricelist.Hold</field>
+            <field name="model_id" ref="product.model_product_pricelist"/>
+            <field name="email_from">{{ object.company_id.email_formatted or '' }}</field>
+            <field name="email_to">{{ object.user_id.email }}</field>
+            <field name="subject">Pricelist on hold: {{ object.name }}</field>
+            <field name="body_html" type="html">
+                <table>
+                    <tbody>
+                        <!-- HEADER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="middle">
+                                            <p style="font-size: 14px;font-weight:bold;">Pricelist Approval</p>
+                                        </td>
+                                        <td valign="middle" align="right">
+                                            <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                 style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                 t-att-alt="object.company_id.name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="text-align:center;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- CONTENT -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="top" style="font-size: 13px;">
+                                            <div>
+                                                <p>Dear <t t-out="object.user_id.name or ''"/>,</p>
+
+                                                <p>This is to inform you that your submitted pricelist titled <strong><t t-out='object.name'/></strong> has been reviewed and is currently placed on hold by <strong><t t-out="ctx.get('action_user') and ctx.get('action_user').name or ''"/></strong>.</p>
+
+                                                <p>This status may be due to pending clarifications, additional approvals, or other considerations. We encourage you to reach out if you require further details or wish to discuss the status.</p>
+                                                
+                                                <p>Thank you for your patience and understanding.</p>
+                                                <p>
+                                                    Regards,
+                                                        <p>
+                                                            <span t-out="object.company_id.name"/>
+                                                        </p>
+                                                </p> 
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="text-align:center;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- FOOTER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="middle" align="left" style="opacity: 0.7;">
+                                            <t t-out="object.company_id.phone or ''"/>
+                                            <t t-if="object.company_id.email">
+                                                |
+                                                <a t-att-href="'mailto:%s' % object.company_id.email"
+                                                   style="text-decoration:none; color: #454748;">
+                                                    <t t-out="object.company_id.email or ''"/>
+                                                </a>
+                                            </t>
+                                            <t t-if="object.company_id.website">
+                                                |
+                                                <a t-att-href="'%s' % object.company_id.website"
+                                                   style="text-decoration:none; color: #454748;">
+                                                    <t t-out="object.company_id.website or ''"/>
+                                                </a>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </field>
+        </record>
+        
+        <!--Email template on Reject-->
+        <record id="email_template_pricelist_rejected" model="mail.template">
+            <field name="name">product.Pricelist.Reject</field>
+            <field name="model_id" ref="product.model_product_pricelist"/>
+            <field name="email_from">{{ object.company_id.email_formatted or '' }}</field>
+            <field name="email_to">{{ object.user_id.email }}</field>
+            <field name="subject">Pricelist Rejected: {{ object.name }}</field>
+            <field name="body_html" type="html">
+                <table>
+                    <tbody>
+                        <!-- HEADER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="middle">
+                                            <p style="font-size: 14px;font-weight:bold;">Pricelist Approval</p>
+                                        </td>
+                                        <td valign="middle" align="right">
+                                            <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                 style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                 t-att-alt="object.company_id.name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="text-align:center;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- CONTENT -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="top" style="font-size: 13px;">
+                                            <div>
+                                                <p>Dear <t t-out="object.user_id.name or ''"/>,</p>
+               
+                                                <p>This is to inform you that your submitted pricelist titled <strong><t t-out='object.name'/></strong> has been reviewed and has not been approved by <strong><t t-out="ctx.get('action_user') and ctx.get('action_user').name or ''"/></strong>.</p>
+
+                                                <p>This decision may be based on discrepancies, misalignment with current pricing policies, or other considerations.</p>
+                                                
+                                                <p>We appreciate your effort and encourage you to make the necessary updates and resubmit if appropriate.</p>
+                                                
+                                                <p>
+                                                    Regards,
+                                                        <p>
+                                                            <span t-out="object.company_id.name"/>
+                                                        </p>
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="text-align:center;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- FOOTER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="middle" align="left" style="opacity: 0.7;">
+                                            <t t-out="object.company_id.phone or ''"/>
+                                            <t t-if="object.company_id.email">
+                                                |
+                                                <a t-att-href="'mailto:%s' % object.company_id.email"
+                                                   style="text-decoration:none; color: #454748;">
+                                                    <t t-out="object.company_id.email or ''"/>
+                                                </a>
+                                            </t>
+                                            <t t-if="object.company_id.website">
+                                                |
+                                                <a t-att-href="'%s' % object.company_id.website"
+                                                   style="text-decoration:none; color: #454748;">
+                                                    <t t-out="object.company_id.website or ''"/>
+                                                </a>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </field>
+        </record>
+        
+        <!--Email template on Dispatch Checklist-->
+        <record id="email_template_stock_picking_sign_request" model="mail.template">
+            <field name="name">product.Pricelist.Reject</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="email_from">{{ object.company_id.email_formatted or '' }}</field>
+            <field name="email_to"></field>
+            <field name="subject">Dispatch Checklist Request: Action Required</field>
+            <field name="body_html" type="html">
+                <table>
+                    <tbody>
+                        <!-- HEADER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="middle">
+                                            <p style="font-size: 14px;font-weight:bold;">Dispatch Checklist</p>
+                                        </td>
+                                        <td valign="middle" align="right">
+                                            <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                 style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                 t-att-alt="object.company_id.name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="text-align:center;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- CONTENT -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="top" style="font-size: 13px;">
+                                            <div>
+                                                <p>Dear <t t-out="ctx.get('recipient_name') or ''"/>,</p>
+               
+                                                <p>
+                                                    You are requested to <strong>review and submit the Dispatch Checklist</strong> for the delivery order <strong><span t-out="object.name or ''"/></strong>.
+                                                </p>
+                                                <p>
+                                                    Please open the checklist using the link below and complete your review/signature to confirm dispatch checklist.
+                                                </p>
+                                                <p>
+                                                    <a t-att-href="object._get_dispatch_checklist_url()">
+                                                        Open Dispatch Checklist
+                                                    </a>
+                                                </p>        
+                                                
+                                                <p>
+                                                    Regards,
+                                                        <p>
+                                                            <span t-out="object.company_id.name"/>
+                                                        </p>
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="text-align:center;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- FOOTER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="middle" align="left" style="opacity: 0.7;">
+                                            <t t-out="object.company_id.phone or ''"/>
+                                            <t t-if="object.company_id.email">
+                                                |
+                                                <a t-att-href="'mailto:%s' % object.company_id.email"
+                                                   style="text-decoration:none; color: #454748;">
+                                                    <t t-out="object.company_id.email or ''"/>
+                                                </a>
+                                            </t>
+                                            <t t-if="object.company_id.website">
+                                                |
+                                                <a t-att-href="'%s' % object.company_id.website"
+                                                   style="text-decoration:none; color: #454748;">
+                                                    <t t-out="object.company_id.website or ''"/>
+                                                </a>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </field>
+        </record>
+    </data>
+</odoo>

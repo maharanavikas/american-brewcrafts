@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="abcl_product_supplierinfo_view_list" model="ir.ui.view">
+        <field name="name">abcl.product.supplierinfo.view.list</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list/field[@name='price']" position="before">
+                <field name="minimum_order_qty"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="abcl_product_supplierinfo_view_form" model="ir.ui.view">
+        <field name="name">abcl.product.supplierinfo.view.form</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='discount']" position="before">
+                <field name="minimum_order_qty"/>
+            </xpath>
+            <xpath expr="//div[field[@name='delay']]" position="after">
+                <field name="is_approval_requested" readonly="1"/>
+                <field name="active" readonly="1"/>
+            </xpath>
+            <xpath expr="//div[@class='o_row'][field[@name='price']]" position="after">
+                <field name="requested_price" readonly="1"/>
+                <field name="requested_by" readonly="1"/>
+                <field name="is_new_request" readonly="1"/>
+            </xpath>
+            <xpath expr="//label[@for='date_start']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[field[@name='date_start']]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='price']" position="attributes">
+                <attribute name="readonly">active</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <!--                    <button name="action_for_request"-->
+                    <!--                            string="Request For Approval"-->
+                    <!--                            type="object"-->
+                    <!--                            class="btn-primary" invisible="approval_status != 'draft'"/>-->
+                    <!--                    <button name="action_approve_request"-->
+                    <!--                            string="Approve"-->
+                    <!--                            type="object"-->
+                    <!--                            class="btn-primary" invisible="approval_status != 'requested'" groups="abcl_base.group_vice_president"/>-->
+                    <!--                    <button name="action_reject_request"-->
+                    <!--                            string="Reject"-->
+                    <!--                            type="object"-->
+                    <!--                            class="btn-secondary" invisible="approval_status != 'requested'" groups="abcl_base.group_vice_president"/>-->
+                    <!--                    <field name="approval_status" widget="statusbar" options="{'clickable': False}"/>-->
+                    <button name="action_for_request"
+                            string="Request For Approval"
+                            type="object"
+                            class="btn-primary" invisible="active == True or is_new_request == True"/>
+                    <button name="action_approve_request"
+                            string="Approve"
+                            type="object"
+                            class="btn-primary" invisible="not is_approval_requested"
+                            groups="abcl_base.group_vice_president"/>
+                    <button name="action_reject_request"
+                            string="Reject"
+                            type="object"
+                            class="btn-secondary" invisible="not is_approval_requested"
+                            groups="abcl_base.group_vice_president"/>
+                </header>
+            </xpath>
+            <xpath expr="//sheet" position="after">
+                <chatter/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

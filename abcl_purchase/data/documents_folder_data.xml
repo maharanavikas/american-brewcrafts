@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="document_customer_document_folder" model="documents.document">
+            <field name="type">folder</field>
+            <field name="name">Vendor Documents</field>
+            <field name="access_internal">edit</field>
+            <field name="is_pinned_folder">True</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,1834 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="report_dispatch_checklist_details" model="ir.actions.report">
+        <field name="name">Dispatch Checklist Details</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">abcl_sale.dispatch_checklist_report_template</field>
+        <field name="report_file">abcl_sale.dispatch_checklist_report_template</field>
+        <field name="print_report_name">'Dispatch Checklist-Details'</field>
+        <field name="binding_model_id" ref="abcl_sale.model_stock_picking"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="dispatch_checklist_report_template">
+        <t t-call="web.html_container"/>
+        <t t-foreach="docs.sudo()" t-as="doc">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <style>
+                        body {
+                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                            color: #333;
+                            font-size: 14px;
+                        }
+
+                        /* Gate pass container */
+                        .gate-pass {
+                            margin: 20px auto;
+                            padding: 15px;
+                            border: 1px solid #ddd;
+                            border-radius: 8px;
+                            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+                            background: #fff;
+                        }
+
+                        /* Heading */
+                        h2 {
+                            text-align: center;
+                            margin: 0 0 15px 0;
+                            color: #2c3e50;
+                        }
+
+                        /* Table */
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+
+                        thead {
+                            background: #f8f9fa;
+                        }
+
+                        th,
+                        td {
+                            padding: 10px;
+                            border: 1px solid #ddd;
+                            text-align: left;
+                        }
+
+                        th {
+                            font-weight: 600;
+                        }
+
+                        /* Center alignment for status column */
+                        td:nth-child(3) {
+                            text-align: center;
+                        }
+
+                        /* Alternating row background */
+                        tbody tr:nth-child(even) {
+                            background: #fcfcfc;
+                        }
+                        .info-card { border: 1px solid #dcdfe3; border-radius: 6px; padding: 8px 10px; margin: 8px 0; page-break-inside: avoid; }
+                        .kv { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
+                        .kv th { width: 18%; background: #f5f7fa; color: #6c757d; font-weight: 600; text-transform: uppercase; letter-spacing: .02em; padding: 8px 10px; border: 1px solid #e5e7eb; vertical-align: top; }
+                        .kv td { width: 32%; padding: 8px 10px; border: 1px solid #e5e7eb; vertical-align: top; word-wrap: break-word; }
+                        .badges { margin-top: -2px; }
+                        .badges .badge { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 8px; background: #0d6efd; color: #fff; border-radius: 10px; font-size: 9pt; white-space: nowrap; }
+                    </style>
+
+                    <div class="text-dark fw-bold">
+                        <h3 class="formm-0 text-center">Dispatch Checklist - <t t-esc="doc.name or 'No Picking ID'"/>
+                        </h3>
+                        <p class="animate-element" style="margin-top:0;padding:0"/>
+
+                        <div id="questionnaire_div">
+                            <div class="info-card">
+                                <table class="kv">
+                                    <colgroup>
+                                    <col style="width:18%"/>
+                                    <col style="width:32%"/>
+                                    <col style="width:18%"/>
+                                    <col style="width:32%"/>
+                                    </colgroup>
+                                    <tbody>
+                                    <tr>
+                                        <th>Date</th>
+                                        <td>
+                                        <t t-if="doc.dispatch_date"><span t-field="doc.dispatch_date"/></t>
+                                        </td>
+                                        <th>Brand</th>
+                                        <td>
+                                        <div class="badges">
+                                            <span t-field="doc.gp_brand"/>
+                                        </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Depot</th>
+                                        <td t-esc="doc.partner_id.name or '-'"/>
+                                        <th>Vehicle Type</th>
+                                        <td t-esc="doc.vehicle_type or ''"/>
+                                    </tr>
+                                    <tr>
+                                        <th></th>
+                                        <td t-esc="''"/>
+                                        <th>Vehicle Number</th>
+                                        <td t-esc="doc.vehicle_no or ''"/>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="mb-2 border-0">
+                                <div class="bg-white">
+                                    <div class="text-center mb-2" style="color: #ce1446;">
+                                        <h5>Documents checklist</h5>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white">
+                                    <div class="d-flex">
+                                        <p class="fs-5 mt-3">
+                                            Gate Pass
+                                        </p>
+                                    </div>
+                                    <div class="mt-3 table-responsive shadow">
+                                        <table class="table table-bordered align-middle mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th class="col-4 fs-6 fw-bold">
+                                                        To be checked
+                                                    </th>
+                                                    <th class="col-3 fs-6 fw-bold">
+                                                        Specifications
+                                                    </th>
+                                                    <th class="col-2 fs-6 fw-bold">
+                                                        Status
+                                                    </th>
+                                                    <th class="col-3 fs-6 fw-bold">
+                                                        Remarks
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>TP No. &amp; Date</td>
+                                                    <td>
+                                                        <span t-field="doc.gp_p_no_date"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.gp_p_no_date_status"/> -->
+                                                        <t t-if="doc.gp_p_no_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.gp_p_no_date_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Party name</td>
+                                                    <td>
+                                                        <span t-field="doc.gp_party_name"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.gp_party_name_status"/> -->
+                                                        <t t-if="doc.gp_party_name_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.gp_party_name_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pack size-330/650/500ml</td>
+                                                    <td>
+                                                        <span t-field="doc.gp_pack_size"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.gp_pack_size_status"/> -->
+                                                        <t t-if="doc.gp_pack_size_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.gp_pack_size_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Quantity</td>
+                                                    <td>
+                                                        <span t-field="doc.gp_quantity"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.gp_quantity_status"/> -->
+                                                        <t t-if="doc.gp_quantity_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.gp_quantity_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Brand</td>
+                                                    <td>
+                                                        <span t-field="doc.gp_brand"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.gp_brand_status"/> -->
+                                                        <t t-if="doc.gp_brand_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.gp_brand_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Vehicle no &amp; date</td>
+                                                    <td>
+                                                        <span t-field="doc.gp_vehicle_no_date"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.gp_vehicle_no_date_status"/> -->
+                                                        <t t-if="doc.gp_vehicle_no_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.gp_vehicle_no_date_remarks"/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-2 border-0" t-if="doc.partner_id.state_id.code in ['AN', 'PY', 'TN', 'TS', 'KL']">
+                                <div class="">
+                                    <div class="d-flex">
+                                        <p class="fs-5 mt-3">
+                                            LR Copy
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="mt-3 border-0 shadow 
+                                ">
+                                        <table class="table table-bordered align-middle mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th class="col-4 fs-6 fw-bold">To be checked</th>
+                                                    <th class="col-3 fs-6 fw-bold">Specifications</th>
+                                                    <th class="col-2 fs-6 fw-bold">Status</th>
+                                                    <th class="col-3 fs-6 fw-bold">Remarks</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>LR No</td>
+                                                    <td>
+                                                        <span t-field="doc.lrc_lr_no"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.lrc_lr_no_status"/> -->
+                                                        <t t-if="doc.lrc_lr_no_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.lrc_lr_no_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>LR Date</td>
+                                                    <td>
+                                                        <span t-field="doc.lrc_lr_date"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.lrc_lr_date_status"/> -->
+                                                        <t t-if="doc.lrc_lr_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.lrc_lr_date_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Vehicle no. To address</td>
+                                                    <td>
+                                                        <span t-field="doc.lrc_lr_vehicle_no_address"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.lrc_lr_vehicle_no_address_status"/> -->
+                                                        <t t-if="doc.lrc_lr_vehicle_no_address_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.lrc_lr_vehicle_no_address_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Quantity</td>
+                                                    <td>
+                                                        <span t-field="doc.lrc_lr_quantity"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.lrc_lr_quantity_status"/> -->
+                                                        <t t-if="doc.lrc_lr_quantity_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.lrc_lr_quantity_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Invoice no &amp; Invoice date</td>
+                                                    <td>
+                                                        <span t-field="doc.lrc_lr_invoice_no_date"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.lrc_lr_invoice_no_date_status"/> -->
+                                                        <t t-if="doc.lrc_lr_invoice_no_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.lrc_lr_invoice_no_date_remarks"/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white">
+                                <div class="d-flex">
+                                    <p class="fs-5 mt-3">Sample analysis report</p>
+                                </div>
+
+                                <div class="mt-3 table-responsive shadow">
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="col-4 fs-6 fw-bold">Brand</th>
+                                                <th class="col-3 fs-6 fw-bold">Batch No.</th>
+                                                <th class="col-2 fs-6 fw-bold">Quantity</th>
+                                                <th class="col-1 fs-6 fw-bold">Status</th>
+                                                <th class="col-2 fs-6 fw-bold">Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="doc.move_ids" t-as="ml">
+                                                <tr>
+                                                    <!-- Brand -->
+                                                    <td>
+                                                        <span t-esc="ml.product_id.display_name or '-'"/>
+                                                    </td>
+
+                                                    <!-- Batch No. (lots live on move lines; show comma-separated lot names) -->
+                                                    <td>
+                                                        <t t-set="lot_names"
+                                                            t-value="', '.join(ml.move_line_ids.filtered(lambda l: l.lot_id).mapped('lot_id.name'))"/>
+                                                        <span t-esc="lot_names or '-'"/>
+                                                    </td>
+
+                                                    <!-- Quantity (use the field you actually want: requested or done) -->
+                                                    <td class="text-end">
+                                                        <span t-esc="ml.product_uom_qty or 0.0"/>
+                                                        <span t-esc="ml.product_uom.name"/>
+                                                    </td>
+
+                                                    <!-- Status (checkbox look) -->
+                                                    <td class="text-center">
+                                                        <t t-if="ml.product_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+
+                                                    <!-- Remarks -->
+                                                    <td>
+                                                        <span t-esc="ml.product_remark or '-'"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="mb-2 border-0">
+                                <div class="">
+                                    <div class="d-flex">
+                                        <p class="fs-5 mt-3">
+                                            Transport Permit
+                                        </p>
+                                    </div>
+                                    <div class="mt-3 border-0 shadow 
+                                            ">
+                                        <table class="table table-bordered align-middle mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th class="col-4 fs-6 fw-bold">To be checked</th>
+                                                    <th class="col-3 fs-6 fw-bold">Specifications</th>
+                                                    <th class="col-2 fs-6 fw-bold">Status</th>
+                                                    <th class="col-3 fs-6 fw-bold">Remarks</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Date</td>
+                                                    <td>
+                                                        <span t-field="doc.tp_date"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.tp_date_status"/> -->
+                                                        <t t-if="doc.tp_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.tp_date_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Brand</td>
+                                                    <td>
+                                                        <span t-field="doc.tp_brand"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.tp_brand_status"/> -->
+                                                        <t t-if="doc.tp_brand_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.tp_brand_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Batch No</td>
+                                                    <td>
+                                                        <span t-field="doc.tp_batch_no"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.tp_batch_no_status"/> -->
+                                                        <t t-if="doc.tp_batch_no_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.tp_batch_no_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PO No. / PO date</td>
+                                                    <td>
+                                                        <span t-field="doc.tp_po_no_date"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.tp_po_no_date_status"/> -->
+                                                        <t t-if="doc.tp_po_no_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.tp_po_no_date_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Quantity</td>
+                                                    <td>
+                                                        <span t-field="doc.tp_quantity"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.tp_quantity_status"/> -->
+                                                        <t t-if="doc.tp_quantity_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.tp_quantity_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Size - 330/650/500ml</td>
+                                                    <td>
+                                                        <span t-field="doc.tp_pack_size"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.tp_pack_size_status"/> -->
+                                                        <t t-if="doc.tp_pack_size_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.tp_pack_size_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Bulk litre</td>
+                                                    <td>
+                                                        <span t-field="doc.tp_bulk_litre"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.tp_bulk_litre_status"/> -->
+                                                        <t t-if="doc.tp_bulk_litre_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.tp_bulk_litre_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Alcohol %</td>
+                                                    <td>
+                                                        <span t-field="doc.tp_alcohol_percent"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.tp_alcohol_percent_status"/> -->
+                                                        <t t-if="doc.tp_alcohol_percent_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.tp_alcohol_percent_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>EXPORT FEE challan No. &amp; Date</td>
+                                                    <td>
+                                                        <span t-field="doc.tp_excise_duty_challan_no_date"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.tp_excise_duty_challan_no_date_status"/> -->
+                                                        <t t-if="doc.tp_excise_duty_challan_no_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.tp_excise_duty_challan_no_date_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Export fee</td>
+                                                    <td>
+                                                        <span t-field="doc.tp_excise_duty"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.tp_excise_duty_status"/> -->
+                                                        <t t-if="doc.tp_excise_duty_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.tp_excise_duty_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Depot</td>
+                                                    <td>
+                                                        <span t-field="doc.tp_depot"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.tp_depot_status"/> -->
+                                                        <t t-if="doc.tp_depot_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.tp_depot_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Vehicle no. / Route</td>
+                                                    <td>
+                                                        <span t-field="doc.tp_vehicle_route"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.tp_vehicle_route_status"/> -->
+                                                        <t t-if="doc.tp_vehicle_route_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.tp_vehicle_route_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Permit validity date &amp; BO signature</td>
+                                                    <td>
+                                                        <span t-field="doc.tp_permit_validity_date"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.tp_permit_validity_date_status"/> -->
+                                                        <t t-if="doc.tp_permit_validity_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.tp_permit_validity_date_remarks"/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="" t-if="doc.partner_id.state_id.code in ['AN', 'JH', 'PY','TN','KL']">
+                                <div class="d-flex">
+                                    <p class="fs-5 mt-3">
+                                        Export Pass
+                                    </p>
+                                </div>
+                                <div class="mt-3 border-0 shadow 
+                                        ">
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="col-4 fs-6 fw-bold">To be checked</th>
+                                                <th class="col-3 fs-6 fw-bold">Specifications</th>
+                                                <th class="col-2 fs-6 fw-bold">Status</th>
+                                                <th class="col-3 fs-6 fw-bold">Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-if="doc.partner_id.state_id.code in ['JH', 'PY','TN','KL']">
+                                                <td>Export permit No.</td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_permit_no"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.e_pass_permit_no_status"/> -->
+                                                    <t t-if="doc.e_pass_permit_no_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_permit_no_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="doc.partner_id.state_id.code in ['JH', 'PY','TN','KL']">
+                                                <td>Dispatch date &amp; time</td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_dispatch_date_time"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.e_pass_dispatch_date_time_status"/> -->
+                                                    <t t-if="doc.e_pass_dispatch_date_time_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_dispatch_date_time_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="doc.partner_id.state_id.code in ['JH', 'PY','TN','KL']">
+                                                <td>Import permit Validity days</td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_import_validity"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.e_pass_import_validity_status"/> -->
+                                                    <t t-if="doc.e_pass_import_validity_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_import_validity_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="doc.partner_id.state_id.code in ['JH', 'PY','TN','KL']">
+                                                <td>Quantity</td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_quantity"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.e_pass_quantity_status"/> -->
+                                                    <t t-if="doc.e_pass_quantity_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_quantity_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Brand</td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_brand"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.e_pass_brand_status"/> -->
+                                                    <t t-if="doc.e_pass_brand_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_brand_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Size - 330/650/500 ml</td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_size"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.e_pass_size_status"/> -->
+                                                    <t t-if="doc.e_pass_size_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_size_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Alcohol strength</td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_alcohol_strength"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.e_pass_alcohol_strength_status"/> -->
+                                                    <t t-if="doc.e_pass_alcohol_strength_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_alcohol_strength_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Route &amp; Validity of export permit</td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_route_validity"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.e_pass_route_validity_status"/> -->
+                                                    <t t-if="doc.e_pass_route_validity_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.e_pass_route_validity_remarks"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class=" mb-2 border-0">
+                            <div class="" t-if="doc.partner_id.state_id.code in ['JH','AN','PY','TN','KL']">
+                                <div class="d-flex">
+                                    <p class="fs-5 mt-3">
+                                        EVC
+                                    </p>
+                                </div>
+                                <div class=" mt-3 border-0 shadow 
+                                        ">
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="col-4 fs-6 fw-bold">To be checked</th>
+                                                <th class="col-3 fs-6 fw-bold">Specifications</th>
+                                                <th class="col-2 fs-6 fw-bold">Status</th>
+                                                <th class="col-3 fs-6 fw-bold">Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Quantity</td>
+                                                <td>
+                                                    <span t-field="doc.evc_quantity"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.evc_quantity_status"/> -->
+                                                    <t t-if="doc.evc_quantity_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.evc_quantity_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Brand</td>
+                                                <td>
+                                                    <span t-field="doc.evc_brand"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.evc_brand_status"/> -->
+                                                    <t t-if="doc.evc_brand_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.evc_brand_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Export Permit No. &amp; date</td>
+                                                <td>
+                                                    <span t-field="doc.evc_export_permit_no_date"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.evc_export_permit_no_date_status"/> -->
+                                                    <t t-if="doc.evc_export_permit_no_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.evc_export_permit_no_date_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Import Permit No. &amp; date</td>
+                                                <td>
+                                                    <span t-field="doc.evc_import_permit_no_date"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.evc_import_permit_no_date_status"/> -->
+                                                    <t t-if="doc.evc_import_permit_no_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.evc_import_permit_no_date_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>TP No. &amp; date</td>
+                                                <td>
+                                                    <span t-field="doc.evc_tp_no_date"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.evc_tp_no_date_status"/> -->
+                                                    <t t-if="doc.evc_tp_no_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.evc_tp_no_date_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Vehicle No.</td>
+                                                <td>
+                                                    <span t-field="doc.evc_vehicle_no"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.evc_vehicle_no_status"/> -->
+                                                    <t t-if="doc.evc_vehicle_no_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.evc_vehicle_no_remarks"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2 border-0">
+                            <div class="" t-if="doc.partner_id.state_id.code in ['JH','AN','PY','TN','KL']">
+                                <div class="d-flex">
+                                    <p class="fs-5 mt-3">
+                                        Export Permit
+                                    </p>
+                                </div>
+                                <div class=" mt-3 border-0 shadow 
+                                        ">
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="col-4 fs-6 fw-bold">To be checked</th>
+                                                <th class="col-3 fs-6 fw-bold">Specifications</th>
+                                                <th class="col-2 fs-6 fw-bold">Status</th>
+                                                <th class="col-3 fs-6 fw-bold">Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-if="doc.partner_id.state_id.code in ['AN','PY','TN','KL']">
+                                                <td>OFS No.</td>
+                                                <td>
+                                                    <span t-field="doc.e_permit_ofs_no_date"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.e_permit_ofs_no_date_status"/> -->
+                                                    <t t-if="doc.e_permit_ofs_no_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.e_permit_ofs_no_date_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="doc.partner_id.state_id.code in ['AN','PY','TN','KL']">
+                                                <td>LR copy No. &amp; date</td>
+                                                <td>
+                                                    <span t-field="doc.e_permit_lr_copy_no_date"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.e_permit_lr_copy_no_date_status"/> -->
+                                                    <t t-if="doc.e_permit_lr_copy_no_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.e_permit_lr_copy_no_date_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Vehicle</td>
+                                                <td>
+                                                    <span t-field="doc.e_permit_vehicle_no"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.e_permit_vehicle_no_status"/> -->
+                                                    <t t-if="doc.e_permit_vehicle_no_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.e_permit_vehicle_no_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Deport Name</td>
+                                                <td>
+                                                    <span t-field="doc.e_permit_deport_name"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.e_permit_deport_name_status"/> -->
+                                                    <t t-if="doc.e_permit_deport_name_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.e_permit_deport_name_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Brand</td>
+                                                <td>
+                                                    <span t-field="doc.e_permit_brand"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.e_permit_brand_status"/> -->
+                                                    <t t-if="doc.e_permit_brand_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.e_permit_brand_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Batch No. Quantity &amp; size 330/650/500ml</td>
+                                                <td>
+                                                    <span t-field="doc.e_permit_batch_qty_size"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.e_permit_batch_qty_size_status"/> -->
+                                                    <t t-if="doc.e_permit_batch_qty_size_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.e_permit_batch_qty_size_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="doc.partner_id.state_id.code in ['JH']">
+                                                <td>Export permit No</td>
+                                                <td>
+                                                    <span t-field="doc.e_permit_no"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.e_permit_no_status"/> -->
+                                                    <t t-if="doc.e_permit_no_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.e_permit_no_remarks"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2 border-0">
+                            <div class="" t-if="doc.partner_id.state_id.code in ['JH','AN','PY','TN','KL']">
+                                <div class="d-flex">
+                                    <p class="fs-5 mt-3">
+                                        Import Permit
+                                    </p>
+                                </div>
+                                <div class=" mt-3 border-0 shadow 
+                                        ">
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="col-4 fs-6 fw-bold">To be checked</th>
+                                                <th class="col-3 fs-6 fw-bold">Specifications</th>
+                                                <th class="col-2 fs-6 fw-bold">Status</th>
+                                                <th class="col-3 fs-6 fw-bold">Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Import Permit No. &amp; date</td>
+                                                <td>
+                                                    <span t-field="doc.i_permit_no_date"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.i_permit_no_date_status"/> -->
+                                                    <t t-if="doc.i_permit_no_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.i_permit_no_date_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Permit validity</td>
+                                                <td>
+                                                    <span t-field="doc.i_permit_validity"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.i_permit_validity_status"/> -->
+                                                    <t t-if="doc.i_permit_validity_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.i_permit_validity_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Brand</td>
+                                                <td>
+                                                    <span t-field="doc.i_permit_brand"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.i_permit_brand_status"/> -->
+                                                    <t t-if="doc.i_permit_brand_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.i_permit_brand_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Size 330/650/500ml</td>
+                                                <td>
+                                                    <span t-field="doc.i_permit_size"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.i_permit_size_status"/> -->
+                                                    <t t-if="doc.i_permit_size_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.i_permit_size_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Quantity &amp; BO signature &amp; Stamp</td>
+                                                <td>
+                                                    <span t-field="doc.i_permit_qty_sign_stamp"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.i_permit_qty_sign_stamp_status"/> -->
+                                                    <t t-if="doc.i_permit_qty_sign_stamp_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.i_permit_qty_sign_stamp_remarks"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" mb-2 border-0">
+                            <div class="">
+                                <div class="d-flex">
+                                    <p class="fs-5 mt-3">
+                                        Invoice
+                                    </p>
+                                </div>
+                                <div class=" mt-3 border-0 shadow 
+                                        ">
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="col-4 fs-6 fw-bold">To be checked</th>
+                                                <th class="col-3 fs-6 fw-bold">Specifications</th>
+                                                <th class="col-2 fs-6 fw-bold">Status</th>
+                                                <th class="col-3 fs-6 fw-bold">Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Invoice No &amp; date</td>
+                                                <td>
+                                                    <span t-field="doc.invoice_no_date"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.invoice_no_date_status"/> -->
+                                                    <t t-if="doc.invoice_no_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.invoice_no_date_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Gate pass date</td>
+                                                <td>
+                                                    <span t-field="doc.invoice_gate_pass_date"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.invoice_gate_pass_date_status"/> -->
+                                                    <t t-if="doc.invoice_gate_pass_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.invoice_gate_pass_date_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Transport name</td>
+                                                <td>
+                                                    <span t-field="doc.invoice_transport"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.invoice_transport_status"/> -->
+                                                    <t t-if="doc.invoice_transport_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.invoice_transport_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Vehicle no</td>
+                                                <td>
+                                                    <span t-field="doc.invoice_vehicle_no"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.invoice_vehicle_no_status"/> -->
+                                                    <t t-if="doc.invoice_vehicle_no_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.invoice_vehicle_no_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>TP No. LR No.</td>
+                                                <td>
+                                                    <span t-field="doc.invoice_tp_lr_no"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.invoice_tp_lr_no_status"/> -->
+                                                    <t t-if="doc.invoice_tp_lr_no_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.invoice_tp_lr_no_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>OFS No. &amp; date</td>
+                                                <td>
+                                                    <span t-field="doc.invoice_ofs_no_date"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.invoice_ofs_no_date_status"/> -->
+                                                    <t t-if="doc.invoice_ofs_no_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.invoice_ofs_no_date_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Brand</td>
+                                                <td>
+                                                    <span t-field="doc.invoice_brand"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.invoice_brand_status"/> -->
+                                                    <t t-if="doc.invoice_brand_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.invoice_brand_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Batch No.</td>
+                                                <td>
+                                                    <span t-field="doc.invoice_batch_no"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.invoice_batch_no_status"/> -->
+                                                    <t t-if="doc.invoice_batch_no_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.invoice_batch_no_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Quantity</td>
+                                                <td>
+                                                    <span t-field="doc.invoice_quantity"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.invoice_quantity_status"/> -->
+                                                    <t t-if="doc.invoice_quantity_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.invoice_quantity_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Basic price</td>
+                                                <td>
+                                                    <span t-field="doc.invoice_basic_price"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.invoice_basic_price_status"/> -->
+                                                    <t t-if="doc.invoice_basic_price_status">
+                                                        <i class="fa fa-check-square-o"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <i class="fa fa-square-o"/>
+                                                    </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.invoice_basic_price_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Excise duty</td>
+                                                <td>
+                                                    <span t-field="doc.inovice_excise_duty"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.inovice_excise_duty_status"/> -->
+                                                    <t t-if="doc.inovice_excise_duty_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.inovice_excise_duty_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Bulk litre &amp; invoice total value in Rs.</td>
+                                                <td>
+                                                    <span t-field="doc.inovice_liter_total_value"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.inovice_liter_total_value_status"/> -->
+                                                    <t t-if="doc.inovice_liter_total_value_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.inovice_liter_total_value_remarks"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" mb-2 border-0">
+                            <div class="" t-if="doc.partner_id.state_id.code in ['JH']">
+                                <div class="d-flex">
+                                    <p class="fs-5 mt-3">
+                                        Dispatch Note
+                                    </p>
+                                </div>
+                                <div class=" mt-3 border-0 shadow 
+                            ">
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="col-4 fs-6 fw-bold">To be checked</th>
+                                                <th class="col-3 fs-6 fw-bold">Specifications</th>
+                                                <th class="col-2 fs-6 fw-bold">Status</th>
+                                                <th class="col-3 fs-6 fw-bold">Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Brand</td>
+                                                <td>
+                                                    <span t-field="doc.dn_brand"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.dn_brand_status"/> -->
+                                                    <t t-if="doc.dn_brand_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.dn_brand_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Size 330/650/500ml</td>
+                                                <td>
+                                                    <span t-field="doc.dn_size"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.dn_size_status"/> -->
+                                                    <t t-if="doc.dn_size_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.dn_size_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Quantity</td>
+                                                <td>
+                                                    <span t-field="doc.dn_qty"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.dn_qty_status"/> -->
+                                                    <t t-if="doc.dn_qty_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.dn_qty_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Depot name</td>
+                                                <td>
+                                                    <span t-field="doc.dn_depot_name"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.dn_depot_name_status"/> -->
+                                                    <t t-if="doc.dn_depot_name_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.dn_depot_name_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Permit No.</td>
+                                                <td>
+                                                    <span t-field="doc.dn_permit_no"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.dn_permit_no_status"/> -->
+                                                    <t t-if="doc.dn_permit_no_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.dn_permit_no_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Transporter Address</td>
+                                                <td>
+                                                    <span t-field="doc.dn_transportor_add"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.dn_transportor_add_status"/> -->
+                                                    <t t-if="doc.dn_transportor_add_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.dn_transportor_add_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Vehicle No. Driver name &amp; Godown address</td>
+                                                <td>
+                                                    <span t-field="doc.dn_vehicle_godown_add"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.dn_vehicle_godown_add_status"/> -->
+                                                    <t t-if="doc.dn_vehicle_godown_add_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.dn_vehicle_godown_add_remarks"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" mb-2 border-0">
+                            <div class="" t-if="doc.partner_id.state_id.code in ['JH']">
+                                <div class="d-flex">
+                                    <p class="fs-5 mt-3">
+                                        Road Permit
+                                    </p>
+                                </div>
+                                <div class=" mt-3 border-0 shadow 
+                                        ">
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="col-4 fs-6 fw-bold">To be checked</th>
+                                                <th class="col-3 fs-6 fw-bold">Specifications</th>
+                                                <th class="col-2 fs-6 fw-bold">Status</th>
+                                                <th class="col-3 fs-6 fw-bold">Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    Document availability
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.rp_doc_availability"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.rp_doc_availability_status"/> -->
+                                                    <t t-if="doc.rp_doc_availability_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.rp_doc_availability_remarks"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" mb-2 border-0">
+                            <div class="" t-if="doc.partner_id.state_id.code in ['PY']">
+                                <div class="d-flex">
+                                    <p class="fs-5 mt-3">
+                                        Unloading Challan
+                                    </p>
+                                </div>
+                                <div class=" mt-3 border-0 shadow 
+                                        ">
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="col-4 fs-6 fw-bold">To be checked</th>
+                                                <th class="col-3 fs-6 fw-bold">Specifications</th>
+                                                <th class="col-2 fs-6 fw-bold">Status</th>
+                                                <th class="col-3 fs-6 fw-bold">Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Brand</td>
+                                                <td>
+                                                    <span t-field="doc.uc_brand"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.uc_brand_status"/> -->
+                                                    <t t-if="doc.uc_brand_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.uc_brand_remarks"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Quantity &amp; Depot</td>
+                                                <td>
+                                                    <span t-field="doc.uc_qty_depot"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.uc_qty_depot_status"/> -->
+                                                    <t t-if="doc.uc_qty_depot_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.uc_qty_depot_remarks"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" mb-2 border-0">
+                            <div class="" t-if="doc.partner_id.state_id.code in ['PY']">
+                                <div class="d-flex">
+                                    <p class="fs-5 mt-3">
+                                        Brand registration
+                                    </p>
+                                </div>
+                                <div class=" mt-3 border-0 shadow 
+                                        ">
+
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="col-4 fs-6 fw-bold">To be checked</th>
+                                                <th class="col-3 fs-6 fw-bold">Specifications</th>
+                                                <th class="col-2 fs-6 fw-bold">Status</th>
+                                                <th class="col-3 fs-6 fw-bold">Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Ensure availability</td>
+                                                <td>
+                                                    <span t-field="doc.br_availability"/>
+                                                </td>
+                                                <td>
+                                                    <!-- <span t-field="doc.br_availability_status"/> -->
+                                                    <t t-if="doc.br_availability_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.br_availability_remarks"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-2 mt-4">
+                        <div class="col-6">
+                            <t t-if="doc.dispatch_signature">
+                                <h5>Dispatch In-Charge</h5>
+                                <img t-att-src="image_data_uri(doc.dispatch_signature)" style="max-height: 4rem;"/>
+                                <p class="mt-2 mb-0">
+                                    <t t-out="doc.dispatch_signed_by or ''"/>
+                                </p>
+                            </t>
+                        </div>
+                        <div class="col-6">
+                            <t t-if="doc.accountant_signature">
+                                <h5>Accountant</h5>
+                                <img t-att-src="image_data_uri(doc.accountant_signature)" style="max-height: 4rem;"/>
+                                <p class="mt-2 mb-0">
+                                    <t t-out="doc.accountant_signed_by or ''"/>
+                                </p>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="abcl_sale_pack_list_view" model="ir.ui.view">
+        <field name="name">abcl.sale.pack.list.view</field>
+        <field name="model">abcl.sale.licence</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" create="true">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_abcl_sale_pack" model="ir.actions.act_window">
+        <field name="name">Sale Pack</field>
+        <field name="res_model">abcl.sale.pack</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_abcl_sale_pack"
+              name="Sales Pack"
+              parent="menu_abcl_sale_data_config"
+              action="action_abcl_sale_pack"
+              sequence="12"/>
+</odoo>

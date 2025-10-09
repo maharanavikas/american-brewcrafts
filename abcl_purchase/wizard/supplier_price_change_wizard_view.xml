@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_supplier_price_change_wizard" model="ir.ui.view">
+        <field name="name">supplier.price.change.wizard.form</field>
+        <field name="model">supplier.price.change.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Change Price Request">
+                <group>
+                    <field name="supplierinfo_id" readonly="1"/>
+                    <field name="product_tmpl_id"/>
+                    <field name="current_price"/>
+                    <field name="new_price"/>
+                </group>
+                <footer>
+                    <button string="Submit Request"
+                            name="action_submit_request"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

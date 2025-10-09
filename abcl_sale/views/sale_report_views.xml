@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_order_product_pivot_inherit" model="ir.ui.view">
+        <field name="name">sale.report.pivot.inherit.permit</field>
+        <field name="model">sale.report</field>
+        <field name="inherit_id" ref="sale.view_order_product_pivot"/>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot" position="inside">
+                <field name="import_permit_status" type="measure"/>
+                <field name="export_permit_status" type="measure"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

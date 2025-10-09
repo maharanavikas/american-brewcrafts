@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="stock_picking_sign_request_wizard_form_view" model="ir.ui.view">
+        <field name="name">stock.picking.sign.request.wizard.form.view</field>
+        <field name="model">stock.picking.sign.request.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div role="alert" class="alert alert-info mx-0 mt0 mb-4 p-1 fw-bold">
+                    Send a digital signature request to the below roles.
+                </div>
+                <group>
+                    <field name="stock_picking_id" invisible="1"/>
+                    <field name="dispatch_checklist_id"/>
+                    <field name="set_sign_order" invisible="1"/>
+                    <field name="signer_request_ids">
+                        <list editable="bottom" create="false" delete="false">
+                            <field name="mail_sent_order"/>
+                            <field name="role_id" readonly="1"/>
+                            <field name="partner_id"/>
+                        </list>
+                    </field>
+                </group>
+                <footer>
+                    <button name="send_sign_request" string="Send Sign Request" type="object" class="btn-primary"
+                            data-hotkey="d"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

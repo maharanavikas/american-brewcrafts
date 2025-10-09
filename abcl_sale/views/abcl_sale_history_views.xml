@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="abcl_sale_history_list_view" model="ir.ui.view">
+        <field name="name">abcl.sale.history.list.view</field>
+        <field name="model">abcl.sale.history</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="godown_id"/>
+                <field name="vendor_id"/>
+                <field name="licence_id"/>
+                <field name="licence_no"/>
+                <field name="state_id"/>
+                <field name="district"/>
+                <field name="product_id"/>
+                <field name="pack_id"/>
+                <field name="quantity"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="abcl_sale_history_form_view" model="ir.ui.view">
+        <field name="name">abcl.sale.history.form.view</field>
+        <field name="model">abcl.sale.history</field>
+        <field name="arch" type="xml">
+            <form string="Sale History">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="godown_id"/>
+                            <field name="vendor_id"/>
+                            <field name="licence_id"/>
+                            <field name="licence_no"/>
+                        </group>
+                        <group>
+                            <field name="state_id"/>
+                            <field name="district"/>
+                            <field name="product_id"/>
+                            <field name="pack_id"/>
+                            <field name="quantity"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="abcl_sale_history_search_view" model="ir.ui.view">
+        <field name="name">abcl.sale.history.search.view</field>
+        <field name="model">abcl.sale.history</field>
+        <field name="arch" type="xml">
+            <search string="Sale History Search">
+                <field name="vendor_id"/>
+                <field name="product_id"/>
+                <field name="state_id"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_vendor" string="Supplier" context="{'group_by': 'vendor_id'}"/>
+                    <filter name="group_by_godown" string="Godown" context="{'group_by': 'godown_id'}"/>
+                    <filter name="group_by_product" string="Product" context="{'group_by': 'product_id'}"/>
+                    <filter name="group_by_state" string="State" context="{'group_by': 'state_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="abcl_sale_history_pivot_view" model="ir.ui.view">
+        <field name="name">abcl.sale.history.pivot.view</field>
+        <field name="model">abcl.sale.history</field>
+        <field name="arch" type="xml">
+            <pivot string="Sale History Analysis">
+                <field name="quantity" type="measure"/>
+                <field name="vendor_id" type="row"/>
+                <field name="product_id" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="abcl_sale_history_graph_view" model="ir.ui.view">
+        <field name="name">abcl.sale.history.graph.view</field>
+        <field name="model">abcl.sale.history</field>
+        <field name="arch" type="xml">
+            <graph string="Sale History Graph" type="bar">
+                <field name="quantity" type="measure"/>
+                <field name="vendor_id"/>
+                <field name="product_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_abcl_sale_history" model="ir.actions.act_window">
+        <field name="name">Sale History</field>
+        <field name="res_model">abcl.sale.history</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+    </record>
+
+    <menuitem id="menu_abcl_sale_history" name="Sale Data" parent="sale.menu_sale_report"
+              action="action_abcl_sale_history" sequence="41"/>
+</odoo>

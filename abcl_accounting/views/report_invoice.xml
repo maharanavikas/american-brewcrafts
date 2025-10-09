@@ -1,0 +1,577 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <template id="abcl_account_invoice_layout_striped" inherit_id="web.external_layout_striped">
+            <xpath expr="//img[@t-if='company.logo']" position="replace">
+                <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">
+                    <img src="/abcl_accounting/static/src/img/lilasons_logo.png"
+                         style="max-width: 400px;"/>
+                </t>
+                <t t-else="">
+                    <img t-if="company.logo" class="o_company_logo_big" t-att-src="image_data_uri(company.logo)"
+                         alt="Logo"/>
+                </t>
+            </xpath>
+            <!--            <xpath expr="//div[@name='company_address']/ul[@name='company_address_list']" position="replace">-->
+            <!--                <div name="company_address_block" class="ms-4">-->
+            <!--                    <h2>-->
+            <!--                        <p class="fw-bold mb-1" t-if="company.partner_id.name" t-esc="company.partner_id.name"/>-->
+            <!--                    </h2>-->
+            <!--                    <p class="mb-1">-->
+            <!--                        <t t-if="company.partner_id.survey_no">-->
+            <!--                            SURVEY NO:-->
+            <!--                            <t t-esc="company.partner_id.survey_no"/>,-->
+            <!--                        </t>-->
+            <!--                        <t t-if="company.partner_id.village">-->
+            <!--                            VILLAGE:-->
+            <!--                            <t t-esc="company.partner_id.village"/>,-->
+            <!--                        </t>-->
+            <!--                        <t t-if="company.partner_id.mandal">-->
+            <!--                            MANDAL:-->
+            <!--                            <t t-esc="company.partner_id.mandal"/>,-->
+            <!--                        </t>-->
+            <!--                        <t t-if="company.partner_id.city">-->
+            <!--                            City:-->
+            <!--                            <t t-esc="company.partner_id.city"/>,-->
+            <!--                        </t>-->
+            <!--                        <t t-if="company.partner_id.state_id">-->
+            <!--                            <t t-esc="company.partner_id.state_id.name"/>-->
+            <!--                        </t>-->
+            <!--                        <t t-if="company.partner_id.zip">-->
+            <!--                            - -->
+            <!--                            <t t-esc="company.partner_id.zip"/>-->
+            <!--                        </t>-->
+            <!--                    </p>-->
+            <!--                    <p class="mb-1">-->
+            <!--                        <t t-if="company.partner_id.l10n_in_pan">-->
+            <!--                            PAN:-->
+            <!--                            <t t-esc="company.partner_id.l10n_in_pan"/>,-->
+            <!--                        </t>-->
+            <!--                        <t t-if="company.partner_id.vat">-->
+            <!--                            GSTIN:-->
+            <!--                            <t t-esc="company.partner_id.vat"/>,-->
+            <!--                        </t>-->
+            <!--                        <t t-if="company.partner_id.phone">-->
+            <!--                            Ph. No:-->
+            <!--                            <t t-esc="company.partner_id.phone"/>-->
+            <!--                        </t>-->
+            <!--                    </p>-->
+            <!--                    <p class="mb-1">-->
+            <!--                        <t t-if="company.partner_id.cin_no">-->
+            <!--                            CIN No:-->
+            <!--                            <t t-esc="company.partner_id.cin_no"/>,-->
+            <!--                        </t>-->
+            <!--                        <t t-if="company.partner_id.email">-->
+            <!--                            Mail Id:-->
+            <!--                            <t t-esc="company.partner_id.email"/>-->
+            <!--                        </t>-->
+            <!--                    </p>-->
+            <!--                </div>-->
+            <!--            </xpath>-->
+            <xpath expr="//div[@name='company_address']/ul[@name='company_address_list']" position="replace">
+                <div name="company_address_block" class="ms-4">
+                    <!--                                <h2>-->
+                    <!--                                    <p class="fw-bold mb-1" t-if="company.partner_id.name" t-esc="company.partner_id.name"/>-->
+                    <!--                                </h2>-->
+                    <p class="mb-1">
+                        <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">
+                            <h2>
+                                <p>Lilasons Alcobev Pvt.Ltd.</p>
+                            </h2>
+                            Survey # 238, Mallepally Village, Kondapur Mandal,
+                            <br/>
+                            Sangareddy District, Telangana-502295, Pincode : 502295
+                        </t>
+                        <t t-else="">
+                            <h2>
+                                <p class="fw-bold mb-1" t-if="company.partner_id.name" t-esc="company.partner_id.name"/>
+                            </h2>
+                            <t t-if="company.partner_id.survey_no">
+                                SURVEY NO:
+                                <t t-esc="company.partner_id.survey_no"/>,
+                            </t>
+                            <t t-if="company.partner_id.village">
+                                VILLAGE:
+                                <t t-esc="company.partner_id.village"/>,
+                            </t>
+                            <t t-if="company.partner_id.mandal">
+                                MANDAL:
+                                <t t-esc="company.partner_id.mandal"/>,
+                            </t>
+                            <t t-if="company.partner_id.city">
+                                City:
+                                <t t-esc="company.partner_id.city"/>,
+                            </t>
+                            <t t-if="company.partner_id.state_id">
+                                <t t-esc="company.partner_id.state_id.name"/>
+                            </t>
+                            <t t-if="company.partner_id.zip">
+                                -
+                                <t t-esc="company.partner_id.zip"/>
+                            </t>
+                        </t>
+                    </p>
+                    <p class="mb-1">
+                        <t t-if="company.partner_id.l10n_in_pan">
+                            PAN:
+                            <t t-esc="company.partner_id.l10n_in_pan"/>,
+                        </t>
+                        <t t-if="company.partner_id.vat">
+                            GSTIN:
+                            <t t-esc="company.partner_id.vat"/>,
+                        </t>
+                        <t t-if="company.partner_id.phone">
+                            Ph. No:
+                            <t t-esc="company.partner_id.phone"/>
+                        </t>
+                    </p>
+                    <p class="mb-1">
+                        <t t-if="company.partner_id.cin_no">
+                            CIN No:
+                            <t t-esc="company.partner_id.cin_no"/>,
+                        </t>
+                        <t t-if="company.partner_id.email">
+                            Mail Id:
+                            <t t-esc="company.partner_id.email"/>
+                        </t>
+                    </p>
+                </div>
+            </xpath>
+<!--            <xpath expr="//div[contains(@class,'footer')]" position="attributes">-->
+<!--                <attribute name="t-if">not (o and o._name == 'account.move' and o.move_type == 'out_invoice')-->
+<!--                </attribute>-->
+<!--            </xpath>-->
+        </template>
+
+        <template id="abcl_report_invoice_document" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@class='row']/t[@t-if='o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)']"
+                   position="replace">
+                <hr/>
+
+                <!--                <t t-if="o and o._name == 'account.move'">-->
+                <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">
+                    <div class="col-6">
+                        <t t-set="information_block">
+                            <div name="sold_to_address_block">
+                                <h5>
+                                    <strong>Sold To:</strong>
+                                </h5>
+                                <div t-field="o.partner_id"
+                                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                            </div>
+                            <hr/>
+                            <div class="mt-2" id="transport_info_not_same_as_shipping">
+                                <div t-if="o.name and o.name != '/'" class="mb-1">
+                                    <b>INVOICE NO:</b>
+                                    <span class="ms-2" t-field="o.name"/>
+                                    <!--                                    <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'"-->
+                                    <!--                                          t-field="o.journal_id.name"/>-->
+                                    <!--                                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">Draft-->
+                                    <!--                                        <span t-field="o.journal_id.name"/>-->
+                                    <!--                                    </span>-->
+                                    <!--                                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled-->
+                                    <!--                                        <span t-field="o.journal_id.name"/>-->
+                                    <!--                                    </span>-->
+                                    <!--                                    <span t-if="o.name != '/'" t-field="o.name"/>-->
+                                </div>
+                                <div t-if="o.invoice_date" class="mb-1">
+                                    Date:
+                                    <span class="ms-2" t-field="o.invoice_date"/>
+                                </div>
+                                <div t-if="o.po_no" class="mb-1">
+                                    P.O.No:
+                                    <span class="ms-2" t-field="o.po_no"/>
+                                </div>
+                                <div t-if="o.po_date" class="mb-1">
+                                    P.O.Dt:
+                                    <span class="ms-2" t-field="o.po_date"/>
+                                </div>
+                                <div t-if="o.invoice_incoterm_id.name" class="mb-1">
+                                    Inco Terms:
+                                    <span class="ms-2" t-field="o.invoice_incoterm_id.code"/>
+                                </div>
+                                <div t-if="o.invoice_payment_term_id" class="mb-1">
+                                    Payment Terms:
+                                    <span class="ms-2" t-field="o.invoice_payment_term_id.name"/>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                    <div class="col-6" name="address_not_same_as_shipping">
+                        <t t-set="address">
+                            <div name="shipping_address_block">
+                                <h5>
+                                    <strong>Ship To:</strong>
+                                </h5>
+                                <div t-field="o.partner_shipping_id"
+                                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                            </div>
+                            <div class="mt-2">
+                                <div t-if="o.partner_id.l10n_in_pan"
+                                     id="partner_pan_address_not_same_as_shipping">
+                                    PAN:
+                                    <span t-field="o.partner_id.l10n_in_pan"/>
+                                </div>
+                                <div t-if="o.partner_id.cin_no" id="partner_cin_address_not_same_as_shipping">
+                                    CIN NO:
+                                    <span t-field="o.partner_id.cin_no"/>
+                                </div>
+                                <div t-if="o.import_permit_id or o.import_permit_date"
+                                     id="import_permit_not_same_as_shipping">
+                                    Import Permit No &amp; Dt:
+                                    <t t-if="o.import_permit_id">
+                                        <span>
+                                            <span t-field="o.import_permit_id.import_permit_no"/>
+                                        </span>
+                                    </t>
+                                    <t t-if="o.import_permit_date">
+                                        <span t-if="o.import_permit_id">DT:</span>
+                                        <span t-field="o.import_permit_date"/>
+                                    </t>
+                                </div>
+                                <div t-if="o.export_permit_id or o.export_permit_date"
+                                     id="export_permit_not_same_as_shipping">
+                                    Export Permit Appl.No &amp; Date:
+                                    <t t-if="o.export_permit_id">
+                                        <span>
+                                            <span t-field="o.export_permit_id.export_permit_no"/>
+                                        </span>
+                                    </t>
+                                    <t t-if="o.export_permit_date">
+                                        <span t-if="o.export_permit_id">DT:</span>
+                                        <span t-field="o.export_permit_date"/>
+                                    </t>
+                                </div>
+                                <div t-if="o.excise_leaf_no" id="excise_leaf_no_not_same_as_shipping">
+                                    Excise Leaf No:
+                                    <span t-field="o.excise_leaf_no"/>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+
+                <t t-elif="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
+                    <div class="col-6">
+                        <t t-set="information_block">
+                            <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
+                                <strong>Shipping Address</strong>
+                                <div t-field="o.partner_shipping_id"
+                                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                            </div>
+                        </t>
+                    </div>
+                    <div class="col-6" name="address_not_same_as_shipping">
+                        <t t-set="address">
+                            <address class="mb-0" t-field="o.partner_id"
+                                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                            <div t-if="o.partner_id.vat" id="partner_vat_address_not_same_as_shipping">
+                                <t t-if="lo.company_id.account_fiscal_country_id.vat_label"
+                                   t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                <t t-else="">Tax ID</t>:
+                                <span t-field="o.partner_id.vat"/>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+                <!--                </t>-->
+
+            </xpath>
+            <xpath expr="//div[@id='informations']" position="replace">
+                <div id="informations" class="row mb-4"
+                     t-if="o.invoice_date or o.invoice_date_due or o.delivery_date or o.invoice_origin or o.partner_id.ref or o.ref or o.invoice_incoterm_id">
+
+                    <!-- Hide Invoice Date when out_invoice -->
+                    <div class="col" t-if="o.invoice_date and o.move_type != 'out_invoice'" name="invoice_date">
+                        <t t-if="o.move_type == 'out_refund'">
+                            <strong>Credit Note Date</strong>
+                        </t>
+                        <t t-elif="o.move_type == 'out_receipt'">
+                            <strong>Receipt Date</strong>
+                        </t>
+                        <t t-else="">
+                            <strong>Date</strong>
+                        </t>
+                        <div t-field="o.invoice_date"/>
+                    </div>
+
+                    <!-- Hide Due Date when out_invoice -->
+                    <div class="col" t-if="o.invoice_date_due and o.move_type != 'out_invoice'" name="due_date">
+                        <strong>Due Date</strong>
+                        <div t-field="o.invoice_date_due"/>
+                    </div>
+
+                    <!-- Keep all remaining fields visible -->
+                    <div class="col" t-if="o.delivery_date" name="delivery_date">
+                        <strong>Delivery Date</strong>
+                        <div t-field="o.delivery_date"/>
+                    </div>
+                    <div class="col" t-if="o.invoice_origin" name="origin">
+                        <strong>Source</strong>
+                        <div t-field="o.invoice_origin"/>
+                    </div>
+                    <div class="col" t-if="o.partner_id.ref" name="customer_code">
+                        <strong>Customer Code</strong>
+                        <div t-field="o.partner_id.ref"/>
+                    </div>
+                    <div class="col" t-if="o.ref" name="reference">
+                        <strong>Reference</strong>
+                        <div t-field="o.ref"/>
+                    </div>
+                    <div class="col" t-if="o.invoice_incoterm_id" name="incoterm_id">
+                        <strong>Incoterm</strong>
+                        <div t-if="o.incoterm_location">
+                            <span t-field="o.invoice_incoterm_id.code"/>
+                            <br/>
+                            <span t-field="o.incoterm_location"/>
+                        </div>
+                        <div t-else="" t-field="o.invoice_incoterm_id.code" class="m-0"/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//td[@name='td_taxes']"
+                   position="replace">
+                <t t-if="o and o._name == 'account.move' and o.move_type != 'out_invoice'">
+                    <td name="td_taxes"
+                        t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                        <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
+                    </td>
+                </t>
+            </xpath>
+            <xpath expr="//th[@name='th_taxes']" position="replace">
+                <t t-if="o and o._name == 'account.move' and o.move_type != 'out_invoice'">
+                    <th name="th_taxes"
+                        t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                        <span>Taxes</span>
+                    </th>
+                </t>
+            </xpath>
+            <xpath expr="//th[@name='th_description']" position="replace">
+                <th name="th_serial" class="text-start">
+                    <span>SI.No</span>
+                </th>
+                <th name="th_description" class="text-start">
+                    <span>Item Description</span>
+                </th>
+            </xpath>
+            <xpath expr="//tr[.//t[@name='account_invoice_line_accountable']]//td[@name='account_invoice_line_name']"
+                   position="before">
+                <td name="td_serial" class="text-start">
+                    <span t-esc="line_index + 1"/>
+                </td>
+            </xpath>
+            <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_quantity']" position="replace">
+                <th name="th_quantity" class="text-end">
+                    <span>Qty</span>
+                </th>
+            </xpath>
+            <xpath expr="//p[@t-if='o.company_id.display_invoice_amount_total_words']" position="replace"/>
+            <xpath expr="//div[@id='payment_term']//p[@name='payment_communication']" position="replace"/>
+            <xpath expr="//th[@name='th_priceunit']" position="replace">
+                <th name="th_priceunit"
+                    t-attf-class="text-end text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                    <span>Unit Rate</span>
+                </th>
+            </xpath>
+            <xpath expr="//th[@name='th_quantity']" position="after">
+                <th name="th_uom" class="text-end">
+                    <span>Units</span>
+                </th>
+            </xpath>
+            <xpath expr="//td[@name='td_quantity']" position="replace">
+                <td name="td_quantity" class="text-end text-nowrap">
+                    <span t-field="line.quantity"/>
+                </td>
+                <td name="td_uom" class="text-end text-nowrap">
+                    <span t-field="line.product_uom_id" groups="uom.group_uom"/>
+                </td>
+            </xpath>
+            <xpath expr="//td[@name='td_price_unit']"
+                   position="after">
+                <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">
+                    <td name="td_qty_units"
+                        t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                        <span class="text-nowrap" t-field="line.qty_units"/>
+                    </td>
+                    <td name="td_qty_liters"
+                        t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                        <span class="text-nowrap" t-field="line.qty_liters"/>
+                    </td>
+                </t>
+            </xpath>
+
+            <xpath expr="//th[@name='th_priceunit']" position="after">
+                <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">
+                    <th name="th_qty_units"
+                        t-attf-class="text-end text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                        <span>Qty (Units)</span>
+                    </th>
+                    <th name="th_qty_liters"
+                        t-attf-class="text-end text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                        <span>Qty (Bulk Ltr)</span>
+                    </th>
+                </t>
+            </xpath>
+            <xpath expr="//div[@class='clearfix invoice_main']" position="after">
+                <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">
+                    <div id="amount_and_declaration" class="row mt-5 mb-4">
+                        <div t-if="o.company_id.display_invoice_amount_total_words" class="text-start">
+                            <hr/>
+                            <p class="lh-sm mb-1">
+                                <strong>Amount in words:</strong>
+                                <small class="text-muted lh-sm">
+                                    <span t-field="o.amount_total_words">Thirty one dollar and Five cents</span>
+                                </small>
+                            </p>
+                            <hr/>
+                            <p class="text-muted">
+                                We hereby certify that our registration certificate under the Telangana Value Added Tax
+                                Act,
+                                2005 is in force on the date on which the sale of goods specified in this Tax Invoice is
+                                made by us and that the transaction of sale covered by this Tax Invoice has been
+                                effected by
+                                us and it shall be accounted for in the turnover of the sales while filing of return and
+                                the
+                                due tax, if any, payable on the sale has been paid or shall be paid.
+                            </p>
+                            <hr/>
+                        </div>
+                    </div>
+                    <div id="signature_declaration" class="row mt-5 mb-4">
+                        <div class="col-4">
+                            <div class="signature-box">
+                                <t t-if="o.prepared_by_signature">
+                                    <img t-att-src="image_data_uri(o.prepared_by_signature)"
+                                         class="img-fluid mx-auto d-block"
+                                         style="max-height: 6rem;"/>
+                                </t>
+                                <t t-else="">
+                                    <div style="min-height: 6rem;"></div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- Second signature box -->
+                        <div class="col-4">
+                            <div class="signature-box">
+                                <t t-if="o.checked_by_signature">
+                                    <img t-att-src="image_data_uri(o.checked_by_signature)"
+                                         class="img-fluid mx-auto d-block"
+                                         style="max-height: 6rem;"/>
+                                </t>
+                                <t t-else="">
+                                    <div style="min-height: 6rem;"></div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- Third signature box with company name -->
+                        <div class="col-4">
+                            <div class="text-end mb-1">
+                                <p class="fw-bold mb-0">
+                                    <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">
+                                        <strong>
+                                            <p>For Lilasons Alcobev Pvt.Ltd.</p>
+                                        </strong>
+                                    </t>
+                                    <t t-else="">
+                                        For
+                                        <t t-esc="o.company_id.name"/>
+                                    </t>
+                                </p>
+                            </div>
+                            <div class="signature-box">
+                                <t t-if="o.signature">
+                                    <img t-att-src="image_data_uri(o.signature)"
+                                         class="img-fluid mx-auto d-block"
+                                         style="max-height: 6rem;"/>
+                                </t>
+                                <t t-else="">
+                                    <div style="min-height: 6rem;"></div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Single line for all signature labels -->
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="border-top border-dark">
+                                <p class="text-start mb-0">Prepared By</p>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-top border-dark">
+                                <p class="text-center mb-0">Checked By</p>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-top border-dark">
+                                <p class="text-end mb-0">(Authorised Signatory)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                </t>
+            </xpath>
+        </template>
+
+
+        <template id="report_invoice_document_remove_hsn_summary"
+                  inherit_id="l10n_in.l10n_in_report_invoice_document_inherit">
+            <xpath expr="//div[@name='l10n_in_hsn_summary']" position="replace"/>
+            <xpath expr="//table[@name='invoice_line_table']//th[normalize-space(text())='HSN/SAC']"
+                   position="replace"/>
+            <xpath expr="//t[@name='account_invoice_line_accountable']/td[2]" position="replace"/>
+            <xpath expr="//t[@t-set='layout_document_title']" position="replace">
+                <t t-if="o and o._name == 'account.move' and o.move_type != 'out_invoice'">
+                    <t t-set="layout_document_title">
+                        <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'" t-field="o.journal_id.name"/>
+                        <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">Draft
+                            <span t-field="o.journal_id.name"/>
+                        </span>
+                        <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled
+                            <span t-field="o.journal_id.name"/>
+                        </span>
+                        <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">Credit Note</span>
+                        <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">Draft Credit Note</span>
+                        <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">Cancelled Credit Note</span>
+                        <span t-elif="o.move_type == 'in_refund'">Vendor Credit Note</span>
+                        <span t-elif="o.move_type == 'in_invoice'">Vendor Bill</span>
+                        <span t-if="o.name != '/'" t-field="o.name"/>
+                    </t>
+                </t>
+            </xpath>
+            <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[4]" position="after">
+                <t t-if="o.company_id.account_fiscal_country_id.code == 'IN'">
+                    <th>HSN/SAC</th>
+                </t>
+            </xpath>
+            <xpath expr="//t[@name='account_invoice_line_accountable']/td[4]" position="after">
+                <td t-if="o.company_id.account_fiscal_country_id.code == 'IN'">
+                    <span t-if="line.l10n_in_hsn_code" t-field="line.l10n_in_hsn_code"></span>
+                </td>
+            </xpath>
+        </template>
+
+        <template id="abcl_report_invoice_document_inherited" inherit_id="account_accountant.report_invoice_document">
+            <xpath expr="//div[@id='right-elements']/div[@t-if='o.show_signature_area']" position="replace"/>
+        </template>
+
+        <template id="replace_place_of_supply_document" inherit_id="l10n_in.place_of_supply">
+            <xpath expr="//div[@t-if='o.l10n_in_state_id']" position="replace"/>
+        </template>
+
+        <template id="abcl_document_tax_totals_template" inherit_id="account.document_tax_totals_template">
+            <xpath expr="//tr[td[text()='Rounding']]/td[1]" position="replace">
+                <td>Rounding Off</td>
+            </xpath>
+            <xpath expr="//tr[@class='o_total']/td[1]" position="replace">
+                <td>
+                    <strong>Total Amount</strong>
+                </td>
+            </xpath>
+            <xpath expr="//tr[@class='o_subtotal']" position="replace"/>
+        </template>
+    </data>
+</odoo>

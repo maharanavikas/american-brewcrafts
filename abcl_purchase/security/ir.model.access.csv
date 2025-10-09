@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_approval_line,purchase.approval.line,model_purchase_approval_line,purchase.group_purchase_manager,1,1,1,1
+access_purchase_approval_line,purchase.approval.line,model_purchase_approval_line,purchase.group_purchase_user,1,1,1,0
+access_purchase_close_reason,purchase.close.reason,model_purchase_close_reason,purchase.group_purchase_manager,1,1,1,1
+access_purchase_close_reason,purchase.close.reason,model_purchase_close_reason,purchase.group_purchase_user,1,1,1,0
+access_purchase_close_reason_wizard,purchase.close.reason.wizard,model_purchase_close_reason_wizard,purchase.group_purchase_user,1,1,1,1
+access_purchase_approve_comment_wizard,purchase.approval.comment.wizard,model_purchase_approval_comment_wizard,purchase.group_purchase_user,1,1,1,0
+access_generate_draft.po_wizard,generate.draft.po.wizard,model_generate_draft_po_wizard,purchase.group_purchase_user,1,1,1,0
+access_product_category_portal,access.product.category.portal,model_product_category,base.group_portal,1,0,0,0
+access_alternative_vendor_wizard,access.alternative.vendor.wizard,model_alternative_vendor_wizard,base.group_user,1,1,1,1
+access_alternative_vendor_wizard_line,access.purchase_vendor_wizard_line,model_alternative_vendor_wizard_line,base.group_user,1,1,1,1
+access_purchase_order_bulk_approval,purchase.order.bulk.approval,model_purchase_order_bulk_approval,abcl_base.group_vice_president,1,1,1,1
+access_supplier_price_change_wizard,supplier.price.change.wizard,model_supplier_price_change_wizard,,1,1,1,1
