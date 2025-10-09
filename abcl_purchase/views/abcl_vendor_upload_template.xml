@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <template id="document_upload_form_template" name="Document Upload Form">
+        <t t-call="website.layout">
+            <div class="container mt-3">
+                <div class="row justify-content-center">
+                    <div class="container text-center mb-3">
+                        <img t-attf-src="/web/binary/company_logo" alt="Logo" class="img-fluid" />
+                    </div>
+                    <div class="text-center">
+                        <h2>Documents required for the vendor registration</h2>
+                        <p>To complete your vendor registration, please upload the required documents listed below.</p>
+                    </div>
+                    <form action="/vendor/document_submit" method="post" enctype="multipart/form-data" class="form-style">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="form-group">
+                            <input type="hidden" name="token" t-att-value="token"/>
+                            <div class="mb-3">
+                                <label class="form-label"><b>GST certificate</b></label>
+                                <input type="file" name="gst_document" required="true" class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"><b>PAN card</b></label>
+                                <input type="file" name="pan_card" required="true" class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"><b>MSME Certificate</b></label>
+                                <input type="file" name="msme_certificate" required="true" class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"><b>Cancel Cheque</b></label>
+                                <input type="file" name="cancel_cheque" required="true" class="form-control"/>
+                            </div>
+                            <div class="container text-center mb-3">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!--Thank you page template-->
+    <template id="thank_you" name="Thank You">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="container text-center mb-3">
+                        <img t-attf-src="/web/binary/company_logo" alt="Logo" class="img-fluid" />
+                    </div>
+                    <div class="text-center">
+                        <h2>Thank You!</h2>
+                        <p>Your data has been submitted successfully.</p>
+                        <p>We will review your documents and get back to you shortly.</p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="link_expired" name="link expired">
+        <t t-call="website.layout">
+            <div class="container mt-5 text-center">
+                <div class="container text-center mb-3">
+                    <img t-attf-src="/web/binary/company_logo" alt="Logo" class="img-fluid" />
+                </div>
+                <h2>Link Expired</h2>
+                <h6>The documents have already been submitted or link got expired.</h6>
+                <p>*Please contact the concerned person for further assistance.*</p>
+            </div>
+        </t>
+    </template>
+</odoo>

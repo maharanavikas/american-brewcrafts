@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="abcl_purchase_product_category_form_view" model="ir.ui.view">
+        <field name="name">abcl.purchase.product.category.form</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='first']" position="after">
+                <group>
+                    <group>
+                        <field name="department_manager_id" groups="purchase.group_purchase_manager"/>
+                        <field name="enable_internal_po" groups="purchase.group_purchase_manager"/>
+                        <field name="is_approval_enabled" groups="purchase.group_purchase_manager"/>
+                        <field name="approval_condition_type" invisible="not is_approval_enabled" groups="purchase.group_purchase_manager"/>
+                        <field name="approval_price_limit" widget="monetary"
+                               invisible="approval_condition_type != 'price_based' or not is_approval_enabled" groups="purchase.group_purchase_manager"/>
+                        <field name="quantity"
+                               invisible="approval_condition_type != 'quantity_based' or not is_approval_enabled" groups="purchase.group_purchase_manager"/>
+                    </group>
+                    <group>
+                        <field name="is_deviation" groups="purchase.group_purchase_manager"/>
+                        <field name="deviation_percentage" widget="percentage" invisible="not is_deviation" groups="purchase.group_purchase_manager"/>
+                        <field name="is_fg"/>
+                        <field name="is_wort"/>
+                        <field name="is_bbs"/>
+                        <field name="is_yb"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="abcl_manufacturing_GenerateSerialDialogInherit"
+       t-inherit="stock.generate_serial_dialog"
+       t-inherit-mode="extension">
+        <xpath expr="//div[@class='o_form_view o_form_nosheet']" position="inside">
+            <div class="o_row">
+                <div class="o_cell col-6 col-sm-auto flex-grow-0 flex-sm-grow-0 text-900 pe-3">
+                    <label><strong>Manufacturing Date</strong></label>
+                </div>
+                <div class="o_cell">
+                    <input type="date" t-ref="mfgDate" class="form-control"/>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>
+

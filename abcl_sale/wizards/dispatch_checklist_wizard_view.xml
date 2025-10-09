@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="dispatch_checklist_wizard_form_view" model="ir.ui.view">
+        <field name="name">dispatch.checklist.wizard.form.view</field>
+        <field name="model">dispatch.checklist.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div role="alert" class="alert alert-info mx-0 mt0 mb-4 p-1 fw-bold">
+                    Send a digital signature request to the below roles.
+                </div>
+                <group>
+                    <!-- <field name="stock_picking_id" invisible="1"/> -->
+                    <group string="Users">
+                        <field name="dispatch_user_id" options="{'no_open': True}"/>
+                        <field name="accountant_user_id" options="{'no_open': True}"/>
+                    </group>
+                    <group string="Order">
+                        <field name="order_responsible"/>
+                        <field name="order_accountant"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="send_sign_request" string="Send"
+                            type="object" class="btn-primary" data-hotkey="d"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

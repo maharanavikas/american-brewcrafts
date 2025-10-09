@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="abcl_sale_order_view_form" model="ir.ui.view">
+        <field name="name">abcl.sale.order.view.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//form/header" position="inside">
+                <button name="action_excise_report" type="object" string="Print Excise Report"/>
+            </xpath> -->
+
+            <field name="tag_ids" position="after">
+                <field name="dispatch_checklist_id"/>
+                <field name="allowed_template_ids" widget="many2many_tags" invisible="1" />
+            </field>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mt-1 mb-1" role="alert" invisible="not dispatch_checklist_id_warning">
+                    <div>
+                        <field name="dispatch_checklist_id_warning" widget="actionable_errors"/>
+                    </div>
+                </div>
+            </xpath>
+            <field name="partner_id" position="after">
+                <field name="user_is_approver" invisible="1"/>
+                <field name="all_approvals_done" invisible="1"/>
+                <field name="can_resend_approval" invisible="1"/>
+                <field name="latest_approval_state" invisible="1"/>
+            </field>
+            <xpath expr="//button[@name='action_confirm'][2]" position="before">
+                <button name="action_send_for_approval" string="Send For Approvals" type="object" class="oe_highlight"
+                        invisible="approval_line_ids"/>
+                <button name="action_send_for_approval" string="Resend For Approvals" type="object" class="oe_highlight"
+                        invisible="not can_resend_approval or create_uid != uid"/>
+                <button name="action_open_approval_wizard" type="object" string="Approve" class="btn-primary"
+                        invisible="all_approvals_done or not user_is_approver"/>
+                <button name="action_open_reject_form" type="object" string="Reject" class="btn btn-danger"
+                        invisible="all_approvals_done or not user_is_approver"/>
+                <!-- <button name="open_import_permit_status_wizard" type="object" string="Update Import Permit Status"
+                        class="btn-primary"
+                        icon="fa-pencil" invisible=" import_permit_status == 'received'"/> -->
+                <!-- <button name="open_export_permit_status_wizard" type="object" string="Update Export Permit Status"
+                        class="btn-primary"
+                        icon="fa-pencil" invisible="export_permit_status == 'received'"/> -->
+            </xpath>
+            <!-- <xpath expr="//div[@class='oe_button_box']" position="inside">
+                <button name="open_import_permit_status_wizard"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-file">
+                    <field name="import_status_display" widget="statinfo"/>
+                </button>
+                <button name="open_export_permit_status_wizard"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-file">
+                    <field name="export_status_display" widget="statinfo"/>
+                </button>
+            </xpath> -->
+            <field name="payment_term_id" position="after">
+                <field name="evc_doc_name" invisible="1"/>
+                <field name="evc_doc" filename="evc_doc_name" widget="binary"/>
+                <!-- <field name="import_permit_doc_name" invisible="1"/>
+                <field name="import_permit_doc" filename="import_permit_doc_name" widget="binary"/>
+                <field name="export_permit_doc_name" invisible="1"/>
+                <field name="export_permit_doc" filename="export_permit_doc_name" widget="binary"/> -->
+            </field>
+            <!-- <xpath expr="//page[@name='other_information']" position="before">
+                <page string="Transport Info">
+                    <group>
+                        <group>
+                            <-<field name="import_permit_no" readonly="1"/>
+                            <field name="import_permit_date" readonly="1"/>
+                            <field name="import_permit_status" readonly="1"/>
+                            <field name="export_permit_no" readonly="1"/>
+                            <field name="export_permit_date" readonly="1"/>
+                            <field name="export_permit_status" readonly="1"/>->
+                            <field name="excise_leaf_no"/>
+                            <field name="scheduled_date"/>
+                        </group>
+                        <group>
+                            <field name="transporter"/>
+                            <field name="vehicle_no"/>
+                            <field name="transport_permit_no"/>
+                            <field name="lr_gc_lwb_no"/>
+                            <field name="lr_gc_lwb_date"/>
+                            <field name="lr_no"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath> -->
+<!--            <xpath expr="//button[@name='action_confirm'][1]" position="attributes">-->
+<!--                <attribute name="invisible">state != 'sent' or approval_status != 'approved'</attribute>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//button[@name='action_confirm'][2]" position="attributes">-->
+<!--                <attribute name="invisible">state != 'draft' or approval_status != 'approved'</attribute>-->
+<!--            </xpath>-->
+            <xpath expr="//button[@name='action_confirm'][1]" position="attributes">
+                <attribute name="invisible">state != 'sent' or latest_approval_state != 'approved'</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm'][2]" position="attributes">
+                <attribute name="invisible">state != 'draft' or latest_approval_state != 'approved'</attribute>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']" position="after">
+                <page string="Approvals">
+                    <field name="approval_line_ids">
+                        <list editable="bottom" create="false" delete="false">
+                            <field name="sequence" readonly="1"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="state" readonly="1"/>
+                            <field name="comment"/>
+                        </list>
+                    </field>
+                </page>
+                <page name='import_permit' string="Import Permit">
+                    <field name='import_permit_lines'>
+                        <list editable="bottom" create="1">
+                            <field name="import_permit_doc_name" optional="hide"/>
+                            <field name="import_permit_doc" filename="import_permit_doc_name" widget="binary"/>
+                            <field name="order_id" readonly="1" optional="hide"/>
+                            <field name="import_permit_no" readonly="1"/>
+                            <field name="import_permit_date" readonly="1"/>
+                            <field name="import_permit_status" readonly="1"/>
+                            <button name="open_import_permit_status_wizard" type="object" string="Update Status"
+                                    class="btn-primary"
+                                    icon="fa-pencil" invisible=" import_permit_status == 'received'"/>
+                        </list>
+                    </field>
+                </page>
+                <page name='export_permit' string="Export Permit">
+                    <field name='export_permit_lines'>
+                        <list editable="bottom" create="1">
+                            <field name="export_permit_doc_name" optional="hide"/>
+                            <field name="export_permit_doc" filename="export_permit_doc_name" widget="binary"/>
+                            <field name="order_id" readonly="1" optional="hide"/>
+                            <field name="export_permit_no" readonly="1"/>
+                            <field name="export_permit_date" readonly="1"/>
+                            <field name="export_permit_status" readonly="1"/>
+                            <button name="open_export_permit_status_wizard" type="object" string="Update Status"
+                                    class="btn-primary"
+                                    icon="fa-pencil" invisible="export_permit_status == 'received'"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_template_id']" position="attributes">
+                <attribute name="domain">['&amp;',('sale_ok', '=', True), ('id', 'in', parent.allowed_template_ids)]
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_invoice_id']" position="replace"/>
+            <field name="partner_shipping_id" position="after">
+                    <field name="partner_invoice_id"
+                           groups="account.group_delivery_invoice_address"
+                           options="{'no_quick_create': True}"
+                           context="{'default_type':'invoice', 'show_address': False, 'show_vat': False, 'default_parent_id': partner_id}"
+                           readonly="state == 'cancel' or locked"/>
+            </field>
+            <xpath expr="//field[@name='partner_invoice_id']" position="attributes">
+                <attribute name="domain">['|',('id', 'parent_of', partner_id), ('id', 'child_of', partner_id)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_shipping_id']" position="attributes">
+                <attribute name="domain">['|',('id', 'parent_of', partner_id), ('id', 'child_of', partner_id)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="domain">[('parent_id', '=', False),('contact_type','=','customer'),('user_id','=', False)]</attribute>
+            </xpath>
+            <xpath expr="//page[@name='customer_signature']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <field name="l10n_in_gst_treatment" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+<!--            <field name="pricelist_id" position="attributes">-->
+<!--                <attribute name="invisible">1</attribute>-->
+<!--            </field>-->
+            <field name="pricelist_id" position="attributes">
+                <attribute name="domain">[('status', '=' , 'approved')]</attribute>
+            </field>
+            <field name="order_line" position="attributes">
+                <attribute name="readonly">sent_for_approval</attribute>
+            </field>
+            <xpath expr="//button[@name='action_view_invoice']" position="before">
+                    <button type="object"
+                            name="action_view_stock_moves"
+                            class="oe_stat_button"
+                            icon="fa-list-alt"
+                            invisible="move_line_count == 0" groups="stock.group_stock_user">
+                        <field name="move_line_count" widget="statinfo" string="Stock Moves"/>
+                    </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_form_quote_inherit" model="ir.ui.view">
+         <field name="name">abcl.sale.order.quote.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_management.sale_order_form_quote"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='optional_products']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_bulk_so_approval" model="ir.actions.server">
+        <field name="name">Bulk Sale Order Approve</field>
+        <field name="model_id" ref="abcl_sale.model_sale_order"/>
+        <field name="state">code</field>
+        <field name="binding_model_id" ref="abcl_sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="groups_id"  eval="[(4, ref('abcl_base.group_vice_president'))]"/>
+        <field name="code">
+            action = records.action_bulk_approve()
+        </field>
+    </record>
+
+    <record id="action_sale_order_line" model="ir.actions.act_window">
+        <field name="name">Sale Order Lines</field>
+        <field name="res_model">sale.order.line</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_sale_order_line"
+              name="Sale Order Lines"
+              parent="sale.sale_order_menu"
+              action="action_sale_order_line"
+              groups="sales_team.group_sale_salesman"
+              sequence="35"/>
+
+</odoo>

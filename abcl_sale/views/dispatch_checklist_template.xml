@@ -1,0 +1,1812 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="dispatch_checklist_template" name="Dispatch Checklist Info">
+            <t t-call="portal.portal_layout">
+                <div class="container my-2">
+                    <div class="bg-white">
+                        <div class="pl-5 pr-5">
+                            <style>
+                                .error {
+                                    color: #CE1446; /* Red color */
+                                    font-size: 14px;
+                                    margin-top: 5px;
+                                    font-family: Arial, sans-serif;
+                                    font-weight: bold;
+                                    padding-left: 0px;
+                                }
+                            </style>
+                            <!-- <t t-set="current_user" t-value="request.env.user"/>
+                            <t t-set="is_public" t-value="current_user._is_public()"/>
+                            <t t-set="is_dispatch_user" t-value="(not is_public) and picking.user_id and (current_user.id == picking.user_id.id)"/>
+                            <t t-set="is_accountant_user" t-value="(not is_public) and picking.finance_user_id and (current_user.id == picking.finance_user_id.id)"/> -->
+
+                            <form name="frm_dispatch_checklist" id="frm_dispatch_checklist" class="form-horizontal" 
+                                method="post" t-attf-action="/dispatch_checklist/{{ access_token }}" 
+                                t-attf-accesstoken="{{access_token}}"
+                                autocomplete="off" enctype="multipart/form-data">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                <div class="text-dark fw-bold">
+                                    <div class="widget">
+                                        <h3 class="form-header m-0 text-center">Dispatch Checklist - <t t-out="picking.name"/></h3>
+                                        <p class="animate-element" style="margin-top:0;padding:0"/>
+                                    </div>
+                                </div>
+
+                                <div id="questionnaire_div">
+                                    <div class="card my-2 shadow overflow-visible">
+                                        <div class="card-body bg-white pt-2">
+                                            <div class="row g-4">
+                                                <div class="col-md-6">
+                                                    <label for="dispatch_date" class="form-label text-accent fw-bold">Date</label>
+                                                    <input id="dispatch_date" name="dispatch_date" type="text" class="form-controls datetimepicker-input input-wrapper"/>
+                                                </div>
+    
+                                                <div class="col-md-6">
+                                                    <label for="dispatch_brand" class="form-label text-accent fw-bold">Brand</label>
+                                                    <div>
+                                                        <span t-foreach="products" t-as="value" class="badge p-2  bg-primary m-1" t-out="value.name"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="depot" class="form-label text-accent fw-bold">Depot</label>
+                                                    <input id="depot" name="depot" type="text" class="form-controls input-wrapper"
+                                                    t-att-value="picking.partner_id.name or ''" readonly="readonly"/>
+                                                </div>
+    
+                                                <div class="col-md-6">
+                                                    <label for="vehicle_type" class="form-label text-accent fw-bold">Vehicle Type</label>
+                                                    <select id="vehicle_type" name="vehicle_type" class="form-controls input-wrapper">
+                                                        <option value="">-- Select Type --</option>
+                                                        <option value="internal">Internal</option>
+                                                        <option value="external">External</option>
+                                                    </select>
+                                                    <div id="select_vehicle_div">
+                                                        <label for="select_vehicle_name" class="mb-2"><i class="text-danger"> * </i>Select Vehicle :</label>
+                                                        <select class="form-controls" id="select_vehicle_name" name="select_vehicle_name">
+                                                            <option value="">Select Vehicle</option>
+                                                            <option t-foreach="vehicles" t-as="vehicle" t-att-value="vehicle.id" t-att-data-number="vehicle.license_plate" t-esc="vehicle.name"/>
+                                                        </select>
+                                                    </div>
+                                                    <div id="vehicle_number_div">
+                                                        <label for="select_vehicle_name" class="mb-2">
+                                                            Selected Vehicle Number :
+                                                        </label>
+                                                        <input type="text" class="form-controls input-wrapper" id="vehicle_no" name="vehicle_no" disabled="disabled"/>
+                                                    </div>
+                                                    <div id="enter_vehicle_details">
+                                                        <label for="enter_vehicle_details" class="form-label"><i class="text-danger"> * </i> Enter Vehicle Details :</label>
+                                                        <input type="text" class="form-controls input-wrapper" name="enter_vehicle_details" id="enter_vehicle_details" placeholder="Vehicle Details"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr style="color: #72b0f4;"/>
+                                        </div>
+                                        <div class="card mb-2 border-0">
+                                            <div class="card-header bg-white">
+                                                <div class="text-center mb-2" style="color: #ce1446;">
+                                                    <h5>Documents checklist</h5>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <p class="card-title fs-5">
+                                                        Gate Pass
+                                                    </p>
+                                                </div>
+                                                <div class="card mt-3 border-0 shadow 
+                                                            rounded-3 inner-card">
+                                                    <div class="card-header bg-white">
+                                                        <div class="row">
+                                                            <div class="col-sm-4 fs-6 fw-bold">
+                                                               To be checked
+                                                            </div>
+                                                            <div class="col-sm-3 fs-6 fw-bold">
+                                                                Specifications
+                                                            </div>
+                                                            <div class="col-sm-2 fs-6 fw-bold">
+                                                                Status
+                                                                <button type="button" class="btn btn-sm btn-outline-primary ms-2 check-all-btn">
+                                                                    Check All
+                                                                </button>
+                                                            </div>                                                            
+                                                            <div class="col-sm-3 fs-6 fw-bold">
+                                                                Remarks
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body rounded">
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                TP No. &amp; Date
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="gp_p_no_date_specifications" name="gp_p_no_date_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.gp_p_no_date or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="gp_p_no_date_check" name="gp_p_no_date_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="gp_p_no_date_remarks" name="gp_p_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Party name
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="gp_party_name_specifications" name="gp_party_name_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.gp_party_name or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="gp_party_name_check" name="gp_party_name_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="gp_party_name_remarks" name="gp_party_name_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Pack size-330/650/500ml
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <!-- <input id="gp_pack_size_specifications" name="gp_pack_size_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.gp_pack_size or ''"/> -->
+                                                                <select id="gp_pack_size_specifications" name="gp_pack_size_specifications" class="form-controls input-wrapper">
+                                                                    <option value="">Select Size</option>
+                                                                    <option value="330">330 ml</option>
+                                                                    <option value="500">500 ml</option>
+                                                                    <option value="650">650 ml</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="gp_pack_size_check" name="gp_pack_size_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="gp_pack_size_remarks" name="gp_pack_size_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Quantity
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="gp_quantity_specifications" name="gp_quantity_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.gp_quantity or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="gp_quantity_check" name="gp_quantity_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="gp_quantity_remarks" name="gp_quantity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Brand
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <span t-foreach="products" t-as="value" class="rounded bg-primary text-white px-2 py-1 m-1 d-inline-block mw-100 text-break small" t-out="value.name"/>
+                                                                <t t-set="brand_names" t-value="', '.join(products.mapped('name'))"/>
+                                                                <input type="hidden" name="gp_brand_specifications" t-att-value="brand_names"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="gp_brand_check" name="gp_brand_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="gp_brand_remarks" name="gp_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Vehicle no &amp; date
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="gp_vehicle_no_date_specifications" name="gp_vehicle_no_date_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.gp_vehicle_no_date or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="gp_vehicle_no_date_check" name="gp_vehicle_no_date_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="gp_vehicle_no_date_remarks" name="gp_vehicle_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <t t-if="picking.partner_id.state_id.code in ['AN', 'PY', 'TN', 'TS', 'KL']">
+                                            <div class="card mb-2 border-0">
+                                                <div class="card-body">
+                                                    <div class="d-flex">
+                                                        <p class="card-title fs-5">
+                                                            LR Copy
+                                                        </p>
+                                                    </div>
+                                                    <div class="card mt-3 border-0 shadow 
+                                                                rounded-3 inner-card">
+                                                        <div class="card-header bg-white">
+                                                            <div class="row">
+                                                                <div class="col-sm-4 fs-6 fw-bold">
+                                                                   To be checked
+                                                                </div>
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Specifications
+                                                                </div>
+                                                                <div class="col-sm-2 fs-6 fw-bold">
+                                                                    Status
+                                                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2 check-all-btn">
+                                                                    Check All
+                                                                </button>
+                                                                </div>                                                            
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Remarks
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-body rounded">
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    LR No
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="lrc_lr_no_specifications" name="lrc_lr_no_specifications" type="text" class="form-controls input-wrapper" t-att-value="picking.lrc_lr_no or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="lrc_lr_no_check" name="lrc_lr_no_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="lrc_lr_no_remarks" name="lrc_lr_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    LR Date
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="lrc_lr_date_specifications" name="lrc_lr_date_specifications" type="text" class="form-controls input-wrapper" t-att-value="picking.lrc_lr_date or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="lrc_lr_date_check" name="lrc_lr_date_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="lrc_lr_date_remarks" name="lrc_lr_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Vehicle no. To address
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="lrc_lr_vehicle_no_address_specifications" name="lrc_lr_vehicle_no_address_specifications" type="text" class="form-controls input-wrapper" t-att-value="picking.lrc_lr_vehicle_no_address or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="lrc_lr_vehicle_no_address_check" name="lrc_lr_vehicle_no_address_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="lrc_lr_vehicle_no_address_remarks" name="lrc_lr_vehicle_no_address_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Quantity
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="lrc_lr_quantity_specifications" name="lrc_lr_quantity_specifications" type="text" class="form-controls input-wrapper" t-att-value="picking.lrc_lr_quantity or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="lrc_lr_quantity_check" name="lrc_lr_quantity_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="lrc_lr_quantity_remarks" name="lrc_lr_quantity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Invoice no &amp; Invoice date
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="lrc_lr_invoice_no_date_specifications" name="lrc_lr_invoice_no_date_specifications" type="text" class="form-controls input-wrapper" t-att-value="picking.lrc_lr_invoice_no_date or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="lrc_lr_invoice_no_date_check" name="lrc_lr_invoice_no_date_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="lrc_lr_invoice_no_date_remarks" name="lrc_lr_invoice_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <div class="card mb-2 border-0">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <p class="card-title fs-5">
+                                                        Sample analysis report
+                                                    </p>
+                                                </div>
+                                                <div class="card mt-3 border-0 shadow 
+                                                            rounded-3 inner-card">
+                                                    <div class="card-header bg-white">
+                                                        <div class="row">
+                                                            <div class="col-sm-3">
+                                                               Brand
+                                                            </div>
+                                                            <div class="col-sm-2 fs-6 fw-bold">
+                                                                Batch No.
+                                                            </div>
+                                                            <div class="col-sm-2 fs-6 fw-bold">
+                                                                Quantity
+                                                            </div>
+                                                            <div class="col-sm-2 fs-6 fw-bold">
+                                                                Status
+                                                                <button type="button" class="btn btn-sm btn-outline-primary ms-2 check-all-btn">
+                                                                    Check All
+                                                                </button>
+                                                            </div>/
+                                                            <div class="col-sm-3 fs-6 fw-bold">
+                                                                Remarks
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body rounded">
+                                                        <div class="row mb-2" t-foreach="picking.move_ids" t-as="ml">
+                                                            <div class="col-sm-3">
+                                                                <span t-out="ml.product_id.display_name"/>
+                                                                <input type="hidden" name="line_ids[]" t-att-value="ml.id"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <span t-out="ml.lot_ids or '-'"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <span t-out="ml.quantity or '-'"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" t-attf-id="ml_check_#{ml.id}"
+                                                                t-attf-name="ml_check_#{ml.id}"
+                                                                t-att-checked="ml.product_status and 'checked' or None"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input class="form-controls input-wrapper" type="text" t-attf-id="ml_remark_#{ml.id}"
+                                                                t-attf-name="ml_remark_#{ml.id}"
+                                                                t-att-value="ml.product_remark or ''"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card mb-2 border-0">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <p class="card-title fs-5">
+                                                        Transport Permit
+                                                    </p>
+                                                </div>
+                                                <div class="card mt-3 border-0 shadow 
+                                                            rounded-3 inner-card">
+                                                    <div class="card-header bg-white">
+                                                        <div class="row">
+                                                            <div class="col-sm-4 fs-6 fw-bold">
+                                                               To be checked
+                                                            </div>
+                                                            <div class="col-sm-3 fs-6 fw-bold">
+                                                                Specifications
+                                                            </div>
+                                                            <div class="col-sm-2 fs-6 fw-bold">
+                                                                Status
+                                                                <button type="button" class="btn btn-sm btn-outline-primary ms-2 check-all-btn">
+                                                                    Check All
+                                                                </button>
+                                                            </div>                                                            
+                                                            <div class="col-sm-3 fs-6 fw-bold">
+                                                                Remarks
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body rounded">
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Date
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_date_specifications" name="tp_date_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_date or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_date_check" name="tp_date_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_date_remarks" name="tp_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Brand
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <!-- <input id="brand_specifications" name="brand_specifications" type="text" class="form-controls input-wrapper"/> -->
+                                                                <span t-foreach="products" t-as="value" class="rounded bg-primary text-white px-2 py-1 m-1 d-inline-block mw-100 text-break small" t-out="value.name"/>
+                                                                <t t-set="brand_names" t-value="', '.join(products.mapped('name'))"/>
+                                                                <input type="hidden" name="tp_brand_specifications" t-att-value="brand_names"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_brand_check" name="tp_brand_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_brand_remarks" name="tp_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">                                                                Batch No
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_batch_no_specifications" name="tp_batch_no_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_batch_no or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_batch_no_check" name="tp_batch_no_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_batch_no_remarks" name="tp_batch_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">                                                                PO No.PO date
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_po_no_date_specifications" name="tp_po_no_date_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_po_no_date or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_po_no_date_check" name="tp_po_no_date_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_po_no_date_remarks" name="tp_po_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">                                                                Quantity
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_quantity_specifications" name="tp_quantity_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_quantity or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_quantity_check" name="tp_quantity_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_quantity_remarks" name="tp_quantity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">                                                                Size-330/650/500ml
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <!-- <input id="tp_pack_size_specifications" name="tp_pack_size_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_pack_size or ''"/> -->
+                                                                <select id="tp_pack_size_specifications" name="tp_pack_size_specifications" class="form-controls input-wrapper">
+                                                                    <option value="">Select Size</option>
+                                                                    <option value="330">330 ml</option>
+                                                                    <option value="500">500 ml</option>
+                                                                    <option value="650">650 ml</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_pack_size_check" name="tp_pack_size_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_pack_size_remarks" name="tp_pack_size_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">                                                                Bulk litre
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_bulk_litre_specifications" name="tp_bulk_litre_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_bulk_litre or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_bulk_litre_check" name="tp_bulk_litre_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_bulk_litre_remarks" name="tp_bulk_litre_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">                                                                Alcohol %
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_alcohol_percent_specifications" name="tp_alcohol_percent_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_alcohol_percent or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_alcohol_percent_check" name="tp_alcohol_percent_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_alcohol_percent_remarks" name="tp_alcohol_percent_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">                                                                EXPORT FEE challan No. &amp; Date
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_excise_duty_challan_no_date_specifications" name="tp_excise_duty_challan_no_date_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_excise_duty_challan_no_date or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_excise_duty_challan_no_date_check" name="tp_excise_duty_challan_no_date_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_excise_duty_challan_no_date_remarks" name="tp_excise_duty_challan_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">                                                                Export fee
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_excise_duty_specifications" name="tp_excise_duty_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_excise_duty or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_excise_duty_check" name="tp_excise_duty_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_excise_duty_remarks" name="tp_excise_duty_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">                                                                Depot
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_depot_specifications" name="tp_depot_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.partner_id.name or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_depot_check" name="tp_depot_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_depot_name_remarks" name="tp_depot_name_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">                                                                Vehicle no. Route
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_vehicle_route_specifications" name="tp_vehicle_route_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_vehicle_route or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_vehicle_route_check" name="tp_vehicle_route_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_vehicle_route_remarks" name="tp_vehicle_route_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">                                                                Permit validity date &amp; BO signature.
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_permit_validity_date_specifications" name="tp_permit_validity_date_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_permit_validity_date or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="tp_permit_validity_date_check" name="tp_permit_validity_date_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="tp_permit_validity_date_remarks" name="tp_permit_validity_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <t t-if="picking.partner_id.state_id.code in ['AN', 'JH', 'PY','TN','KL']">
+                                            <div class="card mb-2 border-0">
+                                                <div class="card-body">
+                                                    <div class="d-flex">
+                                                        <p class="card-title fs-5">
+                                                            Export Pass
+                                                        </p>
+                                                    </div>
+                                                    <div class="card mt-3 border-0 shadow 
+                                                                rounded-3 inner-card">
+                                                        <div class="card-header bg-white">
+                                                            <div class="row">
+                                                                <div class="col-sm-4 fs-6 fw-bold">
+                                                                   To be checked
+                                                                </div>
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Specifications
+                                                                </div>
+                                                                <div class="col-sm-2 fs-6 fw-bold">
+                                                                    Status
+                                                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2 check-all-btn">
+                                                                    Check All
+                                                                </button>
+                                                                </div>                                                            
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Remarks
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-body rounded">
+                                                            <t t-if="picking.partner_id.state_id.code in ['JH', 'PY','TN','KL']">
+                                                                <div class="row mb-2">
+                                                                    <div class="col-sm-4">                                   Export permit No.
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="e_pass_permit_no_specifications" name="e_pass_permit_no_specifications" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.e_pass_permit_no or ''"/>
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_permit_no_check" name="e_pass_permit_no_check"/>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="e_pass_permit_no_remarks" name="e_pass_permit_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-2">
+                                                                    <div class="col-sm-4">
+                                                                        Dispatch date &amp; time
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="e_pass_dispatch_date_time_specifications" name="e_pass_dispatch_date_time_specifications" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.e_pass_dispatch_date_time or ''"/>
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_dispatch_date_time_check" name="e_pass_dispatch_date_time_check"/>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="e_pass_dispatch_date_time_remarks" name="e_pass_dispatch_date_time_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-2">
+                                                                    <div class="col-sm-4">
+                                                                        Import permit Validity days
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="e_pass_import_validity_specifications" name="e_pass_import_validity_specifications" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.e_pass_import_validity or ''"/>
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_import_validity_check" name="e_pass_import_validity_check"/>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="e_pass_import_validity_remarks" name="e_pass_import_validity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-2">
+                                                                    <div class="col-sm-4">
+                                                                        Quantity
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="e_pass_quantity_specifications" name="e_pass_quantity_specifications" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.e_pass_quantity or ''"/>
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_quantity_check" name="e_pass_quantity_check"/>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="e_pass_quantity_remarks" name="e_pass_quantity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    </div>
+                                                                </div>
+                                                            </t>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Brand
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <!-- <input id="brand_specifications" name="brand_specifications" type="text" class="form-controls input-wrapper"/> -->
+                                                                    <span t-foreach="products" t-as="value" class="rounded bg-primary text-white px-2 py-1 m-1 d-inline-block mw-100 text-break small" t-out="value.name"/>
+                                                                    <t t-set="brand_names" t-value="', '.join(products.mapped('name'))"/>
+                                                                    <input type="hidden" name="e_pass_brand_specifications" t-att-value="brand_names"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_brand_check" name="e_pass_brand_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="e_pass_brand_remarks" name="e_pass_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Size 330/650/500 ml
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <!-- <input id="e_pass_size_specifications" name="e_pass_size_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.e_pass_size or ''"/> -->
+                                                                    <select id="e_pass_size_specifications" name="e_pass_size_specifications" class="form-controls input-wrapper">
+                                                                    <option value="">Select Size</option>
+                                                                    <option value="330">330 ml</option>
+                                                                    <option value="500">500 ml</option>
+                                                                    <option value="650">650 ml</option>
+                                                                </select>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_size_check" name="e_pass_size_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="e_pass_size_remarks" name="e_pass_size_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Alcohol strength
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="e_pass_alcohol_strength_specifications" name="e_pass_alcohol_strength_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.e_pass_alcohol_strength or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_alcohol_strength_check" name="e_pass_alcohol_strength_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="e_pass_alcohol_strength_remarks" name="e_pass_alcohol_strength_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Route &amp; Validity of export permit
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="e_pass_route_validity_specifications" name="e_pass_route_validity_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.e_pass_route_validity or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_pass_route_validity_check" name="e_pass_route_validity_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="e_pass_route_validity_remarks" name="e_pass_route_validity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <t t-if="picking.partner_id.state_id.code in ['JH','AN','PY','TN','KL']">
+                                            <div class="card mb-2 border-0">
+                                                <div class="card-body">
+                                                    <div class="d-flex">
+                                                        <p class="card-title fs-5">
+                                                            EVC
+                                                        </p>
+                                                    </div>
+                                                    <div class="card mt-3 border-0 shadow 
+                                                                rounded-3 inner-card">
+                                                        <div class="card-header bg-white">
+                                                            <div class="row">
+                                                                <div class="col-sm-4 fs-6 fw-bold">
+                                                                   To be checked
+                                                                </div>
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Specifications
+                                                                </div>
+                                                                <div class="col-sm-2 fs-6 fw-bold">
+                                                                    Status
+                                                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2 check-all-btn">
+                                                                    Check All
+                                                                </button>
+                                                                </div>                                                            
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Remarks
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-body rounded">
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">                                                                Quantity
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="evc_quantity_specifications" name="evc_quantity_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.evc_quantity or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="evc_quantity_check" name="evc_quantity_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="evc_quantity_remarks" name="evc_quantity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">                                                                Brand
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <!-- <input id="brand_specifications" name="brand_specifications" type="text" class="form-controls input-wrapper"/> -->
+                                                                    <span t-foreach="products" t-as="value" class="rounded bg-primary text-white px-2 py-1 m-1 d-inline-block mw-100 text-break small" t-out="value.name"/>
+                                                                    <t t-set="brand_names" t-value="', '.join(products.mapped('name'))"/>
+                                                                    <input type="hidden" name="evc_brand_specifications" t-att-value="brand_names"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="evc_brand_check" name="evc_brand_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="evc_brand_remarks" name="evc_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">                                                                Export Permit No. &amp; date
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="evc_export_permit_no_date_specifications" name="evc_export_permit_no_date_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.evc_export_permit_no_date or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="evc_export_permit_no_date_check" name="evc_export_permit_no_date_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="evc_export_permit_no_date_remarks" name="evc_export_permit_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">                                                                Import permit No. &amp; date
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="evc_import_permit_no_date_specifications" name="evc_import_permit_no_date_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.evc_import_permit_no_date or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="evc_import_permit_no_date_check" name="evc_import_permit_no_date_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="evc_import_permit_no_date_remarks" name="evc_import_permit_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">                                                                TP No. &amp; date
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="evc_tp_no_date_specifications" name="evc_tp_no_date_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.evc_tp_no_date or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="evc_tp_no_date_check" name="evc_tp_no_date_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="evc_tp_no_date_remarks" name="evc_tp_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">                                                                Vehicle No.
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="evc_vehicle_no_specifications" name="evc_vehicle_no_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.evc_vehicle_no or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="evc_vehicle_no_check" name="evc_vehicle_no_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="evc_vehicle_no_remarks" name="evc_vehicle_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <t t-if="picking.partner_id.state_id.code in ['JH','AN','PY','TN','KL']">
+                                            <div class="card mb-2 border-0">
+                                                <div class="card-body">
+                                                    <div class="d-flex">
+                                                        <p class="card-title fs-5">
+                                                            Export Permit
+                                                        </p>
+                                                    </div>
+                                                    <div class="card mt-3 border-0 shadow 
+                                                                rounded-3 inner-card">
+                                                        <div class="card-header bg-white">
+                                                            <div class="row">
+                                                                <div class="col-sm-4 fs-6 fw-bold">
+                                                                   To be checked
+                                                                </div>
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Specifications
+                                                                </div>
+                                                                <div class="col-sm-2 fs-6 fw-bold">
+                                                                    Status
+                                                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2 check-all-btn">
+                                                                    Check All
+                                                                </button>
+                                                                </div>                                                            
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Remarks
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-body rounded">
+                                                            <t t-if="picking.partner_id.state_id.code in ['AN','PY','TN','KL']">
+                                                                <div class="row mb-2">
+                                                                    <div class="col-sm-4">
+                                                                        OFS No.
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="e_permit_ofs_no_datespecifications" name="e_permit_ofs_no_datespecifications" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.e_permit_ofs_no_date or ''"/>
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_permit_ofs_no_datecheck" name="e_permit_ofs_no_datecheck"/>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="e_permit_ofs_no_dateremarks" name="e_permit_ofs_no_dateremarks" type="text" class="form-controls input-wrapper"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-2">
+                                                                    <div class="col-sm-4">
+                                                                        LR copy No. &amp; date
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="e_permit_lr_copy_no_date_specifications" name="e_permit_lr_copy_no_date_specifications" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.e_permit_lr_copy_no_date or ''"/>
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_permit_lr_copy_no_date_datecheck" name="e_permit_lr_copy_no_date_datecheck"/>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="e_permit_lr_copy_no_date_dateremarks" name="e_permit_lr_copy_no_date_dateremarks" type="text" class="form-controls input-wrapper"/>
+                                                                    </div>
+                                                                </div>
+                                                            </t>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Vehicle No
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="e_permit_vehicle_no_specifications" name="e_permit_vehicle_no_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.e_permit_vehicle_no or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_permit_vehicle_no_check" name="e_permit_vehicle_no_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="e_permit_vehicle_no_remarks" name="e_permit_vehicle_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Deport Name
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="e_permit_deport_name_specifications" name="e_permit_deport_name_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.e_permit_deport_name or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_permit_deport_name_check" name="e_permit_deport_name_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="e_permit_deport_name_remarks" name="e_permit_deport_name_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Brand
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <!-- <input id="brand_specifications" name="brand_specifications" type="text" class="form-controls input-wrapper"/> -->
+                                                                    <span t-foreach="products" t-as="value" class="rounded bg-primary text-white px-2 py-1 m-1 d-inline-block mw-100 text-break small" t-out="value.name"/>
+                                                                    <t t-set="brand_names" t-value="', '.join(products.mapped('name'))"/>
+                                                                    <input type="hidden" name="e_permit_brand_specifications" t-att-value="brand_names"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_permit_brand_check" name="e_permit_brand_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="e_permit_brand_remarks" name="e_permit_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Batch No. Quantity &amp; size 330/650/500ml
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="e_permit_batch_qty_size_specifications" name="e_permit_batch_qty_size_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.e_permit_batch_qty_size or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="e_permit_batch_qty_size_check" name="e_permit_batch_qty_size_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="e_permit_batch_qty_size_remarks" name="e_permit_batch_qty_size_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <t t-if="picking.partner_id.state_id.code in ['JH']">
+                                                                <div class="row mb-2">
+                                                                    <div class="col-sm-4">
+                                                                        Export permit No
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="export_permit_no_specifications" name="export_permit_no_specifications" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.export_permit_id or ''"/>
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="export_permit_no_check" name="export_permit_no_check"/>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="export_permit_no_remarks" name="export_permit_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    </div>
+                                                                </div>
+                                                            </t>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <t t-if="picking.partner_id.state_id.code in ['JH','AN','PY','TN','KL']">
+                                            <div class="card mb-2 border-0">
+                                                <div class="card-body">
+                                                    <div class="d-flex">
+                                                        <p class="card-title fs-5">
+                                                            Import Permit
+                                                        </p>
+                                                    </div>
+                                                    <div class="card mt-3 border-0 shadow 
+                                                                rounded-3 inner-card">
+                                                        <div class="card-header bg-white">
+                                                            <div class="row">
+                                                                <div class="col-sm-4 fs-6 fw-bold">
+                                                                   To be checked
+                                                                </div>
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Specifications
+                                                                </div>
+                                                                <div class="col-sm-2 fs-6 fw-bold">
+                                                                    Status
+                                                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2 check-all-btn">
+                                                                    Check All
+                                                                </button>
+                                                                </div>/
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Remarks
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-body rounded">
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Import Permit No. &amp; date
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="i_permit_no_date_specifications" name="i_permit_no_date_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.i_permit_no_date or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="i_permit_no_date_check" name="i_permit_no_date_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="i_permit_no_date_remarks" name="i_permit_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Permit validity
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="i_permit_validity_specifications" name="i_permit_validity_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.i_permit_validity or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="i_permit_validity_check" name="i_permit_validity_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="i_permit_validity_remarks" name="i_permit_validity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Brand
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <!-- <input id="brand_specifications" name="brand_specifications" type="text" class="form-controls input-wrapper"/> -->
+                                                                    <span t-foreach="products" t-as="value" class="rounded bg-primary text-white px-2 py-1 m-1 d-inline-block mw-100 text-break small" t-out="value.name"/>
+                                                                    <t t-set="brand_names" t-value="', '.join(products.mapped('name'))"/>
+                                                                    <input type="hidden" name="i_permit_brand_specifications" t-att-value="brand_names"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="i_permit_brand_check" name="i_permit_brand_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="i_permit_brand_remarks" name="i_permit_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Size 330/650/500ml
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <!-- <input id="i_permit_size_specifications" name="i_permit_size_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.i_permit_size or ''"/> -->
+                                                                    <select id="i_permit_size_specifications" name="i_permit_size_specifications" class="form-controls input-wrapper">
+                                                                    <option value="">Select Size</option>
+                                                                    <option value="330">330 ml</option>
+                                                                    <option value="500">500 ml</option>
+                                                                    <option value="650">650 ml</option>
+                                                                </select>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="i_permit_size_check" name="i_permit_size_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="i_permit_size_remarks" name="i_permit_size_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Quantity &amp; BO signature &amp; Stamp
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="i_permit_qty_sign_stamp_specifications" name="i_permit_qty_sign_stamp_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.i_permit_qty_sign_stamp or ''"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="i_permit_qty_sign_stamp_check" name="i_permit_qty_sign_stamp_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="i_permit_qty_sign_stamp_remarks" name="i_permit_qty_sign_stamp_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <div class="card mb-2 border-0">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <p class="card-title fs-5">
+                                                        Invoice
+                                                    </p>
+                                                </div>
+                                                <div class="card mt-3 border-0 shadow 
+                                                            rounded-3 inner-card">
+                                                    <div class="card-header bg-white">
+                                                        <div class="row">
+                                                            <div class="col-sm-4 fs-6 fw-bold">
+                                                               To be checked
+                                                            </div>
+                                                            <div class="col-sm-3 fs-6 fw-bold">
+                                                                Specifications
+                                                            </div>
+                                                            <div class="col-sm-2 fs-6 fw-bold">
+                                                                Status
+                                                                <button type="button" class="btn btn-sm btn-outline-primary ms-2 check-all-btn">
+                                                                    Check All
+                                                                </button>
+                                                            </div>                                                            
+                                                            <div class="col-sm-3 fs-6 fw-bold">
+                                                                Remarks
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body rounded">
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Invoice No &amp; date
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_no_date_specifications" name="invoice_no_date_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_no_date or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_no_date_check" name="invoice_no_date_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_no_date_remarks" name="invoice_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Gate pass date
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_gate_pass_date_specifications" name="invoice_gate_pass_date_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_gate_pass_date or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_gate_pass_date_check" name="invoice_gate_pass_date_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_gate_pass_date_remarks" name="invoice_gate_pass_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Transport name
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_transport_specifications" name="invoice_transport_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_transport or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_transport_check" name="invoice_transport_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_transport_remarks" name="invoice_transport_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Vehicle no 
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_vehicle_no_specifications" name="invoice_vehicle_no_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_vehicle_no or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_vehicle_no_check" name="invoice_vehicle_no_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_vehicle_no_remarks" name="invoice_vehicle_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                TP No. LR No.
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_tp_lr_no_specifications" name="invoice_tp_lr_no_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_tp_lr_no or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_tp_lr_no_check" name="invoice_tp_lr_no_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_tp_lr_no_remarks" name="invoice_tp_lr_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                OFS No. &amp; date
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_ofs_no_date_specifications" name="invoice_ofs_no_date_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_ofs_no_date or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_ofs_no_date_check" name="invoice_ofs_no_date_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_ofs_no_date_remarks" name="invoice_ofs_no_date_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Brand
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <!-- <input id="brand_specifications" name="brand_specifications" type="text" class="form-controls input-wrapper"/> -->
+                                                                <span t-foreach="products" t-as="value" class="rounded bg-primary text-white px-2 py-1 m-1 d-inline-block mw-100 text-break small" t-out="value.name"/>
+                                                                <t t-set="brand_names" t-value="', '.join(products.mapped('name'))"/>
+                                                                <input type="hidden" name="invoice_brand_specifications" t-att-value="brand_names"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_brand_check" name="invoice_brand_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_brand_remarks" name="invoice_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Batch No.
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_batch_no_specifications" name="invoice_batch_no_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_batch_no or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_batch_no_check" name="invoice_batch_no_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_batch_no_remarks" name="invoice_batch_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Quantity
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_quantity_specifications" name="invoice_quantity_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_quantity or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_quantity_check" name="invoice_quantity_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_quantity_remarks" name="invoice_quantity_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Basic price
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_basic_price_specifications" name="invoice_basic_price_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_basic_price or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="invoice_basic_price_check" name="invoice_basic_price_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="invoice_basic_price_remarks" name="invoice_basic_price_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Excise duty
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="inovice_excise_duty_specifications" name="inovice_excise_duty_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.inovice_excise_duty or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="inovice_excise_duty_check" name="inovice_excise_duty_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="inovice_excise_duty_remarks" name="inovice_excise_duty_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-4">
+                                                                Bulk litre &amp; invoice total value in Rs.
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="inovice_liter_total_value_specifications" name="inovice_liter_total_value_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.inovice_liter_total_value or ''"/>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                 <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="inovice_liter_total_value_check" name="inovice_liter_total_value_check"/>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input id="inovice_liter_total_value_remarks" name="inovice_liter_total_value_remarks" type="text" class="form-controls input-wrapper"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <t t-if="picking.partner_id.state_id.code in ['JH']">
+                                            <div class="card mb-2 border-0">
+                                                <div class="card-body">
+                                                    <div class="d-flex">
+                                                        <p class="card-title fs-5">
+                                                            Dispatch Note
+                                                        </p>
+                                                    </div>
+                                                    <div class="card mt-3 border-0 shadow 
+                                                    rounded-3 inner-card">
+                                                    <div class="card-header bg-white">
+                                                        <div class="row">
+                                                            <div class="col-sm-4 fs-6 fw-bold">
+                                                                To be checked
+                                                            </div>
+                                                            <div class="col-sm-3 fs-6 fw-bold">
+                                                                Specifications
+                                                            </div>
+                                                            <div class="col-sm-2 fs-6 fw-bold">
+                                                                    Status
+                                                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2 check-all-btn">
+                                                                    Check All
+                                                                </button>
+                                                                </div>                                                            
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Remarks
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-body rounded">
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Brand
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <!-- <input id="brand_specifications" name="brand_specifications" type="text" class="form-controls input-wrapper"/> -->
+                                                                    <span t-foreach="products" t-as="value" class="rounded bg-primary text-white px-2 py-1 m-1 d-inline-block mw-100 text-break small" t-out="value.name"/>
+                                                                    <t t-set="brand_names" t-value="', '.join(products.mapped('name'))"/>
+                                                                    <input type="hidden" name="invoice_brand_specifications" t-att-value="brand_names"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="dn_brand_check" name="dn_brand_check"/>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="dn_brand_remarks" name="dn_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-2">
+                                                                    <div class="col-sm-4">
+                                                                        Size 330/650/500ml
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <!-- <input id="dn_size_specifications" name="dn_size_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.dn_size or ''"/> -->
+                                                                    <select id="dn_size_specifications" name="dn_size_specifications" class="form-controls input-wrapper">
+                                                                    <option value="">Select Size</option>
+                                                                    <option value="330">330 ml</option>
+                                                                    <option value="500">500 ml</option>
+                                                                    <option value="650">650 ml</option>
+                                                                </select>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="dn_size_check" name="dn_size_check"/>
+                                                                    </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="dn_size_remarks" name="dn_size_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Quantity
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="dn_qty_specifications" name="dn_qty_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.dn_qty or ''" readonly="readonly"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="dn_qty_check" name="dn_qty_check"/>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="dn_qty_remarks" name="dn_qty_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-2">
+                                                                    <div class="col-sm-4">
+                                                                        Depot name
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <input id="dn_depot_name_specifications" name="dn_depot_name_specifications" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.partner_id.name or ''" readonly="readonly"/>
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                        <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="dn_depot_name_check" name="dn_depot_name_check"/>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                    <input id="dn_depot_name_remarks" name="dn_depot_name_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Permit No.
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="dn_permit_no_specifications" name="dn_permit_no_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.dn_permit_no or ''" readonly="readonly"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="dn_permit_no_check" name="dn_permit_no_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="dn_permit_no_remarks" name="dn_permit_no_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">                                                                Transporter Address
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="dn_transportor_add_specifications" name="dn_transportor_add_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.dn_transportor_add or ''" readonly="readonly"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="dn_transportor_add_check" name="dn_transportor_add_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="dn_transportor_add_remarks" name="dn_transportor_add_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Vehicle No. Driver name &amp; Godown address
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="dn_vehicle_godown_add_specifications" name="dn_vehicle_godown_add_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.dn_vehicle_godown_add or ''" readonly="readonly"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                    <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="dn_vehicle_godown_add_check" name="dn_vehicle_godown_add_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="dn_vehicle_godown_add_remarks" name="dn_vehicle_godown_add_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <t t-if="picking.partner_id.state_id.code in ['PY']">
+                                            <div class="card mb-2 border-0">
+                                                <div class="card-body">
+                                                    <div class="d-flex">
+                                                        <p class="card-title fs-5">
+                                                            Road Permit
+                                                        </p>
+                                                    </div>
+                                                    <div class="card mt-3 border-0 shadow 
+                                                                rounded-3 inner-card">
+                                                        <div class="card-header bg-white">
+                                                            <div class="row">
+                                                                <div class="col-sm-4 fs-6 fw-bold">
+                                                                   To be checked
+                                                                </div>
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Specifications
+                                                                </div>
+                                                                <div class="col-sm-2 fs-6 fw-bold">
+                                                                    Status
+                                                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2 check-all-btn">
+                                                                    Check All
+                                                                </button>
+                                                                </div>                                                            
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Remarks
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-body rounded">
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Document availability
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="rp_doc_availability_specifications" name="rp_doc_availability_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.rp_doc_availability or ''" readonly="readonly"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="rp_doc_availability_check" name="rp_doc_availability_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="rp_doc_availability_remarks" name="rp_doc_availability_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card mb-2 border-0">
+                                                <div class="card-body">
+                                                    <div class="d-flex">
+                                                        <p class="card-title fs-5">
+                                                            Unloading Challan
+                                                        </p>
+                                                    </div>
+                                                    <div class="card mt-3 border-0 shadow 
+                                                                rounded-3 inner-card">
+                                                        <div class="card-header bg-white">
+                                                            <div class="row">
+                                                                <div class="col-sm-4 fs-6 fw-bold">
+                                                                   To be checked
+                                                                </div>
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Specifications
+                                                                </div>
+                                                                <div class="col-sm-2 fs-6 fw-bold">
+                                                                    Status
+                                                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2 check-all-btn">
+                                                                    Check All
+                                                                </button>
+                                                                </div>                                                            
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Remarks
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-body rounded">
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Brand
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <!-- <input id="brand_specifications" name="brand_specifications" type="text" class="form-controls input-wrapper"/> -->
+                                                                    <span t-foreach="products" t-as="value" class="rounded bg-primary text-white px-2 py-1 m-1 d-inline-block mw-100 text-break small" t-out="value.name"/>
+                                                                    <t t-set="brand_names" t-value="', '.join(products.mapped('name'))"/>
+                                                                    <input type="hidden" name="invoice_brand_specifications" t-att-value="brand_names"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="uc_brand_check" name="uc_brand_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="uc_brand_remarks" name="uc_brand_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Quantity &amp; Depot
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="uc_qty_depot_specifications" name="uc_qty_depot_specifications" type="text" class="form-controls input-wrapper"
+                                                                    t-att-value="picking.uc_qty_depot or ''" readonly="readonly"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="uc_qty_depot_check" name="uc_qty_depot_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="uc_qty_depot_remarks" name="uc_qty_depot_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card mb-2 border-0">
+                                                <div class="card-body">
+                                                    <div class="d-flex">
+                                                        <p class="card-title fs-5">
+                                                            Brand registration
+                                                        </p>
+                                                    </div>
+                                                    <div class="card mt-3 border-0 shadow 
+                                                                rounded-3 inner-card">
+                                                        <div class="card-header bg-white">
+                                                            <div class="row">
+                                                                <div class="col-sm-4 fs-6 fw-bold">
+                                                                   To be checked
+                                                                </div>
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Specifications
+                                                                </div>
+                                                                <div class="col-sm-2 fs-6 fw-bold">
+                                                                    Status
+                                                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2 check-all-btn">
+                                                                    Check All
+                                                                </button>
+                                                                </div>                                                            
+                                                                <div class="col-sm-3 fs-6 fw-bold">
+                                                                    Remarks
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-body rounded">
+                                                            <div class="row mb-2">
+                                                                <div class="col-sm-4">
+                                                                    Ensure availability
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="br_availability_specifications" name="br_availability_specifications" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                     <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" type="checkbox" id="br_availability_check" name="br_availability_check"/>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input id="br_availability_remarks" name="br_availability_remarks" type="text" class="form-controls input-wrapper"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+
+                                        <hr style="color: #72b0f4;"/>
+
+                                        <div id="signatures-section">
+                                            <div id="signatureError" class="alert alert-danger d-none mt-2 mb-3" role="alert"></div>
+                                            <div class="row m-2">
+                                                <!-- Dispatch Signature -->
+                                                <div class="col-md-6">
+                                                    <t t-if="picking.dispatch_signature">
+                                                        <div class="col-sm-6 text-center">
+                                                            <h5>Dispatch In-Charge</h5>
+                                                            <img t-att-src="image_data_uri(picking.dispatch_signature)" style="max-height: 6rem; max-width: 100%;"/>
+                                                            <p class="mt-2 mb-0">
+                                                                <t t-out="picking.dispatch_signed_by or ''"/>
+                                                            </p>
+                                                        </div>
+                                                    </t>
+                                                    <div id="dispatch_content">
+                                                        <div class="mb-4">
+                                                            <t t-if="not picking.dispatch_signature">
+                                                                <h4>Dispatch In-Charge</h4>
+                                                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_dispatch">Accept &amp; Sign</a>
+                                                            </t>
+                                                            <t t-else="">
+                                                            <div class="alert alert-primary">Already signed by Dispatch In-Charge</div>
+                                                            </t>
+                                                        </div>
+
+                                                        <div role="dialog" class="modal fade" id="modal_dispatch" tabindex="-1">
+                                                            <div class="modal-dialog">
+                                                                <div id="accept_dispatch" method="POST" class="modal-content">
+                                                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                                    <header class="modal-header">
+                                                                        <h4 class="modal-title">Dispatch In-Charge Signature</h4>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                                                                    </header>
+                                                                    <main class="modal-body" id="sign-dialog-dispatch">
+                                                                        <span>
+                                                                            By signing, you confirm acceptance for delivery order
+                                                                            <b t-out="picking.name"/>.
+                                                                        </span>
+                                                                        <!-- Signature must be inside form -->
+                                                                        <t t-call="portal.signature_form">
+                                                                            <t t-set="call_url" t-value="'/dispatch_checklist/%s/accept/dispatch' % access_token"/>
+                                                                            <t t-set="default_name" t-value="picking.user_id.name or ''"/>
+                                                                            <t t-set="button_text" t-value="'Sign as In-charge'"/>
+                                                                            <t t-set="success_text" t-value="'Signed'"/>
+                                                                        </t>
+                                                                    </main>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <!-- Accountant Signature -->
+                                                <div class="col-md-6">
+                                                    <t t-if="picking.accountant_signature">
+                                                        <div class="col-sm-6 text-center">
+                                                            <h5>Accountant</h5>
+                                                            <img t-att-src="image_data_uri(picking.accountant_signature)" style="max-height: 6rem; max-width: 100%;"/>
+                                                            <p class="mt-2 mb-0">
+                                                                <t t-out="picking.accountant_signed_by or ''"/>
+                                                            </p>
+                                                        </div>
+                                                    </t>
+                                                    <div id="accountant_content">
+                                                        <div class="mb-4">
+                                                            <t t-if="not picking.accountant_signature">
+                                                                <h4>Accountant</h4>
+                                                                <a role="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_accountant">
+                                                                    Accept &amp; Sign
+                                                                </a>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <div class="alert alert-primary">Already signed by Accountant</div>
+                                                            </t>
+                                                        </div>
+
+                                                        <div role="dialog" class="modal fade" id="modal_accountant">
+                                                            <div class="modal-dialog">
+                                                                <div id="accept_accountant" method="POST" class="modal-content">
+                                                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                                    <header class="modal-header">
+                                                                    <h4 class="modal-title">Accountant Signature</h4>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                                                                    </header>
+                                                                    <main class="modal-body" id="sign-dialog-accountant">
+                                                                        <span>
+                                                                            By signing, you confirm acceptance for delivery order
+                                                                            <b t-out="picking.name"/>.
+                                                                        </span>
+                                                                        <t t-call="portal.signature_form">
+                                                                            <t t-set="call_url" t-value="'/dispatch_checklist/%s/accept/accountant' % access_token"/>
+                                                                            <t t-set="default_name" t-value="picking.finance_user_id.name or ''"/>
+                                                                            <t t-set="button_text" t-value="'Sign as Accountant'"/>
+                                                                            <t t-set="success_text" t-value="'Signed'"/>
+                                                                        </t>
+                                                                    </main>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="d-grid d-flex w-100 justify-content-center mt-4 mb-4" t-if="mode != 'feedback'">
+                                        <button type="submit" class="btn btn-md" style="background-color: #CE1446; color:white;" id="btn_save_next" name="next" value="next" >Submit</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>  
+    </data>
+</odoo>

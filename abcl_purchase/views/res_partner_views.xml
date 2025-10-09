@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="abcl_res_partner_view_form" model="ir.ui.view">
+        <field name="name">abcl.res.partner.view.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="product.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <header>
+                    <button name="action_send_document_upload_link" type="object" string="Send Document upload link" invisible="contact_type != 'vendor' or verification_state == 'verified'" groups="purchase.group_purchase_manager"/>
+                    <button name="action_verified" type="object" string="Documents Verified" class="btn-success" invisible="not document_recevied or verification_state == 'verified'" groups="purchase.group_purchase_manager"/>
+                    <field name="verification_state" widget="statusbar" options="{'clickable': False}" invisible="contact_type != 'vendor'"/>
+                </header>
+            </xpath>
+            <field name="l10n_in_pan" position="after">
+                <field name="contact_type"/>
+            </field>
+            <xpath expr="//form/sheet/group" position="after">
+                <group>
+                    <field name="contact_person"/>
+                    <field name="mailing_address"/>
+                    <!-- <field name="upload_access_key"/> -->
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/form/sheet/group/group[2]/field[@name='mobile']" position="after">
+                <field name="contact_person"/>
+            </xpath>
+            <xpath expr="//sheet//div[@name='button_box']" position="inside">
+                <button name="action_open_supplier_pricelist"
+                        type="object"
+                        class="oe_stat_button"
+                        groups="purchase.group_purchase_manager"
+                        icon="fa-list" invisible="supplier_rank == 0">
+                    <field string="Vendor Pricelists" name="supplier_pricelist_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <notebook position="inside">
+            <page string="Vendor Pricelists" invisible="supplier_rank == 0" groups="purchase.group_purchase_manager">
+                <field name="supplier_pricelist_ids" >
+                    <list create="0" no_open="1" delete="false">
+                        <field name="product_tmpl_id"/>
+                        <field name="product_id"/>
+                        <field name="price"/>
+                        <field name="requested_price"/>
+<!--                        <field name="approval_status"/>-->
+                        <field name="is_approval_requested"/>
+                        <field name="active"/>
+                        <button name="action_open_change_request_wizard"
+                                string="Change Request"
+                                type="object"
+                                class="btn-primary"/>
+                    </list>
+                </field>
+            </page>
+        </notebook>
+        </field>
+    </record>
+</odoo> 

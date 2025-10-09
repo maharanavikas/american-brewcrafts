@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <template id="get_fleet_location_template" name="Fleet location tracking">
+        <t t-call="website.layout">
+            <div class="container mt-3">
+                <div class="row justify-content-center">
+                    <div class="container text-center mb-3">
+                        <img t-attf-src="/web/binary/company_logo" alt="Logo" class="img-fluid" />
+                    </div>
+                    <div class="text-center">
+                        <p>To ensure the safety and efficiency of our fleet operations, we kindly request you to share your current location.</p>
+                        <p><b>Please ensure that your device's GPS is enabled and that you have a stable internet connection.</b></p>
+                        <!-- <p>Please click on the below Submit button to know your current location to us.</p>
+                        <i>*Note : If the submit button is invisible check the location access and refresh the page</i> -->
+                    </div>
+                    <form action="/abcl/tracking" method="post" enctype="multipart/form-data" class="form-style" id="locationForm">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <input type="hidden" name="longitude" id="longitude" />
+                        <input type="hidden" name="latitude" id="latitude" />
+                        <input type="hidden" name="timestamp" id="timestamp" />
+                        <div class="container text-center mb-3">
+                            <input type="hidden" name="name" t-att-value="name"/>
+                            <!-- <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>-->
+                        </div>
+                    </form>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            var form = document.getElementById("locationForm");
+
+                            if ('geolocation' in navigator) {
+                                navigator.geolocation.getCurrentPosition(
+                                    function(location) {
+                                        console.log('User location', location);
+                                        document.getElementById("latitude").value = location.coords.latitude;
+                                        document.getElementById("longitude").value = location.coords.longitude;
+                                        document.getElementById("timestamp").value = location.timestamp;
+
+                                        // Submit the form automatically
+                                        form.submit();
+                                    },
+                                    function(error) {
+                                        console.log('Geolocation error', error.code, error.message);
+                                        alert('Your device location is not turned on. Please turn on your device location and try again.');
+                                    }
+                                );
+                            } else {
+                                alert("Your device does not support geolocation.");
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!--Thank you page template-->
+    <template id="thank_you" name="Thank You">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="container text-center mb-3">
+                        <img t-attf-src="/web/binary/company_logo" alt="Logo" class="img-fluid" />
+                    </div>
+                    <div class="text-center">
+                        <h2>Thank You for helping us to know your location</h2>
+                        <p>Your location data has been submitted successfully.</p>
+                        <h5>Drive Safe...!</h5>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

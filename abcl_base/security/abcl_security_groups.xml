@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="group_plant_manager" model="res.groups">
+            <field name="name">Plant Manager</field>
+        </record>
+
+        <record id="group_vice_president" model="res.groups">
+                <field name="name">Vice President</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="inherite_res_config_setting_purchase_order" model="ir.ui.view">
+		<field name="name">res.congigration.setting</field>
+		<field name="model">res.config.settings</field>
+		<field name="inherit_id" ref="purchase.res_config_settings_view_form_purchase"/>
+		<field name="arch" type="xml">
+			<xpath expr="//setting[@id='auto_receipt_reminder']" position="after">
+				<div class="col-12 col-lg-6 o_setting_box" id="purchase_order_agreement">
+					<div class="o_setting_left_pane">
+						<field name="group_is_recurring_po"/>
+					</div>
+					<div class="o_setting_right_pane">
+						<label for="group_is_recurring_po" string="Recurring PO Agreement"/><br></br>
+						<div class="text-muted">
+                         Manage your Recurring Purchase Order Agreements
+                        </div>
+					</div>
+				</div>
+			</xpath>
+        </field>
+	</record>
+</odoo>

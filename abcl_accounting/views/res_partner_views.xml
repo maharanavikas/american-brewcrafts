@@ -1,0 +1,19 @@
+<odoo>
+    <record id="abcl_view_partner_form" model="ir.ui.view">
+        <field name="name">abcl.res.partner.view.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='street2']" position="after">
+                <field name="village" placeholder="Village" class="o_address_city"/>
+                <field name="mandal" placeholder="Mandal" class="o_address_city"/>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="survey_no" invisible="company_type != 'company'"/>
+                <field name="cin_no" invisible="company_type != 'company'"/>
+                <field name="cst_no" invisible="company_type != 'company'"/>
+                <field name="excise_regn_no" invisible="company_type != 'company'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

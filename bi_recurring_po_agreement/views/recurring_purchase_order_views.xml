@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+	<record id="recurring_purchase_order_view_form" model="ir.ui.view">
+        <field name="name">recurring.purchase.order.view.form</field>
+        <field name="model">recurring.purchase.order</field>
+        <field name="arch" type="xml">
+            <form string="Recurring Purchase Order Agreement">
+                <header>
+                    <button name="button_new" string="New" type="object" class="btn-primary" invisible="state in ['new', 'process']"/>
+                    <field name="state" widget="statusbar"/>
+                    <button name="button_process" string="Process" type="object" class="btn-primary" invisible="state == 'process'"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="order_id" readonly="state in ['process']"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="notify_id" readonly="state in ['process']"/>
+                        </group>
+                        <group>
+                            <label for="execute_every"/>
+                            <div class="oe_inline">
+                                <field name="execute_every" 
+                                    readonly="state in ['process']"/>
+                                <field name="repeat_after"
+                                    readonly="state in ['process']"/>
+                            </div>
+                            <field name="start_date" readonly="state in ['process']"/>
+                            <field name="stop_date" readonly="state in ['process']"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <field name = "recurring_purchase_order_line_ids" readonly="state in ['process']">
+                                <list editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="product_uom"/>
+                                    <field name="product_qty"/>
+                                    <field name="price_unit"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter reload_on_follower="True"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="recurring_purchase_order_view_tree" model="ir.ui.view">
+        <field name="name">recurring.purchase.order.view.list</field>
+        <field name="model">recurring.purchase.order</field>
+        <field name="arch" type="xml">
+            <list string="Recurring Purchase Order">
+                <field name="name"/>
+                <field name="order_id"/>
+                <field name="partner_id"/>
+                <field name="start_date"/>
+                <field name="stop_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="recurring_purchase_order_action" model="ir.actions.act_window">
+        <field name="name">Recurring Purchase Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">recurring.purchase.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="recurring_purchase_order_view_tree"/>
+    </record>
+
+
+    <menuitem name="Recurring Purchase Order Agreement" 
+            id="menu_recurring_purchase_order" 
+            parent="purchase.menu_product_pricelist_action2_purchase"
+            action="recurring_purchase_order_action"
+            sequence="2"
+            groups="bi_recurring_po_agreement.group_is_recurring_po"/>
+
+</odoo>

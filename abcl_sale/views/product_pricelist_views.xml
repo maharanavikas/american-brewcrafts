@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="abcl_product_pricelist_view" model="ir.ui.view">
+        <field name="name">abcl.product.pricelist.view</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <field name='status' widget='statusbar'/>
+            </xpath>
+            <xpath expr="//button[@name='action_open_pricelist_report']" position="after">
+                <button name="action_to_approve" 
+                string="Send for Approval" 
+                type="object" 
+                class="oe_highlight"
+                invisible="status != 'draft'"/>
+                <!-- Approve button-->
+                <button name="action_approved" 
+                string="Approve" 
+                type="object" 
+                class="oe_highlight" 
+                groups="sales_team.group_sale_manager"
+                invisible="status in ['approved','reject','draft']"/>
+                <!-- Hold Button-->
+                <button name="action_hold" 
+                string="Hold" 
+                type="object" 
+                class="oe_highlight" 
+                groups="sales_team.group_sale_manager"
+                invisible="status in ['approved', 'hold', 'reject','draft']"/>
+                <!-- Reject button-->
+                <button name="action_reject" 
+                string="Reject" 
+                type="object" 
+                class="btn btn-secondary" 
+                groups="sales_team.group_sale_manager"
+                invisible="status in ['reject', 'hold','approved','draft']"/>
+            </xpath>
+            <field name="country_group_ids" position="after">
+                <field name="user_id"/>
+            </field>
+            <xpath expr="//page[@name='pricelist_rules']" position="after">
+                <page name="pricelist_remarks" string="Remarks">
+                    <field name="approval_remark" readonly="true"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

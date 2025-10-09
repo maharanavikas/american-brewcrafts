@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="abcl_view_production_lot_form" model="ir.ui.view">
+        <field name="name">abcl.view.production.lot.form</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='main_group']/group[2]/div[field[@name='standard_price']]" position="after">
+                <label for="manufacturing_date"/>
+                <div class="o_row">
+                    <field name="manufacturing_date"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="abcl_view_move_line_form" model="ir.ui.view">
+        <field name="name">abcl.view.move.line.form</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_form"/>
+        <field name="arch" type="xml">
+            <field name="create_uid" position="after">
+                <field name="manufacturing_date"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="abcl_stock_picking_view_form" model="ir.ui.view">
+        <field name="name">abcl.stock.picking.view.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <button name="action_excise_report" type="object" string="Print Excise Report"
+                        groups="sales_team.group_sale_manager" invisible="picking_type_code != 'outgoing'"/>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_journal_entries" type="object" class="oe_stat_button" icon="fa-book">
+                    <field name="journal_entry_count" widget="statinfo" string="Journal Entries"/>
+                </button>
+            </xpath>
+            <xpath expr="//page[@name='extra']" position="before">
+                <page string="Gate Entry Details" invisible="picking_type_code != 'incoming'">
+                    <group>
+                        <group>
+                            <button name="action_generate_entry_number"
+                                    string="Generate Entry"
+                                    type="object"
+                                    class="btn btn-primary"
+                                    invisible="gate_entry_number != False"/>
+                            <field name="gate_entry_number" readonly="1"/>
+                            <field name="security_id"/>
+                            <field name="security_signature" widget="signature"/>
+                        </group>
+                        <group/>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//page[@name='extra']" position="before">
+                <page string="Delivery Fleet Track" invisible="picking_type_code != 'outgoing'">
+                    <group>
+                        <field name="driver_id"/>
+                    </group>
+                    <button name="send_fleet_tracking" string="Get Driver Location" type="object"
+                            class="btn btn-primary" groups="sales_team.group_sale_manager,fleet.fleet_group_manager"/>
+                    <field name="delivery_fleet_tracking_ids" widget="one2many_list">
+                        <list editable="bottom" create="false" delete="false">
+                            <field name="timestamp"/>
+                            <field name="longitude"/>
+                            <field name="latitude"/>
+                            <button name="get_location_map" string="View Map" type="object" class="btn btn-secondary"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']/button[@name='action_view_stock_valuation_layers']"
+                   position="attributes">
+                <attribute name="groups"/>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/list/field[@name='lot_ids']" position="attributes">
+                <attribute name="optional"/>
+            </xpath>
+            <field name="location_id" position="after">
+                <field name="requested_user_id" invisible="picking_type_code != 'outgoing'"/>
+                <field name="purpose" invisible="picking_type_code != 'outgoing'"/>
+                <field name="vendor_inovice_no" invisible="picking_type_code == 'outgoing'"/>
+                <field name="receipt_sequence_no" invisible="picking_type_code == 'outgoing'"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="abcl_stock_picking_view_search" model="ir.ui.view">
+        <field name="name">abcl.stock.picking.view.search</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="receipt_sequence_no" string="Receipt Sequence No"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="abcl_stock_picking_view_list" model="ir.ui.view">
+        <field name="name">abcl.stock.picking.view.list</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='scheduled_date']" position="after">
+                <field name="receipt_sequence_no" string="Receipt Sequence No"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

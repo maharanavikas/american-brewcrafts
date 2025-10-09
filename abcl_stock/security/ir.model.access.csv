@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fleet_vehicle_tracking,access.fleet.vehicle.tracking,model_fleet_vehicle_tracking,base.group_user,1,1,1,1
+access_quality_approval_wizard,access.quality.approval.wizard,model_quality_approval_wizard,abcl_base.group_plant_manager,1,1,1,1

@@ -1,0 +1,1267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="abcl_stock_picking_form_view" model="ir.ui.view">
+        <field name="name">abcl.stock.picking.form.view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <field name="group_id" position="after">
+                <field name="dispatch_checklist_id" invisible="picking_type_code != 'outgoing'"/>
+                <field name="sign_request_id" invisible="picking_type_code != 'outgoing'"/>
+                <field name="signer_ids" readonly="1" invisible="not sign_request_id or picking_type_code != 'outgoing'">
+                    <list no_open="True">
+                        <field name="mail_sent_order" string="Sign Order"/>
+                        <field name="role_id"/>
+                        <field name="partner_id"/>
+                    </list>
+                </field>
+                <field name="sign_request_state" invisible="picking_type_code != 'outgoing'" readonly="0"/>
+                <field name="signature_state" readonly="0"/>
+                <field name="is_dispatch_sent" string="Is Dispatch Sent" readonly="1"/>
+                <field name="dispatch_signature" widget="image" readonly="1"/>
+                <field name="accountant_signature" widget="image" readonly="1"/>
+            </field>
+            <field name="sale_id" position="attributes">
+                <attribute name="invisible">picking_type_code == 'incoming'</attribute>
+            </field>
+            <field name="user_id" position="after">
+                <field name="finance_user_id"/>
+            </field>
+            <xpath expr="//header" position="inside">
+                <!-- <button name="open_sign_wizard"
+                        string="Generate Sign Request"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="picking_type_code != 'outgoing' or (state == 'done' or not sale_id or sign_request_id)"/> -->
+
+                <button name="open_sign_wizard"
+                        string="Generate Dispatch Request"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="picking_type_code == 'incoming' or (state == 'done' or not sale_id or sign_request_id) or is_dispatch_sent == True"/>
+                        
+                <!-- <button name="action_review_dispatch_checkilist_template" string="Review Dispatch Checklist" type="object" class="oe_highlight" invisible="is_dispatch_sent != True"/> -->
+                <!-- <button name="action_review_dispatch_checkilist_template" string="Review Dispatch Checklist" type="object" class="oe_highlight"/> -->
+                <!-- <button name="download_dispatch_checklist_pdf" string="Download Dispatch Checklist" type="object" class="oe_highlight"/> -->
+            </xpath>
+            <!--            <xpath expr="//button[@name='button_validate'][1]" position="attributes">-->
+            <!--                <attribute name="invisible">-->
+            <!--                    (state in ('draft', 'confirmed', 'done', 'cancel')) or ( sale_id and picking_type_code ==-->
+            <!--                    'outgoing')-->
+            <!--                </attribute>-->
+            <!--            </xpath>-->
+            <!--            <xpath expr="//button[@name='button_validate'][2]" position="attributes">-->
+            <!--                <attribute name="invisible">-->
+            <!--                    (state in ('waiting', 'assigned', 'done', 'cancel')) or (sale_id and picking_type_code ==-->
+            <!--                    'outgoing')-->
+            <!--                </attribute>-->
+            <!--            </xpath>-->
+            <xpath expr="//field[@name='move_ids_without_package']/list" position="inside">
+                <field name="product_status" column_invisible="True"/>
+                <field name="product_remark" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//page[@name='operations']" position="after">
+                <page string="Transport Info" invisible="picking_type_code != 'outgoing'">
+                    <group>
+                        <group>
+                            <field name="import_permit_id"/>
+                            <field name="import_permit_date"/>
+                        </group>
+                        <group>
+                            <field name="export_permit_id"/>
+                            <field name="export_permit_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="transporter"/>
+                            <field name="vehicle_type"/>
+                            <field name="vehicle_detail_id" invisible="vehicle_type != 'owned'"/>
+                            <field name="vehicle_no"/>
+                        </group>
+                        <group>
+                            <field name="excise_leaf_no"/>
+                            <field name="transport_permit_no"/>
+                        </group>
+                    </group>
+                    <div id="questionnaire_div">
+                        <div class="mb-2 border-0">
+                            <div class="bg-white">
+                                <div class="d-flex bg-dark text-white">
+                                    <p class="fs-5 fw-bold m-2">
+                                        Gate Pass
+                                    </p>
+                                </div>
+                                <div class="mt-3 table-responsive shadow">
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="fw-bold">
+                                                    To be checked
+                                                </th>
+                                                <th class="fw-bold">
+                                                    Specifications
+                                                </th>
+                                                <th class="fw-bold">
+                                                    Status
+                                                </th>
+                                                <th class="fw-bold">
+                                                    Remarks
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>TP No. &amp; Date</td>
+                                                <td>
+                                                    <field name="gp_p_no_date" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="gp_p_no_date_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="gp_p_no_date_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Party name</td>
+                                                <td>
+                                                    <field name="gp_party_name" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="gp_party_name_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="gp_party_name_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Pack size-330/650/500ml</td>
+                                                <td>
+                                                    <field name="gp_pack_size" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="gp_pack_size_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="gp_pack_size_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Quantity</td>
+                                                <td>
+                                                    <field name="gp_quantity" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="gp_quantity_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="gp_quantity_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Brand</td>
+                                                <td>
+                                                    <field name="gp_brand" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="gp_brand_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="gp_brand_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Vehicle no &amp; date</td>
+                                                <td>
+                                                    <field name="gp_vehicle_no_date" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="gp_vehicle_no_date_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="gp_vehicle_no_date_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2 border-0">
+                            <div class="mt-auto" invisible="partner_state_code not in ['AN', 'PY', 'TN', 'TS', 'KL']">
+                                <div class="d-flex bg-dark text-white">
+                                    <p class="fs-5 fw-bold m-2">
+                                        LR Copy
+                                    </p>
+                                </div>
+                                
+                                <div class="mt-2 border-0 shadow 
+                            ">
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="col-4 fw-bold">To be checked</th>
+                                                <th class="col-3 fw-bold">Specifications</th>
+                                                <th class="col-2 fw-bold">Status</th>
+                                                <th class="col-3 fw-bold">Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>LR No</td>
+                                                <td>
+                                                    <field name="lrc_lr_no" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="lrc_lr_no_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="lrc_lr_no_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>LR Date</td>
+                                                <td>
+                                                    <field name="lrc_lr_date" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="lrc_lr_date_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="lrc_lr_date_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Vehicle no. To address</td>
+                                                <td>
+                                                    <field name="lrc_lr_vehicle_no_address" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="lrc_lr_vehicle_no_address_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="lrc_lr_vehicle_no_address_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Quantity</td>
+                                                <td>
+                                                    <field name="lrc_lr_quantity" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="lrc_lr_quantity_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="lrc_lr_quantity_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Invoice no &amp; Invoice date</td>
+                                                <td>
+                                                    <field name="lrc_lr_invoice_no_date" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="lrc_lr_invoice_no_date_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="lrc_lr_invoice_no_date_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2 border-0">
+                            <div class="mt-auto">
+                                <div class="d-flex bg-dark text-white">
+                                    <p class="fs-5 fw-bold m-2">
+                                        Transport Permit
+                                    </p>
+                                </div>
+                                <div class="mt-2 border-0 shadow 
+                                        ">
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="col-4 fw-bold">To be checked</th>
+                                                <th class="col-3 fw-bold">Specifications</th>
+                                                <th class="col-2 fw-bold">Status</th>
+                                                <th class="col-3 fw-bold">Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Date</td>
+                                                <td>
+                                                    <field name="tp_date" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_date_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_date_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Brand</td>
+                                                <td>
+                                                    <field name="tp_brand" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_brand_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_brand_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Batch No</td>
+                                                <td>
+                                                    <field name="tp_batch_no" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_batch_no_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_batch_no_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>PO No. / PO date</td>
+                                                <td>
+                                                    <field name="tp_po_no_date" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_po_no_date_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_po_no_date_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Quantity</td>
+                                                <td>
+                                                    <field name="tp_quantity" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_quantity_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_quantity_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Size - 330/650/500ml</td>
+                                                <td>
+                                                    <field name="tp_pack_size" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_pack_size_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_pack_size_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Bulk litre</td>
+                                                <td>
+                                                    <field name="tp_bulk_litre" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_bulk_litre_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_bulk_litre_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Alcohol %</td>
+                                                <td>
+                                                    <field name="tp_alcohol_percent" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_alcohol_percent_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_alcohol_percent_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>EXPORT FEE challan No. &amp; Date</td>
+                                                <td>
+                                                    <field name="tp_excise_duty_challan_no_date" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_excise_duty_challan_no_date_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_excise_duty_challan_no_date_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Export fee</td>
+                                                <td>
+                                                    <field name="tp_excise_duty" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_excise_duty_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_excise_duty_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Depot</td>
+                                                <td>
+                                                    <field name="tp_depot" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_depot_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_depot_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Vehicle no. / Route</td>
+                                                <td>
+                                                    <field name="tp_vehicle_route" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_vehicle_route_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_vehicle_route_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Permit validity date &amp; BO signature</td>
+                                                <td>
+                                                    <field name="tp_permit_validity_date" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_permit_validity_date_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="tp_permit_validity_date_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2 border-0" invisible="partner_state_code not in ['AN', 'JH', 'PY','TN','KL']">
+                            <div class="d-flex bg-dark text-white">
+                                <p class="fs-5 fw-bold m-2">
+                                    Export Pass
+                                </p>
+                            </div>
+                            <div class="mt-2 border-0 shadow 
+                                    ">
+                                <table class="table table-bordered align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="col-4 fw-bold">To be checked</th>
+                                            <th class="col-3 fw-bold">Specifications</th>
+                                            <th class="col-2 fw-bold">Status</th>
+                                            <th class="col-3 fw-bold">Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Export permit No.</td>
+                                            <td>
+                                                <field name="e_pass_permit_no" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_permit_no_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_permit_no_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dispatch date &amp; time</td>
+                                            <td>
+                                                <field name="e_pass_dispatch_date_time" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_dispatch_date_time_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_dispatch_date_time_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Import permit Validity days</td>
+                                            <td>
+                                                <field name="e_pass_import_validity" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_import_validity_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_import_validity_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Quantity</td>
+                                            <td>
+                                                <field name="e_pass_quantity" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_quantity_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_quantity_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Brand</td>
+                                            <td>
+                                                <field name="e_pass_brand" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_brand_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_brand_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Size - 330/650/500 ml</td>
+                                            <td>
+                                                <field name="e_pass_size" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_size_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_size_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Alcohol strength</td>
+                                            <td>
+                                                <field name="e_pass_alcohol_strength" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_alcohol_strength_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_alcohol_strength_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Route &amp; Validity of export permit</td>
+                                            <td>
+                                                <field name="e_pass_route_validity" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_route_validity_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_pass_route_validity_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" mb-2 border-0">
+                        <div class="mt-auto" invisible="partner_state_code not in ['JH','AN','PY','TN','KL']">
+                            <div class="d-flex bg-dark text-white">
+                                <p class="fs-5 fw-bold m-2">
+                                    EVC
+                                </p>
+                            </div>
+                            <div class=" mt-2 border-0 shadow 
+                                    ">
+                                <table class="table table-bordered align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="col-4 fw-bold">To be checked</th>
+                                            <th class="col-3 fw-bold">Specifications</th>
+                                            <th class="col-2 fw-bold">Status</th>
+                                            <th class="col-3 fw-bold">Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Quantity</td>
+                                            <td>
+                                                <field name="evc_quantity" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="evc_quantity_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="evc_quantity_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Brand</td>
+                                            <td>
+                                                <field name="evc_brand" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="evc_brand_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="evc_brand_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Export Permit No. &amp; date</td>
+                                            <td>
+                                                <field name="evc_export_permit_no_date" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="evc_export_permit_no_date_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="evc_export_permit_no_date_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Import Permit No. &amp; date</td>
+                                            <td>
+                                                <field name="evc_import_permit_no_date" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="evc_import_permit_no_date_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="evc_import_permit_no_date_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>TP No. &amp; date</td>
+                                            <td>
+                                                <field name="evc_tp_no_date" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="evc_tp_no_date_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="evc_tp_no_date_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Vehicle No.</td>
+                                            <td>
+                                                <field name="evc_vehicle_no" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="evc_vehicle_no_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="evc_vehicle_no_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" mb-2 border-0">
+                        <div class="mt-auto" invisible="partner_state_code not in ['JH','AN','PY','TN','KL']">
+                            <div class="d-flex bg-dark text-white">
+                                <p class="fs-5 fw-bold m-2">
+                                    Export Permit
+                                </p>
+                            </div>
+                            <div class=" mt-2 border-0 shadow 
+                                    ">
+                                <table class="table table-bordered align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="col-4 fw-bold">To be checked</th>
+                                            <th class="col-3 fw-bold">Specifications</th>
+                                            <th class="col-2 fw-bold">Status</th>
+                                            <th class="col-3 fw-bold">Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr invisible="partner_state_code not in ['AN','PY','TN','KL']">
+                                            <td>OFS No.</td>
+                                            <td>
+                                                <field name="e_permit_ofs_no_date" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_permit_ofs_no_date_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_permit_ofs_no_date_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr invisible="partner_state_code not in ['AN','PY','TN','KL']">
+                                            <td>LR copy No. &amp; date</td>
+                                            <td>
+                                                <field name="e_permit_lr_copy_no_date" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_permit_lr_copy_no_date_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_permit_lr_copy_no_date_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Vehicle</td>
+                                            <td>
+                                                <field name="e_permit_vehicle_no" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_permit_vehicle_no_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_permit_vehicle_no_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Deport Name</td>
+                                            <td>
+                                                <field name="e_permit_deport_name" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_permit_deport_name_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_permit_deport_name_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Brand</td>
+                                            <td>
+                                                <field name="e_permit_brand" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_permit_brand_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_permit_brand_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Batch No. Quantity &amp; size 330/650/500ml</td>
+                                            <td>
+                                                <field name="e_permit_batch_qty_size" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_permit_batch_qty_size_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_permit_batch_qty_size_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr invisible="partner_state_code not in ['JH']">
+                                            <td>Export permit No</td>
+                                            <td>
+                                                <field name="e_permit_no" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_permit_no_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="e_permit_no_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" mb-2 border-0">
+                        <div class="mt-auto" invisible="partner_state_code not in ['JH','AN','PY','TN','KL']">
+                            <div class="d-flex bg-dark text-white">
+                                <p class="fs-5 fw-bold m-2">
+                                    Import Permit
+                                </p>
+                            </div>
+                            <div class=" mt-2 border-0 shadow 
+                                    ">
+                                <table class="table table-bordered align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="col-4 fw-bold">To be checked</th>
+                                            <th class="col-3 fw-bold">Specifications</th>
+                                            <th class="col-2 fw-bold">Status</th>
+                                            <th class="col-3 fw-bold">Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Import Permit No. &amp; date</td>
+                                            <td>
+                                                <field name="i_permit_no_date" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="i_permit_no_date_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="i_permit_no_date_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Permit validity</td>
+                                            <td>
+                                                <field name="i_permit_validity" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="i_permit_validity_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="i_permit_validity_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Brand</td>
+                                            <td>
+                                                <field name="i_permit_brand" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="i_permit_brand_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="i_permit_brand_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Size 330/650/500ml</td>
+                                            <td>
+                                                <field name="i_permit_size" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="i_permit_size_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="i_permit_size_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Quantity &amp; BO signature &amp; Stamp</td>
+                                            <td>
+                                                <field name="i_permit_qty_sign_stamp" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="i_permit_qty_sign_stamp_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="i_permit_qty_sign_stamp_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" mb-2 border-0">
+                        <div class="mt-auto">
+                            <div class="d-flex bg-dark text-white">
+                                <p class="fs-5 fw-bold m-2">
+                                    Invoice
+                                </p>
+                            </div>
+                            <div class=" mt-2 border-0 shadow 
+                                    ">
+                                <table class="table table-bordered align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="col-4 fw-bold">To be checked</th>
+                                            <th class="col-3 fw-bold">Specifications</th>
+                                            <th class="col-2 fw-bold">Status</th>
+                                            <th class="col-3 fw-bold">Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Invoice No &amp; date</td>
+                                            <td>
+                                                <field name="invoice_no_date" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_no_date_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_no_date_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Gate pass date</td>
+                                            <td>
+                                                <field name="invoice_gate_pass_date" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_gate_pass_date_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_gate_pass_date_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Transport name</td>
+                                            <td>
+                                                <field name="invoice_transport" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_transport_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_transport_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Vehicle no</td>
+                                            <td>
+                                                <field name="invoice_vehicle_no" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_vehicle_no_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_vehicle_no_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>TP No. LR No.</td>
+                                            <td>
+                                                <field name="invoice_tp_lr_no" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_tp_lr_no_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_tp_lr_no_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>OFS No. &amp; date</td>
+                                            <td>
+                                                <field name="invoice_ofs_no_date" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_ofs_no_date_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_ofs_no_date_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Brand</td>
+                                            <td>
+                                                <field name="invoice_brand" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_brand_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_brand_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Batch No.</td>
+                                            <td>
+                                                <field name="invoice_batch_no" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_batch_no_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_batch_no_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Quantity</td>
+                                            <td>
+                                                <field name="invoice_quantity" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_quantity_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_quantity_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Basic price</td>
+                                            <td>
+                                                <field name="invoice_basic_price" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_basic_price_remarks" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="invoice_basic_price_status" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Excise duty</td>
+                                            <td>
+                                                <field name="inovice_excise_duty" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="inovice_excise_duty_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="inovice_excise_duty_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Bulk litre &amp; invoice total value in Rs.</td>
+                                            <td>
+                                                <field name="inovice_liter_total_value" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="inovice_liter_total_value_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="inovice_liter_total_value_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" mb-2 border-0">
+                        <div class="mt-auto" invisible="partner_state_code not in ['JH']">
+                            <div class="d-flex bg-dark text-white">
+                                <p class="fs-5 fw-bold m-2">
+                                    Dispatch Note
+                                </p>
+                            </div>
+                            <div class=" mt-2 border-0 shadow 
+                        ">
+                                <table class="table table-bordered align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="col-4 fw-bold">To be checked</th>
+                                            <th class="col-3 fw-bold">Specifications</th>
+                                            <th class="col-2 fw-bold">Status</th>
+                                            <th class="col-3 fw-bold">Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Brand</td>
+                                            <td>
+                                                <field name="dn_brand" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="dn_brand_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="dn_brand_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Size 330/650/500ml</td>
+                                            <td>
+                                                <field name="dn_size" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="dn_size_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="dn_size_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Quantity</td>
+                                            <td>
+                                                <field name="dn_qty" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="dn_qty_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="dn_qty_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Depot name</td>
+                                            <td>
+                                                <field name="dn_depot_name" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="dn_depot_name_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="dn_depot_name_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Permit No.</td>
+                                            <td>
+                                                <field name="dn_permit_no" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="dn_permit_no_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="dn_permit_no_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Transporter Address</td>
+                                            <td>
+                                                <field name="dn_transportor_add" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="dn_transportor_add_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="dn_transportor_add_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Vehicle No. Driver name &amp; Godown address</td>
+                                            <td>
+                                                <field name="dn_vehicle_godown_add" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="dn_vehicle_godown_add_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="dn_vehicle_godown_add_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" mb-2 border-0">
+                        <div class="mt-auto" invisible="partner_state_code not in ['JH']">
+                            <div class="d-flex bg-dark text-white">
+                                <p class="fs-5 fw-bold m-2">
+                                    Road Permit
+                                </p>
+                            </div>
+                            <div class=" mt-2 border-0 shadow 
+                                    ">
+                                <table class="table table-bordered align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="col-4 fw-bold">To be checked</th>
+                                            <th class="col-3 fw-bold">Specifications</th>
+                                            <th class="col-2 fw-bold">Status</th>
+                                            <th class="col-3 fw-bold">Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                Document availability
+                                            </td>
+                                            <td>
+                                                <field name="rp_doc_availability" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="rp_doc_availability_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="rp_doc_availability_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" mb-2 border-0">
+                        <div class="mt-auto" invisible="partner_state_code not in ['PY']">
+                            <div class="d-flex bg-dark text-white">
+                                <p class="fs-5 fw-bold m-2">
+                                    Unloading Challan
+                                </p>
+                            </div>
+                            <div class=" mt-2 border-0 shadow 
+                                    ">
+                                <table class="table table-bordered align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="col-4 fw-bold">To be checked</th>
+                                            <th class="col-3 fw-bold">Specifications</th>
+                                            <th class="col-2 fw-bold">Status</th>
+                                            <th class="col-3 fw-bold">Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Brand</td>
+                                            <td>
+                                                <field name="uc_brand" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="uc_brand_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="uc_brand_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Quantity &amp; Depot</td>
+                                            <td>
+                                                <field name="uc_qty_depot" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="uc_qty_depot_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="uc_qty_depot_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" mb-2 border-0">
+                        <div class="mt-auto" invisible="partner_state_code not in ['PY']">
+                            <div class="d-flex bg-dark text-white">
+                                <p class="fs-5 fw-bold m-2">
+                                    Brand registration
+                                </p>
+                            </div>
+                            <div class=" mt-2 border-0 shadow 
+                                    ">
+
+                                <table class="table table-bordered align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="col-4 fw-bold">To be checked</th>
+                                            <th class="col-3 fw-bold">Specifications</th>
+                                            <th class="col-2 fw-bold">Status</th>
+                                            <th class="col-3 fw-bold">Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Ensure availability</td>
+                                            <td>
+                                                <field name="br_availability" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="br_availability_status" readonly="1"/>
+                                            </td>
+                                            <td>
+                                                <field name="br_availability_remarks" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

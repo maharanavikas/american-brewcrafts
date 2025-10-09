@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="portal_my_home_inherit_delivery_orders" inherit_id="portal.portal_my_home"
+              name="Portal My Home: Delivery Order List">
+        <xpath expr="//div[@id='portal_client_category']" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/abcl_stock/static/src/img/delivery_portal.svg'"/>
+                <t t-set="title">Delivery Orders</t>
+                <t t-set="text">View your delivery orders</t>
+                <t t-set="url" t-value="'/delivery_order_list/'"/>
+                <!--                <t t-set="config_card" t-value="True"/>-->
+                <t t-set="config_card" t-value="request.env.user.sudo().employee_ids"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_breadcrumbs_delivery_orders" inherit_id="portal.portal_breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'delivery_orders'" class="breadcrumb-item active">
+                Delivery Orders
+            </li>
+            <t t-if="page_name == 'delivery_order_form' and record">
+                <li class="breadcrumb-item">
+                    <a href="/delivery_order_list/">Delivery Orders</a>
+                </li>
+                <li class="breadcrumb-item active" t-out="record.name"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="delivery_order_list_template" name="Delivery Order List">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name" t-value="'delivery_orders'"/>
+            <div class="container my-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2>Delivery Orders</h2>
+                    <a href="/delivery_order/new" class="btn btn-primary">Create Delivery Order</a>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Reference</th>
+                            <th>Operation Type</th>
+                            <th>Source Location</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="delivery_orders" t-as="do">
+                            <tr>
+                                <td>
+                                    <a t-att-href="'/delivery_order/%d' % do.id" class="link-primary">
+                                        <t t-out="do.name"/>
+                                    </a>
+                                </td>
+                                <td>
+                                    <t t-out="do.picking_type_id.name or '-'"/>
+                                </td>
+                                <td>
+                                    <t t-out="do.location_id.display_name"/>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">
+                                        <t t-out="do.state"/>
+                                    </span>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <template id="delivery_order_template" name="Create Delivery Order">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name" t-value="'delivery_order_form'"/>
+            <t t-set="do_readonly" t-value="record and record.state in ['done', 'cancel']"/>
+
+            <div class="container my-4">
+                <h3 t-if="not record">Create Delivery Order</h3>
+                <form id="delivery_order_form" t-attf-action="/delivery_order/#{'new' if not record else record.id}"
+                      method="post" t-att-data-id="record and record.id">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="d-flex justify-content-between align-items-center mb-3" t-if="record">
+                        <h3 t-out="record.name"/>
+                        <span t-att-class="'badge rounded-pill px-3 py-2 ' + (
+                        'bg-success' if record.state == 'done' else (
+                        'bg-secondary' if record.state == 'cancel' else 'bg-warning'))">
+                            <t t-out="record.state.capitalize()"/>
+                        </span>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <label class="fw-bold">Purpose</label>
+                                <input type="text" t-att-disabled="do_readonly" name="purpose" class="form-control"
+                                       placeholder="Purpose for Delivery Order"
+                                       t-att-value="record and record.purpose" required="1"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <ul class="nav nav-tabs" id="doTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active fw-bold" id="order-lines-tab" data-bs-toggle="tab"
+                               href="#order-lines" role="tab">Select Products
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content border border-top-0 p-3" id="poTabContent">
+
+                        <div class="tab-pane fade show active" id="order-lines" role="tabpanel">
+                            <div class="card bg-white mb-2">
+                                <div class="card-header bg-white d-none d-sm-block">
+                                    <div class="row text-center">
+                                        <div class="col-sm-4 fs-6 fw-bold">
+                                            <i class="text-danger">*</i>Product
+                                        </div>
+                                        <div class="col-sm-5 fs-6 fw-bold">
+                                            <i class="text-danger">*</i>Quantity
+                                        </div>
+                                        <div class="col-sm-2 fs-6 fw-bold text-start">
+                                            UoM
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="order_line_body" class="card-body">
+                                    <t t-set="valid_order_lines"
+                                       t-value="record.move_ids_without_package if record else []"/>
+
+                                    <div class="order-line row mb-2" t-if="not valid_order_lines">
+                                        <div class="col-sm-6">
+                                            <label class="d-block d-sm-none fw-bold">Product</label>
+                                            <select class="form-select product-select" name="product_id_1" required="1">
+                                                <option value="">Select Product</option>
+                                                <t t-foreach="product_data" t-as="product">
+                                                    <option t-att-value="product['id']">
+                                                        <t t-esc="product['display_name']"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                            <label class="d-block d-sm-none fw-bold">Quantity</label>
+                                            <input type="number" name="product_qty_1" min="1" value="1"
+                                                   class="form-control" required="1"/>
+                                        </div>
+
+                                        <div class="col-sm-2">
+                                            <label class="d-block d-sm-none fw-bold">UoM</label>
+                                            <span name="uom_id_1_display"/>
+                                            <input type="hidden" name="uom_1" value=""/>
+                                        </div>
+
+                                        <div class="col-sm-1 text-center">
+                                            <button type="button" class="btn btn-danger remove-line-button btn-sm pl-3">
+                                                <i class="fa fa-trash"/>
+                                            </button>
+                                        </div>
+
+                                        <hr class="d-block d-sm-none border-1 border-dark mt-2"/>
+                                    </div>
+
+                                    <div class="order-line row mb-2" t-else="" t-foreach="valid_order_lines"
+                                         t-as="order_line">
+                                        <div class="col-sm-6">
+                                            <label class="d-block d-sm-none fw-bold">Product</label>
+                                            <select class="form-select product-select"
+                                                    t-attf-name="product_id_#{order_line_index+1}" required="1"
+                                                    t-att-disabled="do_readonly">
+                                                <option value="">Select Product</option>
+
+                                                <t t-foreach="product_data" t-as="product">
+                                                    <option t-att-value="product['id']"
+                                                            t-att-selected="order_line.product_id.id == product['id']">
+                                                        <t t-esc="product['display_name']"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                            <label class="d-block d-sm-none fw-bold">Quantity</label>
+                                            <input type="number" t-attf-name="product_qty_#{order_line_index+1}" min="1"
+                                                   value="1"
+                                                   class="form-control" required="1"
+                                                   t-att-value="order_line.product_qty" t-att-disabled="do_readonly"/>
+                                        </div>
+
+                                        <div class="col-sm-2">
+                                            <label class="d-block d-sm-none fw-bold">UoM</label>
+                                            <span t-attf-name="uom_id_#{order_line_index+1}_display"
+                                                  t-out="order_line.product_uom.name"/>
+                                            <input type="hidden" t-attf-name="uom_#{order_line_index+1}"
+                                                   t-att-value="order_line.product_uom.id"/>
+                                        </div>
+
+                                        <div class="col-sm-1 text-center">
+                                            <button type="button" t-if="not do_readonly"
+                                                    class="btn btn-danger remove-line-button btn-sm pl-3">
+                                                <i class="fa fa-trash"/>
+                                            </button>
+                                        </div>
+
+                                        <hr class="d-block d-sm-none border-1 border-dark mt-2"/>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group row hide" t-if="not do_readonly">
+                                <div class="col-sm-12">
+                                    <button type="button" class="btn btn-sm btn-secondary add-line-button fw-bold">
+                                        Add a line
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="text-end mt-4" t-if="not do_readonly">
+                        <button type="submit" class="btn btn-primary fw-bold">
+                            <span t-out="'Create Delivery Order' if not record else 'Save'"/>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="abcl_manufacturing_mrp_bom_form_view" model="ir.ui.view">
+        <field name="name">abcl.manufacturing.mrp.bom.form.view</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="product_categ_id"/>
+                <field name="bom_source" string="Bom Source"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="abcl_manufacturing_mrp_bom_search_view" model="ir.ui.view">
+        <field name="name">abcl.manufacturing.mrp.bom.search.view</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.view_mrp_bom_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='group_by_type']" position="after">
+                <filter name='bom_source' string='Bom Source' context="{'group_by' : 'bom_source'}"/>
+                <filter name='product_categ_id' string='Product Category' context="{'group_by' : 'product_categ_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="abcl_manufacturing_mrp_bom_list_view" model="ir.ui.view">
+        <field name="name">abcl.manufacturing.mrp.bom.list.view</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="replace"/>
+            <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                <field name="product_id" groups="product.group_product_variant" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="abcl_quality_check_view_form" model="ir.ui.view">
+        <field name="name">abcl.quality.check.view.form</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="quality_control.quality_check_view_form"/>
+        <field name="arch" type="xml">
+            <header>
+                <button name="action_quality_approval_wizard" type="object" string="Approve" class="btn-primary" invisible="not sent_for_approval" groups="abcl_base.group_plant_manager"/>
+                <button name="action_quality_reject_wizard" type="object" string="Reject" class="btn btn-danger" invisible="not sent_for_approval" groups="abcl_base.group_plant_manager"/>
+            </header>
+            <field name="additional_note" position="after">
+                <field name="plant_manager_comment"/>
+            </field>
+            <field name="operation_id" position="after">
+                <field name="lot_id" readonly="1"/>
+            </field>
+            <field name="partner_id" position="after">
+                <field name="is_check_failed" readonly="1"/>
+                <field name="approver_id"/>
+            </field>
+            <field name="user_id" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </field>
+            <field name="approver_id" position="after">
+                <field name="control_date"/>
+            </field>
+            <field name="picking_id" position="after">
+                <field name="buyer_id" invisible="not picking_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="abcl_quality_check_view_search" model="ir.ui.view">
+        <field name="name">abcl.quality.check.view.search</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="quality_control.quality_check_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter name="control_date" string="Control Date" context="{'group_by': 'control_date'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

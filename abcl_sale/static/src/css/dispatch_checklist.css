@@ -1,0 +1,98 @@
+.form-controls {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #FFFFFF;
+    background-clip: padding-box;
+    border-radius: 0.4rem;
+    transition: background-color 0.05s ease-in-out, border-color 0.05s ease-in-out, box-shadow 0.05s ease-in-out;
+}
+
+::placeholder {
+    font-family: var(--font-sans-serif);
+}
+
+.form-control {
+    box-shadow: none !important;
+    border: 1px solid;
+}
+
+p.animate-element {
+    position: relative;
+}
+
+p.animate-element:before {
+    content: "";
+    width: 12px;
+    height: 4px;
+    left: 3px;
+    background: #CE1446;
+    position: absolute;
+    border-radius: 2px;
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease;
+    z-index: 1;
+}
+
+p.animate-element:after {
+    content: "";
+    width: 80px;
+    height: 4px;
+    background: #CE1446;
+    position: absolute;
+    right: 0;
+    left: -57px;
+    margin-left: 78px;
+    border-radius: 2px;
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease;
+    z-index: 0;
+}
+
+.widget:hover p.animate-element:after {
+    width: 12px;
+    left: 10px;
+    background: #CE1446;
+}
+
+.widget:hover p.animate-element:before {
+    width: 80px;
+    background: #CE1446;
+}
+
+.input-parent {
+    position: relative;
+}
+
+.input {
+    padding: 6px;
+    border: 1px solid black;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.place {
+    position: absolute;
+    top: 10px;
+    left: 30px;
+    font-size: 14px;
+    padding: 0px 5px;
+    color: #666;
+    transition: 0.3s;
+    pointer-events: none;
+}
+
+.input:focus+.place,
+.input:not(:placeholder-shown)+.place {
+    top: -11px;
+    background-color: #fff;
+    z-index: 0;
+}
+
+.input:not(:placeholder-shown)+.place {
+    display: none;
+}

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="email_template_document_upload_link" model="mail.template">
+            <field name="name">Document upload email</field>
+            <field name="model_id" ref="abcl_purchase.model_res_partner"/>
+            <field name="subject">Action Required: Upload Your Documents</field>
+            <field name="email_from">{{ object.company_id.email_formatted or '' }}</field>
+            <field name="email_to">{{ object.email }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+            <table>
+                <tbody>
+                    <!-- header -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr>
+                                    <td valign="middle">
+                                        <p style="font-size: 14px;font-weight:bold;">Vendor Registration Mail</p>
+                                    </td>
+                                    <td valign="middle" align="right">
+                                        <img t-attf-src="/web/binary/company_logo?company={{ user.company_id.id }}"
+                                             style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                             t-att-alt="user.company_id.name"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="text-align:center;">
+                                        <hr width="100%"
+                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- CONTENT -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr>
+                                    <td valign="top" style="font-size: 13px;">
+                                        <div>
+                                            <!-- <t t-set="approver"
+                                               t-value="object.approval_line_ids.filtered(lambda l: l.approval_status == 'pending')[:1].approver_id"/>
+                                            <t t-set="approver_email"
+                                               t-value="approver.partner_id.email if approver and approver.partner_id else ''"/> -->
+                                            <!-- <p>Dear<span style="font-weight:bold;"
+                                                         t-out="approver.name or ''"/>, -->
+                                            <p>Dear <t t-out="object.name"/>,</p>
+                                            <p>Thank you for registering with <strong><t t-out="user.company_id.name"/></strong>.<br />
+                                                We are pleased to inform you that your vendor registration has been successfully submitted.
+                                            </p>
+                                            <p>To complete the verification process, please upload the following documents:</p>
+                                            <ul>
+                                                <li>GST certificate</li>
+                                                <li>PAN card</li>
+                                                <li>MSME Certificate</li>
+                                                <li>Cancel Cheque</li>
+                                            </ul>
+                                            <p>Before uploading the documents, please ensure that they are clear and legible.</p> 
+
+                                            <p>Upload link: <a t-att-href="object.get_base_url() + '/vendor/document_upload/?t='+ object.upload_access_key">click here</a></p>
+                                            
+                                            <p>If you encounter any problems feel free to contact us by replying to this email.</p>
+                                            <p>
+                                                Regards,
+                                                <p>
+                                                    <span t-out="object.company_id.name"/>
+                                                </p>
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="text-align:center;">
+                                        <hr width="100%"
+                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- footer -->
+                    
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr>
+                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                        <t t-out="object.company_id.phone or ''"/>
+                                        <t t-if="object.company_id.email">
+                                            |
+                                            <a t-att-href="'mailto:%s' % object.company_id.email"
+                                               style="text-decoration:none; color: #454748;">
+                                                <t t-out="object.company_id.email or ''"/>
+                                            </a>
+                                        </t>
+                                        <t t-if="object.company_id.website">
+                                            |
+                                            <a t-att-href="'%s' % object.company_id.website"
+                                               style="text-decoration:none; color: #454748;">
+                                                <t t-out="object.company_id.website or ''"/>
+                                            </a>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>    
+            </table>
+                <!-- <div>
+                    <p>Dear <t t-out="object.name"/>,</p>
+                    
+                    <p>Thank you for registering with <strong><t t-out="user.company_id.name"/></strong>.<br />
+                    We are pleased to inform you that your vendor registration has been successfully submitted.</p>
+
+                    <p>To complete the verification process, please upload the following documents:</p>
+
+                    <ul>
+                        <li>GST certificate</li>
+                        <li>PAN card</li>
+                        <li>MSME Certificate</li>
+                        <li>Cancel Cheque</li>
+                    </ul>
+
+                    <p>Before uploading the documents, please ensure that they are clear and legible.</p> 
+
+                    <p>Upload link: <a t-att-href="object.get_base_url() + '/vendor/document_upload/?t='+ object.upload_access_key">click here</a></p>
+                    
+                    <p>If you encounter any problems feel free to contact us by replying to this email.</p>
+
+                    <p>Best regards,</p>
+                    <p>
+                        <t t-out="user.name"/><br/>
+                        <t t-out="user.company_id.name"/><br/>
+                        <t t-out="user.email"/>
+                    </p>
+                </div> -->
+            </field>
+        </record>
+    </data>      
+</odoo>

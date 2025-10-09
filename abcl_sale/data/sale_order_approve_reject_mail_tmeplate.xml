@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="abcl_sale_order_approved_mail_template" model="mail.template">
+            <field name="name">Sale Order: Approved</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">Sale Order {{ object.name }} - Approved</field>
+            <field name="email_from">{{ object.company_id.email_formatted or '' }}</field>
+            <field name="email_to">{{ '' }}</field>
+            <field name="description">Sent to the requester when the Sale Order is approved</field>
+            <field name="body_html" type="html">
+                <table>
+                    <tbody>
+                        <!-- HEADER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="middle">
+                                            <p style="font-size: 14px;font-weight:bold">Sale Order
+                                                Approved
+                                            </p>
+                                        </td>
+                                        <td valign="middle" align="right">
+                                            <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                 style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                 t-att-alt="object.company_id.name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="text-align:center;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- CONTENT -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="top" style="font-size: 13px;">
+                                            <div>
+                                                <p>Dear <span style="font-weight:bold;"
+                                                             t-out="object.create_uid.name or ''"/>,
+                                                </p>
+
+                                                <p>
+                                                    Good news! Your Sale order
+                                                    <span style="font-weight:bold;" t-out="object.name"/>
+                                                    requested on
+                                                    <span t-out="object.date_order"
+                                                          t-options="{'widget': 'datetime', 'tz_name': user.tz or 'UTC'}"/>
+                                                    has been <span style=" font-weight:bold">
+                                                    APPROVED</span>.
+                                                </p>
+                                                <t t-set="approved_lines"
+                                                   t-value="object.approval_line_ids.filtered(lambda x: x.state == 'approved')"/>
+                                                <p>
+                                                    You can now proceed with the next steps for this Sale order.
+                                                </p>
+
+                                                <p>
+                                                    Best regards,
+                                                    <br/>
+                                                    <span t-out="object.company_id.name"/>
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="text-align:center;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- FOOTER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="middle" align="left" style="opacity: 0.7;">
+                                            <t t-out="object.company_id.phone or ''"/>
+                                            <t t-if="object.company_id.email">
+                                                |
+                                                <a t-att-href="'mailto:%s' % object.company_id.email"
+                                                   style="text-decoration:none; color: #454748;">
+                                                    <t t-out="object.company_id.email or ''"/>
+                                                </a>
+                                            </t>
+                                            <t t-if="object.company_id.website">
+                                                |
+                                                <a t-att-href="'%s' % object.company_id.website"
+                                                   style="text-decoration:none; color: #454748;">
+                                                    <t t-out="object.company_id.website or ''"/>
+                                                </a>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </field>
+        </record>
+
+        <!-- Sale Order Rejected Email Template -->
+        <record id="abcl_sale_order_rejected_mail_template" model="mail.template">
+            <field name="name">Sale Order: Rejected</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">Sale Order {{ object.name }} - Rejected</field>
+            <field name="email_from">{{ object.company_id.email_formatted or '' }}</field>
+            <field name="email_to">{{ '' }}</field>
+            <field name="description">Sent to the requester when the Sale Order is rejected</field>
+            <field name="body_html" type="html">
+                <table>
+                    <tbody>
+                        <!-- HEADER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="middle">
+                                            <p style="font-size: 14px;font-weight:bold">Sale Order
+                                                Rejected
+                                            </p>
+                                        </td>
+                                        <td valign="middle" align="right">
+                                            <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                 style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                 t-att-alt="object.company_id.name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="text-align:center;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- CONTENT -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="top" style="font-size: 13px;">
+                                            <div>
+                                                <p>Dear <span style="font-weight:bold;"
+                                                             t-out="object.create_uid.name or ''"/>,
+                                                </p>
+
+                                                <p>
+                                                    We regret to inform you that your Sale order
+                                                    <span style="font-weight:bold;" t-out="object.name"/>
+                                                    requested on
+                                                    <span t-out="object.date_order"
+                                                          t-options="{'widget': 'datetime', 'tz_name': user.tz or 'UTC'}"/>
+                                                    has been <span style="font-weight:bold;">
+                                                    REJECTED</span>.
+                                                </p>
+                                                <t t-set="rejected_line"
+                                                   t-value="object.approval_line_ids.filtered(lambda x: x.state == 'rejected')[:1]"/>
+                                                <p>
+                                                    Please review the rejection reason and make necessary modifications
+                                                    before resubmitting your request.
+                                                </p>
+
+                                                <p>
+                                                    If you have any questions or need clarification, please contact the
+                                                    approver.
+                                                </p>
+
+                                                <p>
+                                                    Best regards,
+                                                    <br/>
+                                                    <span t-out="object.company_id.name"/>
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="text-align:center;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- FOOTER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                       style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr>
+                                        <td valign="middle" align="left" style="opacity: 0.7;">
+                                            <t t-out="object.company_id.phone or ''"/>
+                                            <t t-if="object.company_id.email">
+                                                |
+                                                <a t-att-href="'mailto:%s' % object.company_id.email"
+                                                   style="text-decoration:none; color: #454748;">
+                                                    <t t-out="object.company_id.email or ''"/>
+                                                </a>
+                                            </t>
+                                            <t t-if="object.company_id.website">
+                                                |
+                                                <a t-att-href="'%s' % object.company_id.website"
+                                                   style="text-decoration:none; color: #454748;">
+                                                    <t t-out="object.company_id.website or ''"/>
+                                                </a>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </field>
+        </record>
+
+    </data>
+</odoo>
