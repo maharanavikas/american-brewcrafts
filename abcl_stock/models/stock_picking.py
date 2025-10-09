@@ -124,13 +124,12 @@ class StockPicking(models.Model):
     
 ############for historical data import#########333
     def button_validate(self):
-
         for picking in self:
             if picking.picking_type_code == 'outgoing' and picking.sale_id:
-                if not picking.is_dispatch_sent != True:
+                if picking.is_dispatch_sent != True:
                     raise ValidationError("Please generate a sign request before validating.")
 
-                if picking.sign_request_state != 'signed':
+                if not picking.dispatch_signature or not picking.accountant_signature:
                     raise ValidationError("You cannot validate this delivery until it is fully signed.")
 
         res = super(StockPicking, self).button_validate()
