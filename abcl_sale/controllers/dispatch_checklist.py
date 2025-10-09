@@ -318,7 +318,7 @@ class DispatchChecklistController(Controller):
         picking.sudo().write(vals)
 
         if role == 'dispatch':
-            picking._send_accountant_mail()  # we'll define this below
+            picking._send_accountant_mail() 
         elif role == 'accountant':
             picking.message_post(body="Both dispatch and accountant have signed the dispatch checklist.")
     
