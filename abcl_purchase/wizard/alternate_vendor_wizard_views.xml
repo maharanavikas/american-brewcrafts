@@ -8,18 +8,15 @@
                 <sheet>
                     <group>
                         <field name="purchase_order" readonly="1" invisible="1"/>
-                        <field name="line_ids"
-                               widget="sol_o2m">
-                            <list 
-                                editable="bottom"
-                                create='false'
-                                delete="false">
-                                <field name="order_line_id" column_invisible="1" force_save="1"/>
-                                <field name="product_id" force_save="1"/>
-                                <field name="vendor_ids" widget="many2many_tags" readonly="1"/>
+                        <field name="vendor_info">
+                            <list>
+                                <field name="partner_id"/>
+                                <field name="product_id"/>
+                                <field name="price"/>
+                                <field name="min_qty"/>
                             </list>
                         </field>
-                        <field name="alternative_vendor"/>
+                        <field name="alternative_vendor" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
                     </group>
                 </sheet>
                 <footer>
