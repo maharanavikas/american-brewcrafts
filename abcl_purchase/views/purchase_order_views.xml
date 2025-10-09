@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="abcl_purchase_order_view_form" model="ir.ui.view">
+        <field name="name">abcl.purchase.order.view.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mt-1 mb-1" role="alert"
+                     invisible="not min_qty_warning or not state in ('draft', 'sent')">
+                    <div>
+                        <field name="min_qty_warning" widget="actionable_errors"/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_get_alternative_vendors" string="Alternative Vendors" type="object"
+                        class="btn-primary" invisible="origin != 'MPS' or state != 'draft'"/>
+                <button name="action_generate_approval_lines" string="Send For Approval" type="object"
+                        class="btn-primary" invisible="approval_line_ids"/>
+                <button name="action_open_approval_form" type="object" string="Approve" class="btn-primary"
+                        invisible="state in ('purchase', 'done', 'cancel', 'close') or all_approvals_done or not user_is_approver"/>
+                <button name="action_open_reject_form" type="object" string="Reject" class="btn btn-danger"
+                        invisible=" state in ('purchase', 'done', 'cancel', 'close') or all_approvals_done or not user_is_approver"/>
+                <button name="action_close" type="object" string="Close" class="btn-primary"
+                        invisible="state not in ('purchase', 'done', 'cancel')"/>
+                <button name="action_open_purchase_analysis" type="object" string="Next PO Analysis" class="btn-primary"
+                        icon="fa-bar-chart" invisible="not next_po_id"/>
+            </xpath>
+            <xpath expr="//button[@name='button_confirm'][1]" position="attributes">
+                <attribute name="invisible">state != 'sent' or approval_status != 'approved'</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_confirm'][2]" position="attributes">
+                <attribute name="invisible">state != 'draft' or approval_status != 'approved'</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_rfq_send'][3]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_rfq_send'][1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_rfq_send'][2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <div name="reminder" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </div>
+            <div name="button_box" position="inside">
+                <button type="object"
+                        name="action_view_next_po"
+                        class="oe_stat_button"
+                        icon="fa-file"
+                        invisible="not next_po_id">
+                    <field name="next_po_id" widget="statinfo" string="Next PO"/>
+                </button>
+            </div>
+            <field name="partner_ref" position="after">
+                <field name="priority_type"/>
+                <!-- <field name="reason"/> -->
+                <field name="next_po_id" domain="[('id', '!=', id)]"/>
+                <!-- <field name="po_ref_no"/> -->
+                <field name="user_is_approver" invisible="1"/>
+                <field name="approval_status" invisible="1"/>
+            </field>
+            <field name="partner_id" position="before">
+                <field name="product_categ_id" options='{"no_open": True, "no_create": True}'/>
+            </field>
+            <field name="fiscal_position_id" position="after">
+                <field name="close_reason_id"/>
+                <field name="closed_date"/>
+                <field name="all_approvals_done" invisible="1"/>
+            </field>
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_id']" position="attributes">
+                <attribute name="domain">['&amp;',
+                    ('seller_ids.partner_id', '=', parent.partner_id),
+                    ('purchase_ok', '=', True)]
+                </attribute>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Approvals">
+                    <field name="approval_line_ids">
+                        <list editable="bottom" create="false" delete="false">
+                            <field name="sequence" readonly="1"/>
+                            <field name="approver_id" readonly="1"/>
+                            <field name="approval_status" readonly="1"/>
+                            <field name="comment"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="po_ref_no"/>
+                <field name="reason"/>
+            </xpath>
+            <field name="partner_id" position="attributes">
+                <attribute name="options">{ 'no_create': True, 'no_create_edit': True}</attribute>
+            </field>
+            <field name="partner_ref" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="currency_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="order_line" position="attributes">
+                <attribute name="readonly">sent_for_approval</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="abcl_purchase_order_view_search" model="ir.ui.view">
+        <field name="name">abcl.purchase.order.view.search</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="po_ref_no" string="PO Reference No"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="abcl_purchase_order_view_list" model="ir.ui.view">
+        <field name="name">abcl.purchase.order.view.list</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="po_ref_no" string="PO Reference No"/>
+            </xpath>
+            <xpath expr="//list" position="attributes">
+                <attribute name="js_class">custom_po_list_controller</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="abcl_purchase_order_l10n_in_purchase_view_form" model="ir.ui.view">
+        <field name="name">abcl.purchase.order.l10n.in.purchaseview.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="l10n_in_purchase.view_purchase_order_form_inherit_l10n_in_purchase"/>
+        <field name="arch" type="xml">
+            <field name="l10n_in_gst_treatment" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_bulk_po_approval" model="ir.actions.server">
+        <field name="name">Bulk Purchase Order Approve</field>
+        <field name="model_id" ref="abcl_purchase.model_purchase_order"/>
+        <field name="state">code</field>
+        <field name="binding_model_id" ref="abcl_purchase.model_purchase_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="groups_id"  eval="[(4, ref('abcl_base.group_vice_president'))]"/>
+        <field name="code">
+            action = records.action_bulk_po_approve()
+        </field>
+    </record>
+</odoo>

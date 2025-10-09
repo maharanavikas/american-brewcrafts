@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="fleet_vehicle_form_inherit" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form.inherit</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <field name="acquisition_date" position="replace">
+                <field name="acquisition_date"/>
+            </field>
+            <field name="transmission" position="replace">
+                <field name="transmission"/>
+            </field>
+            <field name="write_off_date" position="replace">
+                <field name="write_off_date"/>
+            </field>
+            <field name="seats" position="replace">
+                <field name="seats"/>
+            </field>
+            <field name="doors" position="replace">
+                <field name="doors"/>
+            </field>
+            <field name="trailer_hook" position="replace">
+                <field name="trailer_hook"/>
+            </field>
+            <xpath expr="//page[@name='page_model']/group/group[2]" position="replace">
+                <group string="Engine" name="engine">
+                    <field name="power_unit"/>
+                    <label for="power" invisible="power_unit != 'power'"/>
+                    <div class="o_row" invisible="power_unit != 'power'">
+                        <field name="power"/>
+                        <span>kW</span>
+                    </div>
+                    <field name="horsepower" invisible="power_unit != 'horsepower'"/>
+                    <label for="vehicle_range"/>
+                    <div class="o_row">
+                        <field name="vehicle_range"/>
+                        <span>km</span>
+                    </div>
+                    <field name="fuel_type"/>
+                    <label for="co2"/>
+                    <div class="o_row" name="co2">
+                        <field name="co2"/>
+                        <span>g/km</span>
+                    </div>
+                    <field name="co2_standard"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+		<record id="abcl_sale_sign_template_from_view" model="ir.ui.view">
+			<field name="name">abcl.sale.sign.template.form.view</field>
+			<field name="model">sign.template</field>
+			<field name="inherit_id" ref="sign.sign_template_view_form"/>
+			<field name="arch" type="xml">
+				<field name="authorized_ids" position="after">
+					<field name="set_sign_order"/>
+					<field name="signer_ids">
+						<list editable="bottom" create="false">
+							<field name="mail_sent_order"/>
+							<field name="role_id"/>
+							<field name="partner_id"/>
+						</list>
+					</field>
+				</field>
+			</field>
+		</record>
+</odoo>

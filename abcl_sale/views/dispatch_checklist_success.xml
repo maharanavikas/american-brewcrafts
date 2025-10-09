@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="dispatch_checklist_success" name="Dispatch Checklist Submission Success">
+        <t t-call="portal.portal_layout">
+            <div class="container">
+                <div class="card bg-primary">
+                    <div class="card-body">
+                        <div class="text-center p-5">
+                            <i class="fa fa-check-circle fa-4x text-success mb-4"/>
+                            <h2 class="text-success">Thank You for Submitting Your Dispatch Checklist Form!</h2>
+                            <h6 class="lead mt-3">
+                                Your details has been received successfully.
+                            </h6>
+                            <p>
+                                Thank you for your cooperation.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

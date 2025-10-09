@@ -1,0 +1,58 @@
+# -*- coding: utf-8 -*-
+{
+    'name': "ABCL Sales",
+    'summary': "American Brew Crafts Sales Module",
+    'description': """ABCL sales module customization to restrict product sales based on customer-specific allowed products.""",
+
+    'author': "Linkfields Innovations",
+    'website': "https://www.linkfields.com",
+    'maintainer': 'Linkfields Innovations',
+
+    'sequence': 120,
+    'category': 'Sales/Sales',
+    'version': '18.0',
+
+    'depends': ['base', 'sale', 'mail', 'documents', 'website', 'sign','sale_stock', 'l10n_in', 'sale_management', "web", "website"],
+    'data': [
+        "security/ir.model.access.csv",
+        'data/email_template_pricelist.xml',
+        'data/activity_data.xml',
+        'data/sale_quotation_approval_mail_template.xml',
+        'data/sale_order_approve_reject_mail_tmeplate.xml',
+        'views/product_pricelist_views.xml',
+        "data/sign_item_role_data.xml",
+        "wizards/pricelist_approval_remark_wizard_views.xml",
+        "wizards/stock_picking_sign_request_wizard_views.xml",
+        "wizards/sale_quotation_approval_line_wizard_views.xml",
+        "wizards/permit_status_wizard_views.xml",
+        "wizards/sale_order_bulk_approval_wizard_view.xml",
+        "wizards/dispatch_checklist_wizard_view.xml",
+        # "views/sale_gate_pass_report.xml",
+        "reports/dispatch_checklist_report.xml",
+        "views/res_partner_views.xml",
+        'views/sale_order_views.xml',
+        "views/abcl_sale_history_views.xml",
+        "views/abcl_sale_godown_views.xml",
+        "views/abcl_sale_licence_views.xml",
+        "views/abcl_sale_pack_views.xml",
+        "views/stock_picking_views.xml",
+        "data/sign_item_role_data.xml",
+        "views/sign_template_views.xml",
+        "views/sale_quotation_approvers_views.xml",
+        "views/dispatch_checklist_views.xml",
+        "views/dispatch_checklist_template.xml",
+        "views/dispatch_checklist_success.xml",
+        # "views/sale_report_views.xml",
+    ],
+    'assets': {
+        'web.assets_frontend': [
+            "abcl_sale/static/src/css/dispatch_checklist.css",
+            "abcl_sale/static/src/css/multi-select-tag.css",
+            "abcl_sale/static/src/js/dispatch_checklist.js",
+        ],
+    },
+
+    'license': 'LGPL-3',
+    'images': ['description/abcl_sales_icon.svg'],
+    'installable': True,
+}

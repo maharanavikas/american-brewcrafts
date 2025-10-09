@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <odoo>  
+        <record id="recurring_purchase_order_email_template" model="mail.template">
+          <field name="name">Recurring Purchase Order</field>
+          <field name="subject">Recurring Purchase Order</field>
+          <field name="model_id" ref="bi_recurring_po_agreement.model_recurring_purchase_order"/>
+          <field name="auto_delete" eval="True"/>
+          <field name="body_html">
+              <![CDATA[ <p>Hello, <strong><t t-out="object.notify_id.name or ''" /></strong> 
+              <br><br>
+              <t>This email informs you that purchase order <t t-out="object.order_id.name or ''" > is re-occurred</t> <br/><br/>
+              <t>Access re-occurred Purchase Order from bellow button</t><br/>
+              <p style="padding:16px 0px 16px 0px">
+              <a t-att-href="'/web#view_type=form&model=' + object.order_id._name + '&id=' + str(ctx.get('data').id)" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+              View Purchase Order
+              </a></p>]]>
+          </field>
+       </record>
+      
+  </odoo>

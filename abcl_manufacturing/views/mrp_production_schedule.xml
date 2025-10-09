@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="abcl_mrp_production_search_view" model="ir.ui.view">
+        <field name="name">abcl.mrp.production.search.view</field>
+        <field name="model">mrp.production.schedule</field>
+        <field name="inherit_id" ref="mrp_mps.mrp_mps_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='never_replenish']" position="after">
+                <separator/>
+                 <filter name="manufacturing" string="Manufacturing"
+                        domain='[("product_category_id", "in", [38, 39, 36, 10])]'/>
+                <filter name="purchase" string="Purchase"
+                        domain='[("product_category_id", "not in", [38, 39, 36, 10])]'/>
+                <separator/>
+
+                <filter name="bbbb330tg" string="Block Buster Beeryani Beer - 330ml (Telangana)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3058, 2184, 2282, 3403]), ('product_id', '=', [20660])]"/>
+                <filter name="bbbb650tg" string="Block Buster Beeryani Beer - 650ml (Telangana)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3402, 3058, 2184, 2282]), ('product_id', '=', [20667])]"/>
+                <filter name="bblb330tg" string="Block Buster Lager Beer - 330ml (Telangana)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3444, 3041, 2169, 2265]), ('product_id', '=', [21114])]"/>
+                <filter name="bblb330goa" string="Block Buster Lager Beer - 330ml (Goa)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3445, 3041, 2169, 2265]), ('product_id', '=', [21094])]"/>
+                <filter name="bblb650an" string="Block Buster Lager Beer - 650ml (Andaman)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3441, 3041, 2169, 2265]), ('product_id', '=', [21092])]"/>
+                <filter name="bblb650pud" string="Block Buster Lager Beer - 650ml (Puducherry)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3443, 3041, 2169, 2265]), ('product_id', '=', [21093])]"/>
+                <filter name="bblb650tg" string="Block Buster Lager Beer - 650ml (Telangana)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3442, 3041, 2169, 2265]), ('product_id', '=', [21115])]"/>
+                <filter name="bblbd30tg" string="Block Buster Lager Beer Draught - 30ltrs (Telangana)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3384, 3041, 2169, 2265]), ('product_id', '=', [20652])]"/>
+                <filter name="bblbd50tg" string="Block Buster Lager Beer Draught - 50ltrs (Telangana)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3383, 3041, 2169, 2265]), ('product_id', '=', [20651])]"/>
+                <filter name="bbmcb330tg" string="Block Buster Matinee Cranberry Beer - 330ml (Telangana)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3401, 3044, 2172, 2268]), ('product_id', '=', [20659])]"/>
+                <filter name="bbsb330pud" string="Block Buster Strong Beer - 330ml (Puducherry)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3446, 3040, 2168, 2264]), ('product_id', '=', [21116])]"/>
+                <filter name="bbsb330goa" string="Block Buster Strong Beer - 330ml (Goa)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3447, 3040, 2168, 2264]), ('product_id', '=', [21099])]"/>
+                <filter name="bbsb650tg" string="Block Buster Strong Beer - 650ml (Telangana)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [2168, 2264, 3040, 3385]), ('product_id', '=', [21118])]"/>
+                <filter name="bbsb650pud" string="Block Buster Strong Beer - 650ml (Puducherry)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [2168, 2264, 3040, 3386]), ('product_id', '=', [21095])]"/>
+                <filter name="bbsb650an" string="Block Buster Strong Beer - 650ml (Andaman)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [2168, 2264, 3040, 3387]), ('product_id', '=', [21097])]"/>
+                <filter name="bbsb650jk" string="Block Buster Strong Beer - 650ml (Jharkhand)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [2168, 2264, 3040, 3388]), ('product_id', '=', [21096])]"/>
+                <filter name="bbsb650k" string="Block Buster Strong Beer - 650ml (Karnataka)"
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [2168, 2264, 3040, 3389]), ('product_id', '=', [21098])]"/>
+                <filter name="bbsbd30tg" string="Block Buster Strong Beer Draught - 30ltrs (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3390, 3040, 2168, 2264]), ("product_id", "=", 20653)]'/>
+                <filter name="bbulb330tg" string="Block Buster Ultra Lager Beer - 330ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3043, 2171, 2267, 3395]), ("product_id", "=", 20655)]'/>
+                <filter name="bbulb500tg" string="Block Buster Ultra Lager Beer - 500ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3391, 3043, 2171, 2267]), ("product_id", "=", 20654)]'/>
+                <filter name="bbulb650tg" string="Block Buster Ultra Lager Beer - 650ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3392, 3043, 2171, 2267]), ("product_id", "=", 21119)]'/>
+                <filter name="bbulb650jk" string="Block Buster Ultra Lager Beer - 650ml (Jharkhand)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3393, 3043, 2171, 2267]), ("product_id", "=", 21102)]'/>
+                <filter name="bbulb650pud" string="Block Buster Ultra Lager Beer - 650ml (Puducherry)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3394, 3043, 2171, 2267]), ("product_id", "=", 21103)]'/>
+                <filter name="bbusb330jk" string="Block Buster Ultra Strong Beer - 330ml (Jharkhand)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3042, 2170, 2266, 3400]), ("product_id", "=", 20658)]'/>
+                <filter name="bbusb500jk" string="Block Buster Ultra Strong Beer - 500ml (Jharkhand)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3042, 2170, 2266, 3397]), ("product_id", "=", 20657)]'/>
+                <filter name="bbusb650jk" string="Block Buster Ultra Strong Beer - 650ml (Jharkhand)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3042, 2170, 2266, 3398]), ("product_id", "=", 21120)]'/>
+                <filter name="bbusb650tn" string="Block Buster Ultra Strong Beer - 650ml (TamilNadu)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3042, 2170, 2266, 3399]), ("product_id", "=", 21104)]'/>
+                <filter name="bbusbd30tn" string="Block Buster Ultra Strong Beer Draught- 30ltrs (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3396, 3042, 2170, 2266]), ("product_id", "=", 20656)]'/>
+                <filter name="fmbscb330tg" string="Flying Monkey Belgian Style Craft Beer - 330ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3425, 3045, 2173, 2269]), ("product_id", "=", 21091)]'/>
+                <filter name="fmbscb330k" string="Flying Monkey Belgian Style Craft Beer - 330ml (Karnataka)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3426, 3045, 2173, 2269]), ("product_id", "=", 21121)]'/>
+                <filter name="fmbscb500tg" string="Flying Monkey Belgian Style Craft Beer - 500ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3045, 2173, 2269, 3427]), ("product_id", "=", 20650)]'/>
+                <filter name="fmbscb650tg" string="Flying Monkey Belgian Style Craft Beer - 650ml (Karnataka)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3045, 2173, 2269, 3428]), ("product_id", "=", 20649)]'/>
+                <filter name="fmupsb500ke" string="Flying Monkey Ultra Premium Strong Beer - 500ml (Kerala)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3429, 3059, 2189, 2283]), ("product_id", "=", 20648)]'/>
+                <filter name="fmupsb650ke" string="Flying Monkey Ultra Premium Strong Beer - 650ml (Kerala)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3059, 2189, 2283, 3430]), ("product_id", "=", 20647)]'/>
+                <filter name="klb650tg" string="Karjura Lager Beer - 650ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3409, 3048, 2176, 2272]), ("product_id", "=", 20641)]'/>
+                <filter name="klbd30tg" string="Karjura Lager Beer Draught - 30ltrs (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3048, 2176, 2272, 3411]), ("product_id", "=", 20642)]'/>
+                <filter name="klbd50tg" string="Karjura Lager Beer Draught - 50ltrs (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3048, 2176, 2272, 3410]), ("product_id", "=", 20643)]'/>
+                <filter name="ksb650tg" string="Karjura Strong Beer - 650ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3412, 3047, 2175, 2271]), ("product_id", "=", 20644)]'/>
+                <filter name="ksbd30tg" string="Karjura Strong Beer Draught - 30ltrs (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3047, 2175, 2271, 3414]), ("product_id", "=", 20645)]'/>
+                <filter name="ksbd50tg" string="Karjura Strong Beer Draught - 50ltrs (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3047, 2175, 2271, 3413]), ("product_id", "=", 20646)]'/>
+                <filter name="khlb330tg" string="Khajuraho Lager Beer - 330ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3061, 2191, 2285, 3405]), ("product_id", "=", 20637)]'/>
+                <filter name="khlb650tg" string="Khajuraho Lager Beer - 650ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3404, 3061, 2191, 2285]), ("product_id", "=", 20636)]'/>
+                <filter name="khlbd30tg" string="Khajuraho Lager Beer Draught - 30ltrs (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3061, 2191, 2285, 3407]), ("product_id", "=", 20639)]'/>
+                <filter name="khlbd50tg" string="Khajuraho Lager Beer Draught - 50ltrs (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3061, 2191, 2285, 3406]), ("product_id", "=", 20638)]'/>
+                <filter name="khsb650tg" string="Khajuraho Strong Beer - 650ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3408, 3060, 2190, 2284]), ("product_id", "=", 20640)]'/>
+                <filter name="tbsb330tg" string="T BULL Strong Beer - 330ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3056, 2185, 2280, 3418]), ("product_id", "=", 21131)]'/>
+                <filter name="tbsb330goa" string="T BULL Strong Beer - 330ml (Goa)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3056, 2185, 2280, 3419]), ("product_id", "=", 21087)]'/>
+                <filter name="tbsb330pud" string="T BULL Strong Beer - 330ml (Puducherry)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3056, 2185, 2280, 3420]), ("product_id", "=", 21088)]'/>
+                <filter name="tbsb650tg" string="T BULL Strong Beer - 650ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3415, 3056, 2185, 2280]), ("product_id", "=", 21132)]'/>
+                <filter name="tbsb650goa" string="T BULL Strong Beer - 650ml (Goa)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3416, 3056, 2185, 2280]), ("product_id", "=", 21085)]'/>
+                <filter name="tbsb650pud" string="T BULL Strong Beer - 650ml (Puducherry)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3417, 3056, 2185, 2280]), ("product_id", "=", 21086)]'/>
+<!--############################################################-->
+                <filter name="bbusb500jh" string="Block Buster Strong Beer - 500ml (Jharkhand)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3450, 3040, 2168, 2264]), ("product_id", "=", 21101)]'/>
+                <filter name="bbusb500pd" string="Block Buster Strong Beer - 500ml (Puducherry)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3040, 2168, 2264, 3449]), ("product_id", "=", 21100)]'/>
+                <filter name="bbusb500tg" string="Block Buster Strong Beer - 500ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3040, 2168, 2264, 3448]), ("product_id", "=", 21117)]'/>
+                <filter name="fmucsb500ke" string="Flying Monkey Ultra Classic Strong Beer - 500ml (Kerala)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3561, 3046, 2174, 2270]), ("product_id", "=", 21294)]'/>
+                <filter name="fmucsb650ke" string="Flying Monkey Ultra Classic Strong Beer - 650ml (Kerala)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3046, 2174, 2270, 3562]), ("product_id", "=", 21295)]'/>
+                <filter name="kesb650ap" string="Karjura Extra Strong Beer - 650ml (Andhra Pradesh)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3563, 3500, 3496, 3498]), ("product_id", "=", 21296)]'/>
+                <filter name="kpsb500ke" string="Karjura Premium Strong Beer - 500ml (Kerala)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3566, 3499, 3495, 3497]), ("product_id", "=", 21299)]'/>
+                <filter name="kpsb650ke" string="Karjura Premium Strong Beer - 650ml (Kerala)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3499, 3495, 3497, 3567]), ("product_id", "=", 21298)]'/>
+                <filter name="kemb330tg" string="Karjura Raw Mango Beer - 330ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3565, 3055, 2183, 2279]), ("product_id", "=", 21297)]'/>
+                <filter name="kemb650tg" string="Karjura Raw Mango Beer - 650ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3055, 2183, 2279, 3564]), ("product_id", "=", 20616)]'/>
+                <filter name="tblb330goa" string="T BULL Lager Beer - 330ml (Goa)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3424, 3057, 2186, 2281]), ("product_id", "=", 21090)]'/>
+                 <filter name="tblb330tg" string="T BULL Lager Beer - 330ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3057, 2186, 2281, 3423]), ("product_id", "=", 21129)]'/>
+                <filter name="tblb650goa" string="T BULL Lager Beer - 650ml (Goa)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3057, 2186, 2281, 3422]), ("product_id", "=", 21089)]'/>
+                <filter name="tblb650tg" string="T BULL Lager Beer - 650ml (Telangana)"
+                        domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3057, 2186, 2281, 3421]), ("product_id", "=", 21130)]'/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

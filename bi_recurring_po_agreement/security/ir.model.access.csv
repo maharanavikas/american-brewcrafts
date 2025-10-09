@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+bi_recurring_po_agreement.access_recurring_purchase_order,access_recurring_purchase_order,bi_recurring_po_agreement.model_recurring_purchase_order,base.group_user,1,1,1,1
+bi_recurring_po_agreement.access_recurring_purchase_order_line,access_recurring_purchase_order_line,bi_recurring_po_agreement.model_recurring_purchase_order_line,base.group_user,1,1,1,1
