@@ -394,3 +394,18 @@ class PurchaseOrder(models.Model):
             'context': {'default_purchase_order': self.id},
             'target': 'new',
         }
+
+    @api.model
+    def action_split_po(self):
+        self.ensure_one()
+        if self.state != 'draft':
+            raise UserError("You cannot Split the PO unless it's in draft state.")
+        return{
+            'type': 'ir.actions.act_window',
+            'name': 'Split Purchase Order',
+            'view_mode': 'form',
+            'res_model': 'split.po.wizard',
+            'context': {'default_purchase_order': self.id, 'default_vendor_ids': [(5, 0, 0)]},
+            'target': 'new',
+        }
+    

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_split_po_wizard_form" model="ir.ui.view">
+        <field name="name">split.po.wizard.form</field>
+        <field name="model">split.po.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Split Purchase Order">
+                <sheet>
+                    <group>
+                        <field name="purchase_order" readonly="1" force_save="1"/>
+                        <field name="vendor_ids"
+                               widget="sol_o2m"
+                               force_save="1">
+                            <list 
+                                editable="bottom">
+                                 <field name="product_id" force_save="1" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                                <field name="partner_id" force_save="1" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                                <field name="quantity" force_save="1"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Confirm" type="object" name="action_confirm" class="btn-primary" invisible="not quantities_matched"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

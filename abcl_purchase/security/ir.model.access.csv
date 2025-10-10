@@ -10,4 +10,6 @@ access_product_category_portal,access.product.category.portal,model_product_cate
 access_alternative_vendor_wizard,access.alternative.vendor.wizard,model_alternative_vendor_wizard,base.group_user,1,1,1,1
 access_purchase_order_bulk_approval,purchase.order.bulk.approval,model_purchase_order_bulk_approval,abcl_base.group_vice_president,1,1,1,1
 access_supplier_price_change_wizard,supplier.price.change.wizard,model_supplier_price_change_wizard,,1,1,1,1
+access_split_po_wizard,access.split.po.wizard,model_split_po_wizard,base.group_user,1,1,1,1
+access_split_po_wizard_line,access.split_po_wizard_line,model_split_po_wizard_line,base.group_user,1,1,1,1
 access_vendor_pricelist_approval_wizard,vendor.pricelist.approval.wizard,model_vendor_pricelist_approval_wizard,abcl_base.group_vice_president,1,1,1,1
