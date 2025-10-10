@@ -1817,7 +1817,7 @@
                                                 </div>
 
                                                 <!-- Accountant Signature -->
-                                                <div class="col-md-6">
+                                                <div class="col-md-6 text-end">
                                                     <t t-if="picking.accountant_signature">
                                                         <div class="col-sm-6 text-center">
                                                             <h5>Accountant</h5>
@@ -1827,7 +1827,7 @@
                                                             </p>
                                                         </div>
                                                     </t>
-                                                    <div id="accountant_content">
+                                                    <div id="accountant_content" t-if="not picking.accountant_signature">
                                                         <div class="mb-4">
                                                             <t t-if="not picking.accountant_signature">
                                                                 <h4>Accountant</h4>
@@ -1880,6 +1880,21 @@
                     </div>
                 </div>
             </t>
+            <t t-jquery="body" t-operation="append">
+                <script>
+                    $(document).on('signature_submitted', function (ev, data) {
+                        if (data &amp;
+                         data.success) {
+                            // Fetch the updated signature image (assuming it’s now stored)
+                            $.get(window.location.href, function (html) {
+                                const newContent = $(html).find('#accountant_content').html();
+                                $('#accountant_content').html(newContent);
+                            });
+                        }
+                    });
+                </script>
+            </t>
+
         </template>  
 
 
