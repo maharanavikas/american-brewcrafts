@@ -16,7 +16,7 @@
                     </list>
                 </field>
                 <field name="sign_request_state" invisible="picking_type_code != 'outgoing'" readonly="0"/>
-                <field name="signature_state" readonly="0"/>
+                <!-- <field name="signature_state" readonly="0"/> -->
                 <field name="is_dispatch_sent" string="Is Dispatch Sent" readonly="1"/>
                 <field name="dispatch_signature" widget="image" readonly="1"/>
                 <field name="accountant_signature" widget="image" readonly="1"/>

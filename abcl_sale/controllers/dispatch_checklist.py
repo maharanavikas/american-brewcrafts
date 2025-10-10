@@ -15,6 +15,11 @@ def validate_access_token(func):
         print("picking --->", picking)
         if not picking:
             return request.not_found()
+        if picking.dispatch_signature and picking.accountant_signature:
+            return request.render('abcl_sale.dispatch_checklist_locked', {
+                    'picking': picking,
+                    'message': "This dispatch checklist has already been signed by both Dispatch and Accountant. Access denied."
+                })
         return func(object, picking, *args, **kwargs)
     return wrapper
 
@@ -318,7 +323,7 @@ class DispatchChecklistController(Controller):
         picking.sudo().write(vals)
 
         if role == 'dispatch':
-            picking._send_accountant_mail()  # we'll define this below
+            picking._send_accountant_mail() 
         elif role == 'accountant':
             picking.message_post(body="Both dispatch and accountant have signed the dispatch checklist.")
     

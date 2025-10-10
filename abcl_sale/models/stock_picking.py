@@ -14,7 +14,7 @@ class StockPicking(models.Model):
         store=True, copy=False
     )
 
-    signature_state = fields.Selection([('darft', 'Draft'), ('signed', 'Fully Signed')], string=' State')
+    # signature_state = fields.Selection([('darft', 'Draft'), ('signed', 'Fully Signed')], string=' State')
 
     signer_ids = fields.One2many(
         related='sign_request_id.request_item_ids',
