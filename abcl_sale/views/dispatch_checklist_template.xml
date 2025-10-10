@@ -379,7 +379,7 @@
                                                                 <input type="hidden" name="line_ids[]" t-att-value="ml.id"/>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                <span t-out="ml.lot_ids or '-'"/>
+                                                                <span t-out="ml.lot_ids.name or '-'"/>
                                                             </div>
                                                             <div class="col-sm-2">
                                                                 <span t-out="ml.quantity or '-'"/>

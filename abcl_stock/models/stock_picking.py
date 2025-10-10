@@ -126,7 +126,7 @@ class StockPicking(models.Model):
     def button_validate(self):
         for picking in self:
             if picking.picking_type_code == 'outgoing' and picking.sale_id:
-                if picking.is_dispatch_sent != True:
+                if picking.is_dispatch_sent == False:
                     raise ValidationError("Please generate a sign request before validating.")
 
                 if not picking.dispatch_signature or not picking.accountant_signature:

@@ -25,6 +25,7 @@
         "wizard/purchase_approval_comment_wizard_views.xml",
         "wizard/generate_draft_purchase_order.xml",
         "wizard/purchase_order_bulk_approval_wizard_views.xml",
+        "wizard/vendor_pricelist_approve_wizard.xml",
         "views/res_partner_views.xml",
         "views/uom_uom_views.xml",
         "views/abcl_vendor_registration_mail.xml",

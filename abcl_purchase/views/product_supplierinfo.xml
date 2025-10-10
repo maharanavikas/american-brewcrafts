@@ -22,6 +22,7 @@
             <xpath expr="//div[field[@name='delay']]" position="after">
                 <field name="is_approval_requested" readonly="1"/>
                 <field name="active" readonly="1"/>
+                <field name="approver_comment" readonly="1"/>
             </xpath>
             <xpath expr="//div[@class='o_row'][field[@name='price']]" position="after">
                 <field name="requested_price" readonly="1"/>
@@ -56,12 +57,12 @@
                             string="Request For Approval"
                             type="object"
                             class="btn-primary" invisible="active == True or is_new_request == True"/>
-                    <button name="action_approve_request"
+                    <button name="action_approve_wizard"
                             string="Approve"
                             type="object"
                             class="btn-primary" invisible="not is_approval_requested"
                             groups="abcl_base.group_vice_president"/>
-                    <button name="action_reject_request"
+                    <button name="action_reject_wizard"
                             string="Reject"
                             type="object"
                             class="btn-secondary" invisible="not is_approval_requested"
