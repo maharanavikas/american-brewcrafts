@@ -36,7 +36,8 @@
         'views/product_views.xml',
         'views/purchase_close_reason_views.xml',
         'wizard/supplier_price_change_wizard_view.xml',
-        'wizard/alternate_vendor_wizard_views.xml'
+        'wizard/alternate_vendor_wizard_views.xml',
+        'wizard/split_po_wizard_views.xml',
     ],
 
     'assets': {
