@@ -154,4 +154,17 @@
             action = records.action_bulk_po_approve()
         </field>
     </record>
+
+    <record id="action_split_po" model="ir.actions.server">
+        <field name="name">Split PO</field>
+        <field name="model_id" ref="abcl_purchase.model_purchase_order"/>
+        <field name="state">code</field>
+        <field name="binding_view_types">form</field>
+         <field name="binding_model_id" ref="abcl_purchase.model_purchase_order"/>
+        <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+        <field name="code">
+           action = record.action_split_po()
+        </field>
+    </record>
+    
 </odoo>

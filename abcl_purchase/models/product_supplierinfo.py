@@ -26,6 +26,7 @@ class SupplierInfo(models.Model):
     is_approval_requested = fields.Boolean(string="Approval Requested", default=False, tracking=True)
     active = fields.Boolean(string="Active", default=False, tracking=True)
     is_new_request = fields.Boolean(string="New request", default=False, tracking=True)
+    approver_comment = fields.Text(string="Approver Comment", tracking=True)
 
     def action_open_change_request_wizard(self):
         return {
@@ -121,6 +122,34 @@ class SupplierInfo(models.Model):
                         force_send=True,
                         email_values={'recipient_ids': [(6, 0, vp_users.mapped('partner_id').ids)]}
                     )
+
+    def action_approve_wizard(self):
+        self.ensure_one()
+        return {
+            'name': 'Vendor Pricelist Approval',
+            'type': 'ir.actions.act_window',
+            'res_model': 'vendor.pricelist.approval.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_product_supplierinfo_id': self.id,
+                'default_action_type': 'approve'
+            }
+        }
+
+    def action_reject_wizard(self):
+        self.ensure_one()
+        return {
+            'name': 'Vendor Pricelist Approval',
+            'type': 'ir.actions.act_window',
+            'res_model': 'vendor.pricelist.approval.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_product_supplierinfo_id': self.id,
+                'default_action_type': 'reject'
+            }
+        }
 
     def action_approve_request(self):
         for rec in self:

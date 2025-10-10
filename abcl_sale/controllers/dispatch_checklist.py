@@ -15,7 +15,7 @@ def validate_access_token(func):
         print("picking --->", picking)
         if not picking:
             return request.not_found()
-        if picking.dispatch_signature and picking.accountant_signature:
+        if picking.signature_state == 'signed':
             return request.render('abcl_sale.dispatch_checklist_locked', {
                     'picking': picking,
                     'message': "This dispatch checklist has already been signed by both Dispatch and Accountant. Access denied."
@@ -295,6 +295,10 @@ class DispatchChecklistController(Controller):
                     'product_remark': remark,
                 })
 
+            if picking.dispatch_signature and picking.accountant_signature:
+                if picking.signature_state != 'signed':
+                    picking.signature_state = 'signed'
+
             return request.redirect(f'/dispatch_checklist_success/{picking.access_token}')
 
     @route('/dispatch_checklist/<string:access_token>/accept/<string:role>',
@@ -318,7 +322,6 @@ class DispatchChecklistController(Controller):
             vals = {'accountant_signed_by': name, 'accountant_signature': signature, 'accountant_sign_status': 'signed'}
         else:
             return {'success': False, 'error': f'Unknown role: {role}'}
-        print('vals --->', vals)
 
         picking.sudo().write(vals)
 
@@ -337,76 +340,3 @@ class DispatchChecklistController(Controller):
             return request.not_found()
         return request.render('abcl_sale.dispatch_checklist_success',{'picking': picking})
     
-    @route('/andaman_nicobar_dispatch_checklist/',type='http', methods=["GET", "POST"], auth='public', website=True)
-    # @validate_access_token
-    def andaman_nicobar_dispatch_checklist(self, **kw):
-        method = request.httprequest.method
-
-        if method == 'GET':
-            return request.render('abcl_sale.andaman_nico_dispatch_checklist_template')
-        elif method == 'POST':
-            return request.redirect(f'/andaman_nicobar_dispatch_checklist_success/')
-        
-    @route('/andaman_nicobar_dispatch_checklist_success/<string:access_token>', type='http', methods=["GET"], auth='public', website=True)
-    def andaman_nicobar_success(self, access_token):
-        pass
-
-
-    @route('/kerala_dispatch_checklist/',type='http', methods=["GET", "POST"], auth='public', website=True)
-    # @validate_access_token
-    def kerala_dispatch_checklist(self, **kw):
-        method = request.httprequest.method
-
-        if method == 'GET':
-            return request.render('abcl_sale.kerala_dispatch_checklist_template')
-        elif method == 'POST':
-            return request.redirect(f'/kerala_dispatch_checklist_success/')
-        
-    @route('/kerala_dispatch_checklist_success/<string:access_token>', type='http', methods=["GET"], auth='public', website=True)
-    def kerala_dispatch_success(self, access_token):
-        pass
-
-
-    @route('/puducherry_dispatch_checklist/',type='http', methods=["GET", "POST"], auth='public', website=True)
-    # @validate_access_token
-    def puducherry_dispatch_checklist(self, **kw):
-        method = request.httprequest.method
-
-        if method == 'GET':
-            return request.render('abcl_sale.puducherry_dispatch_checklist_template')
-        elif method == 'POST':
-            return request.redirect(f'/puducherry_dispatch_checklist_success/')
-        
-    @route('/puducherry_dispatch_checklist_success/<string:access_token>', type='http', methods=["GET"], auth='public', website=True)
-    def puducherry_dispatch_success(self, access_token):
-        pass
-
-
-    @route('/tamilnadu_dispatch_checklist/',type='http', methods=["GET", "POST"], auth='public', website=True)
-    # @validate_access_token
-    def tamilnadu_dispatch_checklist(self, **kw):
-        method = request.httprequest.method
-
-        if method == 'GET':
-            return request.render('abcl_sale.tamilnadu_dispatch_checklist_template')
-        elif method == 'POST':
-            return request.redirect(f'/tamilnadu_dispatch_checklist_success/')
-        
-    @route('/tamilnadu_dispatch_checklist_success/<string:access_token>', type='http', methods=["GET"], auth='public', website=True)
-    def tamilnadu_dispatch_success(self, access_token):
-        pass
-
-
-    @route('/telangana_dispatch_checklist/',type='http', methods=["GET", "POST"], auth='public', website=True)
-    # @validate_access_token
-    def telangana_dispatch_checklist(self, **kw):
-        method = request.httprequest.method
-
-        if method == 'GET':
-            return request.render('abcl_sale.telangana_dispatch_checklist_template')
-        elif method == 'POST':
-            return request.redirect(f'/telangana_dispatch_checklist_success/')
-        
-    @route('/telangana_dispatch_checklist_success/<string:access_token>', type='http', methods=["GET"], auth='public', website=True)
-    def telangana_dispatch_success(self, access_token):
-        pass

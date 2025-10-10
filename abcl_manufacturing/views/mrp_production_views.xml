@@ -39,14 +39,6 @@
                 <attribute name="invisible">1</attribute>
             </button>
             <field name="user_id" position="after">
-                <!--                                <field name="brew_number"/>-->
-                <!--                <field name="brew_number" string="Brew Number" invisible="product_categ_id.name != 'Wort Liquid'"/>-->
-
-                <!--                <field name="brew_number" string="UT Number" invisible="product_categ_id.name != 'Young Beer'"/>-->
-
-                <!--                <field name="brew_number" string="BBT Number" invisible="product_categ_id.name != 'Bulk Beer Stock'"/>-->
-
-                <!--                <field name="brew_number" string="Batch Number" invisible="product_categ_id.name != 'Finished Goods'"/>-->
 
                 <div style="display: flex; align-items: center; width: 100%;">
                     <span class="o_form_label" style="flex: 0 0 20%; max-width: 20%; margin-right: 8px;">
@@ -56,10 +48,20 @@
                     </span>
                     <field name="brew_number" nolabel="1" style="flex: 0 0 80%; max-width: 80%;"/>
                 </div>
-
             </field>
             <xpath expr="//field[@name='user_id']" position="after">
                 <field name="quantity_available" readonly="1" invisible="state != 'done'"/>
+            </xpath>
+           <xpath expr="//div[field[@name='lot_producing_id']]" position="after">
+                <div class="o_row align-items-center" name="extra_production_div" invisible="state != 'done'">
+                    <label for="extra_production" string="Extra Production" class="me-2"/>
+                    <field name="extra_production" widget="float" class="me-3"/>
+                    <button name="action_update_extra_quantity"
+                            string="Update Quantity"
+                            type="object"
+                            class="btn btn-primary"
+                            icon="fa-refresh"/>
+                </div>
             </xpath>
         </field>
     </record>
@@ -71,6 +73,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_uom_id']" position="before">
                 <field name="quantity_available" invisible="state != 'done'"/>
+                <field name="extra_production" invisible="state != 'done'"/>
             </xpath>
         </field>
     </record>

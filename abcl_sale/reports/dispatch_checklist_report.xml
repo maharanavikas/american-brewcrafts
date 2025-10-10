@@ -1817,7 +1817,7 @@
                                 </p>
                             </t>
                         </div>
-                        <div class="col-6">
+                        <div class="col-6 text-end">
                             <t t-if="doc.accountant_signature">
                                 <h5>Accountant</h5>
                                 <img t-att-src="image_data_uri(doc.accountant_signature)" style="max-height: 4rem;"/>
