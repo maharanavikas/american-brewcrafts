@@ -40,34 +40,45 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
         const selectDiv       = this.$el.find("#select_vehicle_div");
         const enterDiv        = this.$el.find("#enter_vehicle_details");
         const vehicleNumber   = this.$el.find("#vehicle_number_div");
+        const vehicleSelect   = this.$el.find("#select_vehicle_name");
+        const vehicleNumberInput = this.$el.find("#vehicle_number_div input");
 
+        // Hide all by default
         selectDiv.hide();
         enterDiv.hide();
         vehicleNumber.hide();
 
-        vehicleType.on("change", function () {
-            const val = $(this).val();
+        // Function to toggle based on current value
+        const toggleSections = (val) => {
             if (val === "internal") {
                 selectDiv.show();
                 vehicleNumber.show();
                 enterDiv.hide();
             } else if (val === "external") {
                 enterDiv.show();
-                selectDiv.hide().val("");
-                vehicleNumber.hide().val("");
+                selectDiv.hide();
+                vehicleNumber.hide();
             } else {
-                selectDiv.val("").hide();
-                enterDiv.val("").hide();
-                vehicleNumber.val("").hide();
+                selectDiv.hide();
+                enterDiv.hide();
+                vehicleNumber.hide();
             }
+        };
+
+        // --- Run toggle once on load (important!) ---
+        const initialVal = vehicleType.val();
+        toggleSections(initialVal);
+
+        // --- On change of vehicle type ---
+        vehicleType.on("change", function () {
+            const val = $(this).val();
+            toggleSections(val);
         });
 
-        const vehicleSelect      = this.$el.find("#select_vehicle_name");
-        const vehicleNumberInput = this.$el.find("#vehicle_number_div input");
+        // --- Vehicle selection handler ---
         vehicleNumberInput.val("");
-
         vehicleSelect.on("change", () => {
-            const $opt   = vehicleSelect.find("option:selected");
+            const $opt = vehicleSelect.find("option:selected");
             const number = $opt.data("number") || "";
             vehicleNumberInput.val(number).trigger("change");
             vehicleNumberInput.valid && $(vehicleNumberInput).valid();
