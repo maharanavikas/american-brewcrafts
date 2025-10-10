@@ -16,6 +16,34 @@ class MrpProduction(models.Model):
     brew_number = fields.Char(string="Brew Number")
     brew_label = fields.Char(compute="_compute_brew_label")
     quantity_available = fields.Float(string="Quantity Available", compute="_compute_quantity_available", store=False)
+    extra_production = fields.Float(string="Extra Production", tracking=True)
+
+
+    def action_update_extra_quantity(self):
+        """Update on-hand quantity for the same lot used in this MO."""
+        for record in self:
+            if not record.product_id:
+                raise UserError("No product defined for this production order.")
+            if record.extra_production <= 0:
+                raise UserError("Please enter a valid extra production quantity greater than zero.")
+            if not record.finished_move_line_ids:
+                raise UserError("No finished move lines found for this production order.")
+
+            finished_move_line = record.finished_move_line_ids.filtered(lambda l: l.lot_id)
+            if not finished_move_line:
+                raise UserError("No lot/serial number found in finished move lines.")
+            lot = finished_move_line[0].lot_id
+
+            location = record.location_dest_id or record.location_src_id
+            if not location:
+                raise UserError("No valid location found to update stock.")
+
+            self.env['stock.quant']._update_available_quantity(
+                record.product_id,
+                location,
+                record.extra_production,
+                lot_id=lot,
+            )
 
     def _compute_quantity_available(self):
         for rec in self:
@@ -23,17 +51,16 @@ class MrpProduction(models.Model):
 
     def _compute_brew_label(self):
         for rec in self:
-            if rec.product_categ_id.name == "Wort Liquid":
+            if rec.product_categ_id.is_wort == True:
                 rec.brew_label = "Brew Number"
-            elif rec.product_categ_id.name == "Young Beer":
+            elif rec.product_categ_id.is_yb == True:
                 rec.brew_label = "UT Number"
-            elif rec.product_categ_id.name == "Bulk Beer Stock":
+            elif rec.product_categ_id.is_bbs == True:
                 rec.brew_label = "BBT Number"
-            elif rec.product_categ_id.name == "Finished Goods":
+            elif rec.product_categ_id.is_fg == True:
                 rec.brew_label = "Batch Number"
             else:
                 rec.brew_label = "Brew Number"
-
 
     def _prepare_stock_lot_values(self):
         self.ensure_one()
