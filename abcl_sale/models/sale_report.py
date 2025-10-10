@@ -27,11 +27,11 @@ class SaleReport(models.Model):
         aggregator='count_distinct',
     )
 
-    def _select_additional_fields(self):
-        res = super()._select_additional_fields()
-        # res.update({
-        #     'import_permit_status': 's.import_permit_status',
-        #     'export_permit_status': 's.export_permit_status',
-        # })
-        return res
+    # def _select_additional_fields(self):
+    #     res = super()._select_additional_fields()
+    #     # res.update({
+    #     #     'import_permit_status': 's.import_permit_status',
+    #     #     'export_permit_status': 's.export_permit_status',
+    #     # })
+    #     return res
 
