@@ -118,7 +118,7 @@ class StockPicking(models.Model):
             'email_to': partner.email,
             'recipient_ids': [(6, 0, [partner.id])],
         }
-        template.with_context(ctx).send_mail(self.id, email_values=email_values, force_send=True)
+        template.with_context(ctx).send_mail(self.id, email_values=email_values)
         self.message_post(body=f"Sign request sent to accountant: {partner.name}")
 
     
@@ -126,7 +126,7 @@ class StockPicking(models.Model):
     def button_validate(self):
         for picking in self:
             if picking.picking_type_code == 'outgoing' and picking.sale_id:
-                if picking.is_dispatch_sent != True:
+                if picking.is_dispatch_sent == False:
                     raise ValidationError("Please generate a sign request before validating.")
 
                 if not picking.dispatch_signature or not picking.accountant_signature:
@@ -182,95 +182,97 @@ class StockMove(models.Model):
     def _create_quality_checks_for_mo(self):
         print("_create_quality_checks_for_mo ..........")
         mo_moves = defaultdict(lambda: self.env['stock.move'])
-        check_vals_list, seen = [], set()
+        check_vals_list = []
+        seen = set()
+
         for move in self:
             if move.production_id and not move.scrapped:
                 mo_moves[move.production_id] |= move
 
+        # QC of product type
         for production, moves in mo_moves.items():
-            q_points_product = self._search_quality_points(moves.product_id, production.picking_type_id, 'product')
-            q_points_qty = self._search_quality_points(production.product_id, production.picking_type_id, 'move_line')
-            q_points = q_points_product | q_points_qty
+            quality_points = self._search_quality_points(moves.product_id, production.picking_type_id, 'product')
 
-            if q_points:
-                vals_list = q_points._get_checks_values(
-                    moves.product_id, production.company_id.id,
-                    existing_checks=production.sudo().check_ids
-                )
-                for vals in vals_list:
-                    vals['production_id'] = production.id
-                check_vals_list += vals_list
+            quality_points_lot_type = self._search_quality_points(
+                production.product_id, production.picking_type_id, 'move_line'
+            )
 
-            # operation
-            q_points_op = self._search_quality_points(
+            quality_points = quality_points | quality_points_lot_type
+            if not quality_points:
+                continue
+
+            mo_check_vals_list = quality_points._get_checks_values(
+                moves.product_id, production.company_id.id,
+                existing_checks=production.sudo().check_ids
+            )
+            for check_value in mo_check_vals_list:
+                check_value.update({'production_id': production.id})
+            check_vals_list += mo_check_vals_list
+
+        # QC of operation type
+        for production, moves in mo_moves.items():
+            quality_points_operation = self._search_quality_points(
                 production.move_finished_ids.product_id, production.picking_type_id, 'operation'
             )
-            for p in q_points_op:
-                if p.check_execute_now():
-                    key = (p.id, production.id, 0, 0, 'operation')
+            for point in quality_points_operation:
+                if point.check_execute_now():
+                    key = (point.id, production.id, 0, 0, 'operation')
                     if key in seen:
                         continue
                     seen.add(key)
                     check_vals_list.append({
-                        'point_id': p.id,
-                        'team_id': p.team_id.id,
+                        'point_id': point.id,
+                        'team_id': point.team_id.id,
                         'measure_on': 'operation',
                         'production_id': production.id,
                     })
 
-            # per-lot checks
-            raw_products = production.move_raw_ids.filtered(lambda m: not m.scrapped).product_id
-            print("raw_products --->", raw_products)
-            operation = production.workorder_ids.mapped('operation_id')
-            print("operation ids ---->", operation.ids)
-            if raw_products:
-                print("inside raw_products if ...")
-                domain_raw = self.env['quality.point']._get_domain(
-                    raw_products, production.picking_type_id, measure_on='lots_serial_no'
-                )
-                print("domain_raw --->", domain_raw)
-                q_points_raw = self.env['quality.point'].sudo().search(domain_raw)
-                print("q_points_raw ---->", q_points_raw)
-                QP = self.env['quality.point'].sudo()
-                pts = QP.search([('measure_on', '=', 'lots_serial_no')])
-                print("All lots_serial_no points:", pts.ids)
-                for p in pts:
-                    print("P", p.id,
-                        "name:", p.display_name,
-                        "picking_types:", p.picking_type_ids.ids,
-                        "products:", p.product_ids.ids,
-                        "categories:", p.product_category_ids.ids,
-                        "operation:", p.operation_id and p.operation_id.id,
-                        "company:", p.company_id.id or None,
-                        "freq:", p.measure_frequency_type)
+        #CUSTOM COMPONENT LOT QC 
+        QP = self.env['quality.point'].sudo()
+        for production, moves in mo_moves.items():
+            print(f"Checking component lots for MO: {production.name}")
 
-                print("Our domain_raw:", domain_raw)
-                print("Matches for domain_raw:", QP.search(domain_raw).ids)
-                if pts:
-                    print("inside q_points_raw .......")
-                    for m in production.move_raw_ids.filtered(lambda mm: not mm.scrapped):
-                        print("M --->", m)
-                        lots  = (m.mapped('move_line_ids.lot_id') | m.lot_ids)
-                        print("lots  ---->", lots )
-                        for lot in m.lot_ids:
-                            print("lot --->", lot)
-                            for p in pts:
-                                print("p ---->", p)
-                                key = (p.id, production.id, m.product_id.id, lot.id, 'lots_serial_no')
-                                print("key --->", key)
-                                print("seen -->", seen)
-                                if key in seen:
-                                    continue
-                                seen.add(key)
-                                check_vals_list.append({
-                                    'point_id': p.id,
-                                    'team_id': p.team_id.id,
-                                    'measure_on': 'lots_serial_no',
-                                    'production_id': production.id,
-                                    'company_id': production.company_id.id,
-                                    'product_id': m.product_id.id,
-                                    'lot_id': lot.id,
-                                })
+            # get 'Manufacturing' control points for lot/serial checks
+            manu_points = QP.search([
+                ('measure_on', '=', 'lots_serial_no'),
+                ('picking_type_ids.name', '=', 'Manufacturing')
+            ])
+            print("manu_points ------>", manu_points)
+            if not manu_points:
+                continue
+
+            # get raw material (component) moves
+            component_moves = production.move_raw_ids.filtered(lambda m: not m.scrapped)
+            print("component_moves --->", component_moves)
+            for move in component_moves:
+                lots = (move.mapped('move_line_ids.lot_id') | move.lot_ids)
+                print("lots ------>", lots)
+                if not lots:
+                    continue
+
+                for lot in lots:
+                    print("lot --->", lot)
+                    for point in manu_points:
+                        print("point --->", point)
+                        # skip unrelated points if restricted to certain products
+                        if point.product_ids and move.product_id not in point.product_ids:
+                            continue
+
+                        key = (point.id, production.id, move.product_id.id, lot.id, 'lots_serial_no')
+                        print("key ---->", key)
+                        if key in seen:
+                            continue
+                        seen.add(key)
+
+                        check_vals_list.append({
+                            'point_id': point.id,
+                            'team_id': point.team_id.id,
+                            'measure_on': 'lots_serial_no',
+                            'production_id': production.id,
+                            'company_id': production.company_id.id,
+                            'product_id': move.product_id.id,
+                            'lot_id': lot.id,
+                        })
 
         if check_vals_list:
             print("check_vals_list ---->", check_vals_list)
