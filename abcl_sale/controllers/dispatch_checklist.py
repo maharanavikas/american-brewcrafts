@@ -15,7 +15,7 @@ def validate_access_token(func):
         print("picking --->", picking)
         if not picking:
             return request.not_found()
-        if picking.dispatch_signature and picking.accountant_signature:
+        if picking.signature_state == 'signed':
             return request.render('abcl_sale.dispatch_checklist_locked', {
                     'picking': picking,
                     'message': "This dispatch checklist has already been signed by both Dispatch and Accountant. Access denied."
@@ -295,6 +295,10 @@ class DispatchChecklistController(Controller):
                     'product_remark': remark,
                 })
 
+            if picking.dispatch_signature and picking.accountant_signature:
+                if picking.signature_state != 'signed':
+                    picking.signature_state = 'signed'
+
             return request.redirect(f'/dispatch_checklist_success/{picking.access_token}')
 
     @route('/dispatch_checklist/<string:access_token>/accept/<string:role>',
@@ -318,7 +322,6 @@ class DispatchChecklistController(Controller):
             vals = {'accountant_signed_by': name, 'accountant_signature': signature, 'accountant_sign_status': 'signed'}
         else:
             return {'success': False, 'error': f'Unknown role: {role}'}
-        print('vals --->', vals)
 
         picking.sudo().write(vals)
 

@@ -94,10 +94,12 @@ class MrpProduction(models.Model):
         return data
 
     def button_mark_done(self):
+        res = super(MrpProduction, self).button_mark_done()
+        if self.quality_check_fail:
+            raise ValidationError("You cannot mark the Production as Done Pre Production Quality Checks for the components have failed")
         for record in self.workorder_ids:
             if record.quality_check_fail:
-                raise ValidationError("You cannot mark the Production as Done as Quality Checks for the components have failed")
-        res = super(MrpProduction, self).button_mark_done()
+                raise ValidationError("You cannot mark the Production as Done as Quality Checks for the components have failed") 
         return res
 
     # def _generate_finished_moves(self):
@@ -105,3 +107,101 @@ class MrpProduction(models.Model):
     #     for move in self.move_finished_ids:
     #         move = move.with_context(default_production_id=self.id)
     #     return res
+
+
+    def action_generate_component_lot_qc(self):
+        print("inside action_generate_component_lot_qc .........")
+        QP = self.env['quality.point'].sudo()
+        QualityCheck = self.env['quality.check'].sudo()
+
+        check_vals_list = []
+        seen = set()
+
+        existing_checks = QualityCheck.search([
+            ('production_id', 'in', self.ids),
+            ('measure_on', '=', 'lots_serial_no'),
+        ])
+        existing_keys = set(
+            (qc.point_id.id, qc.production_id.id, qc.product_id.id, qc.lot_id.id, qc.measure_on)
+            for qc in existing_checks
+        )
+
+        for production in self:
+            # Get Manufacturing quality points for lots/serials
+            manu_points = QP.search([
+                ('measure_on', '=', 'lots_serial_no'),
+                ('picking_type_ids.name', '=', 'Manufacturing')
+            ])
+            if not manu_points:
+                continue
+
+            component_moves = production.move_raw_ids.filtered(lambda m: not m.scrapped)
+
+            for move in component_moves:
+                lots = (move.mapped('move_line_ids.lot_id') | move.lot_ids)
+                if not lots:
+                    continue
+
+                for lot in lots:
+                    for point in manu_points:
+                        if point.product_ids and move.product_id not in point.product_ids:
+                            continue
+
+                        key = (point.id, production.id, move.product_id.id, lot.id, 'lots_serial_no')
+                        if key in seen or key in existing_keys:
+                            continue
+                        seen.add(key)
+                        check_vals_list.append({
+                            'point_id': point.id,
+                            'team_id': point.team_id.id,
+                            'measure_on': 'lots_serial_no',
+                            'production_id': production.id,
+                            'company_id': production.company_id.id,
+                            'product_id': move.product_id.id,
+                            'lot_id': lot.id,
+                        })
+
+        if not check_vals_list:
+            raise ValidationError(
+                "Quality Checks have already been generated for all existing lots.\n"
+                "No new lots found to create new Quality Checks."
+            )
+        QualityCheck.create(check_vals_list)
+
+        action = self.env["ir.actions.actions"]._for_xml_id("quality_control.quality_check_action_main")
+        action['domain'] = [('production_id', 'in', self.ids)]
+        action['context'] = {
+            'search_default_groupby_point': 0,
+            'default_production_id': self[:1].id,
+        }
+        return action
+
+    def _action_confirm_mo_backorders(self):
+        """Confirm MOs, create QCs, then remove older QCs with duplicate lot_ids."""
+        print("inside _action_confirm_mo_backorders ...")
+        super()._action_confirm_mo_backorders()
+        for mo in self:
+            if not mo.procurement_group_id:
+                continue
+
+            related_mos = self.env['mrp.production'].search([
+                ('procurement_group_id', '=', mo.procurement_group_id.id)
+            ], order='backorder_sequence ASC')
+
+            parent_mos = related_mos.filtered(lambda m: m.backorder_sequence < mo.backorder_sequence)
+            if not parent_mos:
+                continue
+            
+            mo_qcs = self.env['quality.check'].search([('production_id', '=', mo.id), ('lot_id', '!=', False)])
+            new_lot_ids = set(mo_qcs.mapped('lot_id').ids)
+            if not new_lot_ids:
+                continue
+            print(f"New QC lot_ids in {mo.name}: {new_lot_ids}")
+
+            for mo in parent_mos:
+                parent_qcs = self.env['quality.check'].search([('production_id', '=', mo.id), ('lot_id', 'in', list(new_lot_ids))])
+                print("parent_qcs --->", parent_qcs)
+                if parent_qcs:
+                    print(f"Removing duplicate QCs from {mo.name} for lots: {parent_qcs.mapped('lot_id.name')}")
+                    parent_qcs.sudo().unlink()
+

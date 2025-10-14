@@ -118,7 +118,7 @@ class StockPicking(models.Model):
             'email_to': partner.email,
             'recipient_ids': [(6, 0, [partner.id])],
         }
-        template.with_context(ctx).send_mail(self.id, email_values=email_values, force_send=True)
+        template.with_context(ctx).send_mail(self.id, email_values=email_values)
         self.message_post(body=f"Sign request sent to accountant: {partner.name}")
 
     
