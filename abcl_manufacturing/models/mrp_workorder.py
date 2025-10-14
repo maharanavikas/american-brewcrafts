@@ -33,3 +33,16 @@ class MrpProductionWorkcenterLine(models.Model):
         elif self.quality_check_fail:
             raise ValidationError("You cannot start the Work Order as Quality Checks for the components have failed")
         return res
+
+    def button_finish(self):
+        print("Work center based finish button")
+        if self.production_id.quality_check_todo:
+            raise ValidationError("Please complete the Pre production Quality Checks before finishing the Work Order.")
+        elif self.production_id.quality_check_fail:
+            raise ValidationError("You cannot finish the Work Order as Pre production Quality Checks for the components have failed")
+        elif self.quality_check_todo:
+            raise ValidationError("Please complete the Quality Checks before finishing the Work Order.")
+        elif self.quality_check_fail:
+            raise ValidationError("You cannot finish the Work Order as Quality Checks for the components have failed")
+        res = super(MrpProductionWorkcenterLine, self).button_finish()
+        return res
