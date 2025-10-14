@@ -78,10 +78,12 @@ class MrpProduction(models.Model):
         return data
 
     def button_mark_done(self):
+        res = super(MrpProduction, self).button_mark_done()
+        if self.quality_check_fail:
+            raise ValidationError("You cannot mark the Production as Done Pre Production Quality Checks for the components have failed")
         for record in self.workorder_ids:
             if record.quality_check_fail:
-                raise ValidationError("You cannot mark the Production as Done as Quality Checks for the components have failed")
-        res = super(MrpProduction, self).button_mark_done()
+                raise ValidationError("You cannot mark the Production as Done as Quality Checks for the components have failed") 
         return res
 
     # def _generate_finished_moves(self):
