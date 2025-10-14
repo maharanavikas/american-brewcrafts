@@ -6,11 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
-    product_id = fields.Many2one(
-        'product.product', 'Product',
-        domain="[('product_tmpl_id.bom_ids', '!=', False)]",
-        required=True
-    )
+    product_id = fields.Many2one('product.product', 'Product', domain="[('product_tmpl_id.bom_ids', '!=', False)]", required=True)
     production_source = fields.Selection([('self','Self'),('third_party','Third Party')])
     product_categ_id = fields.Many2one('product.category', string='Product Category', related='product_id.categ_id')
     brew_number = fields.Char(string="Brew Number")
@@ -18,32 +14,52 @@ class MrpProduction(models.Model):
     quantity_available = fields.Float(string="Quantity Available", compute="_compute_quantity_available", store=False)
     extra_production = fields.Float(string="Extra Production", tracking=True)
 
+    # def action_update_extra_quantity(self):
+    #     """Update on-hand quantity for the same lot used in this MO."""
+    #     for record in self:
+    #         if not record.product_id:
+    #             raise UserError("No product defined for this production order.")
+    #         if record.extra_production <= 0:
+    #             raise UserError("Please enter a valid extra production quantity greater than zero.")
+    #         if not record.finished_move_line_ids:
+    #             raise UserError("No finished move lines found for this production order.")
+    #
+    #         finished_move_line = record.finished_move_line_ids.filtered(lambda l: l.lot_id)
+    #         if not finished_move_line:
+    #             raise UserError("No lot/serial number found in finished move lines.")
+    #         lot = finished_move_line[0].lot_id
+    #
+    #         location = record.location_dest_id or record.location_src_id
+    #         if not location:
+    #             raise UserError("No valid location found to update stock.")
+    #
+    #         self.env['stock.quant']._update_available_quantity(
+    #             record.product_id,
+    #             location,
+    #             record.extra_production,
+    #             lot_id=lot,
+    #         )
 
-    def action_update_extra_quantity(self):
-        """Update on-hand quantity for the same lot used in this MO."""
-        for record in self:
-            if not record.product_id:
-                raise UserError("No product defined for this production order.")
-            if record.extra_production <= 0:
-                raise UserError("Please enter a valid extra production quantity greater than zero.")
-            if not record.finished_move_line_ids:
-                raise UserError("No finished move lines found for this production order.")
+    def action_open_extra_production_wizard(self):
+        """Open the Extra Production Wizard with default values."""
+        self.ensure_one()
 
-            finished_move_line = record.finished_move_line_ids.filtered(lambda l: l.lot_id)
-            if not finished_move_line:
-                raise UserError("No lot/serial number found in finished move lines.")
-            lot = finished_move_line[0].lot_id
+        finished_move_line = self.finished_move_line_ids.filtered(lambda l: l.lot_id)
+        lot_id = finished_move_line[0].lot_id.id if finished_move_line else False
 
-            location = record.location_dest_id or record.location_src_id
-            if not location:
-                raise UserError("No valid location found to update stock.")
-
-            self.env['stock.quant']._update_available_quantity(
-                record.product_id,
-                location,
-                record.extra_production,
-                lot_id=lot,
-            )
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'extra.production.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'name': 'Register Extra Production',
+            'context': {
+                'default_production_id': self.id,
+                'default_product_id': self.product_id.id,
+                'default_location_id': self.location_dest_id.id or self.location_src_id.id,
+                'default_lot_id': lot_id,
+            },
+        }
 
     def _compute_quantity_available(self):
         for rec in self:
@@ -91,3 +107,101 @@ class MrpProduction(models.Model):
     #     for move in self.move_finished_ids:
     #         move = move.with_context(default_production_id=self.id)
     #     return res
+
+
+    def action_generate_component_lot_qc(self):
+        print("inside action_generate_component_lot_qc .........")
+        QP = self.env['quality.point'].sudo()
+        QualityCheck = self.env['quality.check'].sudo()
+
+        check_vals_list = []
+        seen = set()
+
+        existing_checks = QualityCheck.search([
+            ('production_id', 'in', self.ids),
+            ('measure_on', '=', 'lots_serial_no'),
+        ])
+        existing_keys = set(
+            (qc.point_id.id, qc.production_id.id, qc.product_id.id, qc.lot_id.id, qc.measure_on)
+            for qc in existing_checks
+        )
+
+        for production in self:
+            # Get Manufacturing quality points for lots/serials
+            manu_points = QP.search([
+                ('measure_on', '=', 'lots_serial_no'),
+                ('picking_type_ids.name', '=', 'Manufacturing')
+            ])
+            if not manu_points:
+                continue
+
+            component_moves = production.move_raw_ids.filtered(lambda m: not m.scrapped)
+
+            for move in component_moves:
+                lots = (move.mapped('move_line_ids.lot_id') | move.lot_ids)
+                if not lots:
+                    continue
+
+                for lot in lots:
+                    for point in manu_points:
+                        if point.product_ids and move.product_id not in point.product_ids:
+                            continue
+
+                        key = (point.id, production.id, move.product_id.id, lot.id, 'lots_serial_no')
+                        if key in seen or key in existing_keys:
+                            continue
+                        seen.add(key)
+                        check_vals_list.append({
+                            'point_id': point.id,
+                            'team_id': point.team_id.id,
+                            'measure_on': 'lots_serial_no',
+                            'production_id': production.id,
+                            'company_id': production.company_id.id,
+                            'product_id': move.product_id.id,
+                            'lot_id': lot.id,
+                        })
+
+        if not check_vals_list:
+            raise ValidationError(
+                "Quality Checks have already been generated for all existing lots.\n"
+                "No new lots found to create new Quality Checks."
+            )
+        QualityCheck.create(check_vals_list)
+
+        action = self.env["ir.actions.actions"]._for_xml_id("quality_control.quality_check_action_main")
+        action['domain'] = [('production_id', 'in', self.ids)]
+        action['context'] = {
+            'search_default_groupby_point': 0,
+            'default_production_id': self[:1].id,
+        }
+        return action
+
+    def _action_confirm_mo_backorders(self):
+        """Confirm MOs, create QCs, then remove older QCs with duplicate lot_ids."""
+        print("inside _action_confirm_mo_backorders ...")
+        super()._action_confirm_mo_backorders()
+        for mo in self:
+            if not mo.procurement_group_id:
+                continue
+
+            related_mos = self.env['mrp.production'].search([
+                ('procurement_group_id', '=', mo.procurement_group_id.id)
+            ], order='backorder_sequence ASC')
+
+            parent_mos = related_mos.filtered(lambda m: m.backorder_sequence < mo.backorder_sequence)
+            if not parent_mos:
+                continue
+            
+            mo_qcs = self.env['quality.check'].search([('production_id', '=', mo.id), ('lot_id', '!=', False)])
+            new_lot_ids = set(mo_qcs.mapped('lot_id').ids)
+            if not new_lot_ids:
+                continue
+            print(f"New QC lot_ids in {mo.name}: {new_lot_ids}")
+
+            for mo in parent_mos:
+                parent_qcs = self.env['quality.check'].search([('production_id', '=', mo.id), ('lot_id', 'in', list(new_lot_ids))])
+                print("parent_qcs --->", parent_qcs)
+                if parent_qcs:
+                    print(f"Removing duplicate QCs from {mo.name} for lots: {parent_qcs.mapped('lot_id.name')}")
+                    parent_qcs.sudo().unlink()
+
