@@ -6,11 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
-    product_id = fields.Many2one(
-        'product.product', 'Product',
-        domain="[('product_tmpl_id.bom_ids', '!=', False)]",
-        required=True
-    )
+    product_id = fields.Many2one('product.product', 'Product', domain="[('product_tmpl_id.bom_ids', '!=', False)]", required=True)
     production_source = fields.Selection([('self','Self'),('third_party','Third Party')])
     product_categ_id = fields.Many2one('product.category', string='Product Category', related='product_id.categ_id')
     brew_number = fields.Char(string="Brew Number")
@@ -18,32 +14,52 @@ class MrpProduction(models.Model):
     quantity_available = fields.Float(string="Quantity Available", compute="_compute_quantity_available", store=False)
     extra_production = fields.Float(string="Extra Production", tracking=True)
 
+    # def action_update_extra_quantity(self):
+    #     """Update on-hand quantity for the same lot used in this MO."""
+    #     for record in self:
+    #         if not record.product_id:
+    #             raise UserError("No product defined for this production order.")
+    #         if record.extra_production <= 0:
+    #             raise UserError("Please enter a valid extra production quantity greater than zero.")
+    #         if not record.finished_move_line_ids:
+    #             raise UserError("No finished move lines found for this production order.")
+    #
+    #         finished_move_line = record.finished_move_line_ids.filtered(lambda l: l.lot_id)
+    #         if not finished_move_line:
+    #             raise UserError("No lot/serial number found in finished move lines.")
+    #         lot = finished_move_line[0].lot_id
+    #
+    #         location = record.location_dest_id or record.location_src_id
+    #         if not location:
+    #             raise UserError("No valid location found to update stock.")
+    #
+    #         self.env['stock.quant']._update_available_quantity(
+    #             record.product_id,
+    #             location,
+    #             record.extra_production,
+    #             lot_id=lot,
+    #         )
 
-    def action_update_extra_quantity(self):
-        """Update on-hand quantity for the same lot used in this MO."""
-        for record in self:
-            if not record.product_id:
-                raise UserError("No product defined for this production order.")
-            if record.extra_production <= 0:
-                raise UserError("Please enter a valid extra production quantity greater than zero.")
-            if not record.finished_move_line_ids:
-                raise UserError("No finished move lines found for this production order.")
+    def action_open_extra_production_wizard(self):
+        """Open the Extra Production Wizard with default values."""
+        self.ensure_one()
 
-            finished_move_line = record.finished_move_line_ids.filtered(lambda l: l.lot_id)
-            if not finished_move_line:
-                raise UserError("No lot/serial number found in finished move lines.")
-            lot = finished_move_line[0].lot_id
+        finished_move_line = self.finished_move_line_ids.filtered(lambda l: l.lot_id)
+        lot_id = finished_move_line[0].lot_id.id if finished_move_line else False
 
-            location = record.location_dest_id or record.location_src_id
-            if not location:
-                raise UserError("No valid location found to update stock.")
-
-            self.env['stock.quant']._update_available_quantity(
-                record.product_id,
-                location,
-                record.extra_production,
-                lot_id=lot,
-            )
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'extra.production.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'name': 'Register Extra Production',
+            'context': {
+                'default_production_id': self.id,
+                'default_product_id': self.product_id.id,
+                'default_location_id': self.location_dest_id.id or self.location_src_id.id,
+                'default_lot_id': lot_id,
+            },
+        }
 
     def _compute_quantity_available(self):
         for rec in self:

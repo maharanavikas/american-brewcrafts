@@ -58,17 +58,23 @@
             <xpath expr="//field[@name='user_id']" position="after">
                 <field name="quantity_available" readonly="1" invisible="state != 'done'"/>
             </xpath>
-           <xpath expr="//div[field[@name='lot_producing_id']]" position="after">
+            <xpath expr="//div[field[@name='lot_producing_id']]" position="after">
                 <div class="o_row align-items-center" name="extra_production_div" invisible="state != 'done'">
                     <label for="extra_production" string="Extra Production" class="me-2"/>
-                    <field name="extra_production" widget="float" class="me-3"/>
-                    <button name="action_update_extra_quantity"
-                            string="Update Quantity"
-                            type="object"
-                            class="btn btn-primary"
-                            icon="fa-refresh"/>
+                    <field name="extra_production" widget="float" class="me-3" readonly="1"/>
+<!--                    <button name="action_update_extra_quantity"-->
+<!--                            string="Update Quantity"-->
+<!--                            type="object"-->
+<!--                            class="btn btn-primary"-->
+<!--                            icon="fa-refresh"/>-->
                 </div>
             </xpath>
+            <header position="inside">
+                <button name="action_open_extra_production_wizard"
+                    string="Register Extra Production"
+                    type="object"
+                    class="btn-primary" invisible="state != 'done'"/>
+            </header>
         </field>
     </record>
 

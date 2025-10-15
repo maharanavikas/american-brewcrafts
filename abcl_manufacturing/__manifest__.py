@@ -14,6 +14,8 @@
 
     'depends': ['mrp', 'mrp_mps', 'stock'],
     'data': [
+        "security/ir.model.access.csv",
+        "wizard/extra_production_wizard_views.xml",
         'views/mrp_production_views.xml',
         "views/mrp_bom_views.xml",
         'views/mrp_production_schedule.xml',
