@@ -161,31 +161,26 @@ class MrpProduction(models.Model):
         return action
 
     def _action_confirm_mo_backorders(self):
-        """Confirm MOs, create QCs, then remove older QCs with duplicate lot_ids."""
-        print("inside _action_confirm_mo_backorders ...")
         super()._action_confirm_mo_backorders()
+        processed_groups = set()
         for mo in self:
-            if not mo.procurement_group_id:
+            group = mo.procurement_group_id
+            if not group or group.id in processed_groups:
                 continue
+            processed_groups.add(group.id)
 
-            related_mos = self.env['mrp.production'].search([
-                ('procurement_group_id', '=', mo.procurement_group_id.id)
-            ], order='backorder_sequence ASC')
+            related_mos = self.env['mrp.production'].search([('procurement_group_id', '=', group.id)])
+            for rmo in related_mos:
+                lots = rmo.move_raw_ids.mapped('lot_ids')
+                valid_lot_ids = set(lots.ids)
+                if not valid_lot_ids:
+                    continue
 
-            parent_mos = related_mos.filtered(lambda m: m.backorder_sequence < mo.backorder_sequence)
-            if not parent_mos:
-                continue
-            
-            mo_qcs = self.env['quality.check'].search([('production_id', '=', mo.id), ('lot_id', '!=', False)])
-            new_lot_ids = set(mo_qcs.mapped('lot_id').ids)
-            if not new_lot_ids:
-                continue
-            print(f"New QC lot_ids in {mo.name}: {new_lot_ids}")
+                mo_qcs = self.env['quality.check'].search([
+                    ('production_id', '=', rmo.id),
+                    ('lot_id', '!=', False),
+                ])
 
-            for mo in parent_mos:
-                parent_qcs = self.env['quality.check'].search([('production_id', '=', mo.id), ('lot_id', 'in', list(new_lot_ids))])
-                print("parent_qcs --->", parent_qcs)
-                if parent_qcs:
-                    print(f"Removing duplicate QCs from {mo.name} for lots: {parent_qcs.mapped('lot_id.name')}")
-                    parent_qcs.sudo().unlink()
-
+                invalid_qcs = mo_qcs.filtered(lambda qc: qc.lot_id.id not in valid_lot_ids)
+                if invalid_qcs:
+                    invalid_qcs.sudo().unlink()

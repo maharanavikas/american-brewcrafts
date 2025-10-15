@@ -12,7 +12,7 @@
                 <button name="action_generate_component_lot_qc"
                 type="object"
                 string="Generate Component Lot QC"
-                class="oe_highlight" invisible="not show_lot_ids or not origin"/>
+                class="oe_highlight" invisible="not show_lot_ids or not origin or state in ['progress', 'done']"/>
             </xpath>
             <xpath expr="//field[@name='move_raw_ids']/list/field[@name='quantity']" position="after">
                 <field name="bom_uom_qty" readonly="1" force_save="1" optional="hide"/>
