@@ -77,7 +77,7 @@
                                                         </label>
                                                         <input type="text" class="form-controls input-wrapper" id="vehicle_no" name="vehicle_no" disabled="disabled" t-att-value="picking.vehicle_no or ''"/>
                                                     </div>
-                                                    <div id="enter_vehicle_details">
+                                                    <div id="enter_vehicle_details_div">
                                                         <label for="enter_vehicle_details" class="form-label"><i class="text-danger"> * </i> Enter Vehicle Details :</label>
                                                         <input type="text" class="form-controls input-wrapper" name="enter_vehicle_details" id="enter_vehicle_details" placeholder="Vehicle Details" t-att-value="picking.vehicle_no or ''"/>
                                                     </div>
