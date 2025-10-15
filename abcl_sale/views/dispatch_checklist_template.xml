@@ -1874,20 +1874,6 @@
                     </div>
                 </div>
             </t>
-            <t t-jquery="body" t-operation="append">
-                <script>
-                    $(document).on('signature_submitted', function (ev, data) {
-                        if (data &amp;
-                         data.success) {
-                            // Fetch the updated signature image (assuming it’s now stored)
-                            $.get(window.location.href, function (html) {
-                                const newContent = $(html).find('#accountant_content').html();
-                                $('#accountant_content').html(newContent);
-                            });
-                        }
-                    });
-                </script>
-            </t>
 
         </template>  
 
