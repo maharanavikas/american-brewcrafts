@@ -38,7 +38,8 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
     _initVehicleToggles() {
         const vehicleType     = this.$el.find("#vehicle_type");
         const selectDiv       = this.$el.find("#select_vehicle_div");
-        const enterDiv        = this.$el.find("#enter_vehicle_details");
+        const enterDiv        = this.$el.find("#enter_vehicle_details_div");
+        const enterVehicleNum        = this.$el.find("#enter_vehicle_details");
         const vehicleNumber   = this.$el.find("#vehicle_number_div");
         const vehicleSelect   = this.$el.find("#select_vehicle_name");
         const vehicleNumberInput = this.$el.find("#vehicle_number_div input");
@@ -52,16 +53,25 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
         const toggleSections = (val) => {
             if (val === "internal") {
                 selectDiv.show();
+                vehicleSelect.addClass('clsrequired');
                 vehicleNumber.show();
                 enterDiv.hide();
+                enterVehicleNum.hide();
             } else if (val === "external") {
                 enterDiv.show();
+                enterVehicleNum.show();
+                enterVehicleNum.addClass('clsrequired');
+                vehicleSelect.removeClass('clsrequired');
                 selectDiv.hide();
                 vehicleNumber.hide();
             } else {
                 selectDiv.hide();
                 enterDiv.hide();
                 vehicleNumber.hide();
+                enterVehicleNum.hide();
+                enterDiv.removeClass('clsrequired');
+                vehicleSelect.removeClass('clsrequired');
+                vehicleType.addClass('clsrequired');
             }
         };
 
@@ -89,6 +99,7 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
         // class rules
         $.validator.addClassRules({
             checkrequired: { required: true },
+            clsrequired: {required : true}
         });
 
         // custom date rule: not in the past
@@ -120,7 +131,7 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
                     $el.closest(".form-check").addClass("has-error");
                     $el.addClass("is-invalid");
                 } else {
-                    $el.css("background", "#a70808ff");
+                    $el.css("background", "#f4c3c3");
                 }
             },
             unhighlight: function (el) {
