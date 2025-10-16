@@ -134,9 +134,10 @@ class QualityCheckSpreadsheet(models.Model):
                 if ml:
                     lines = ml
                     print("lines ---->", lines)
+                    quantities = list(map(lambda line: line.quantity, lines))
                     get_values = lambda line: {
                         'Product': line.product_id.display_name or 'N/A',
-                        'Quantity': line.lot_id.product_qty or 0.0,
+                        'Quantity': line.quantity or 0.0,
                         'UOM': line.product_uom_id.name or 'N/A',
                         # 'Lot/Serial Number': line.lot_id.name,
                     }
@@ -148,7 +149,6 @@ class QualityCheckSpreadsheet(models.Model):
                         'Quantity': move.product_uom_qty or 0.0,
                         'UOM': move.product_uom.name or 'N/A',
                     }
-
             else:
                 # *** FINISHED PRODUCT CASE (original behavior) ***
                 fin_moves = prod.move_finished_ids.filtered(lambda m: m.product_id.id == target_product_id)
