@@ -129,6 +129,20 @@
             <xpath expr="//list" position="attributes">
                 <attribute name="js_class">custom_po_list_controller</attribute>
             </xpath>
+            <xpath expr="//field[@name='priority']" position="replace">
+                <field name="priority_type"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="abcl_purchase_order_tree_view" model="ir.ui.view">
+        <field name="name">abcl.purchase.order.tree.view</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='priority']" position="replace">
+                <field name="priority_type"/>
+            </xpath>
         </field>
     </record>
 
