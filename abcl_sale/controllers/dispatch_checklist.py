@@ -295,6 +295,11 @@ class DispatchChecklistController(Controller):
                     'product_remark': remark,
                 })
 
+            if picking.dispatch_signature:
+                picking._send_accountant_mail() 
+                if picking.is_accountant_sign != True:
+                    picking.is_accountant_sign = True
+
             if picking.dispatch_signature and picking.accountant_signature:
                 if picking.signature_state != 'signed':
                     picking.signature_state = 'signed'
@@ -324,11 +329,6 @@ class DispatchChecklistController(Controller):
             return {'success': False, 'error': f'Unknown role: {role}'}
 
         picking.sudo().write(vals)
-
-        if role == 'dispatch':
-            picking._send_accountant_mail() 
-        elif role == 'accountant':
-            picking.message_post(body="Both dispatch and accountant have signed the dispatch checklist.")
     
         return {'success': True, 'redirect_url': request.httprequest.path.rsplit('/accept', 1)[0]}
 

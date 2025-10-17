@@ -102,7 +102,7 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
         });
 
         // Bind for Dispatch in Charge Modal Close
-        const modalDispatchInCharge = $('#modal_dispatch_in_charge'); // Assuming this is the ID of the other modal
+        const modalDispatchInCharge = $('#modal_dispatch');
         modalDispatchInCharge.on('hidden.bs.modal', function () {
             location.reload(); // Reload the page after modal close
         });
@@ -173,6 +173,37 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
                 } else {
                     error.insertAfter(element);
                 }
+            },
+            submitHandler: function (el) {
+                // Check if dispatch_signature is missing or is_incharge_sign is false
+                const isInchargeSign = $("#is_incharge_sign").val();
+                console.log("isInchargeSign --->", isInchargeSign);
+
+                // Check if accountant_signature is missing or is_incharge_sign is false
+                const isAccountantSign = $("#is_accountant_sign").val();
+                console.log("isAccountantSign --->", isAccountantSign);
+
+                if (!isInchargeSign || !isAccountantSign) {
+                    // Show an error popup if the conditions are not met
+                    swal({
+                        title: "Error",
+                        text: "You must provide a signature.",
+                        icon: "error",
+                        button: "OK",
+                    });
+                    return false;
+                }
+                // If everything is valid, proceed with form submission
+                swal({
+                    title: "Are you sure?",
+                    text: "Do you want to submit the form?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    closeOnClickOutside: false,
+                }).then((willSubmit) => {
+                    if (willSubmit) frm.submit();
+                });
             },
         });
     },

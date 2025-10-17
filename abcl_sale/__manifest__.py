@@ -49,6 +49,7 @@
             "abcl_sale/static/src/css/dispatch_checklist.css",
             "abcl_sale/static/src/css/multi-select-tag.css",
             "abcl_sale/static/src/js/dispatch_checklist.js",
+            "abcl_sale//static/src/js/sweetalert.min.js",
         ],
     },
 

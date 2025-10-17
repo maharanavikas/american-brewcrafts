@@ -29,6 +29,7 @@ class StockPicking(models.Model):
 
     accountant_sign_status = fields.Selection([('pending', 'Pending'),('signed', 'Signed')], 
                                               string="Accountant Sign Status", default='pending')
+    
     is_incharge_sign = fields.Boolean(default=False)
     is_accountant_sign = fields.Boolean(default=False)
     
@@ -121,8 +122,6 @@ class StockPicking(models.Model):
             'recipient_ids': [(6, 0, [partner.id])],
         }
         template.with_context(ctx).send_mail(self.id, email_values=email_values)
-        if self.is_accountant_sign != True:
-            self.is_accountant_sign = True
         self.message_post(body=f"Sign request sent to accountant: {partner.name}")
 
     
