@@ -32,7 +32,9 @@ class AccountMove(models.Model):
     import_permit_date = fields.Date(string="Import Permit Date",)
     export_permit_id = fields.Many2one("export.permit", string="Export Permit")
     export_permit_date = fields.Date(string="Export Permit Date")
-    vehicle_type = fields.Selection([('owned', 'Owned'), ('rented', 'Rented')], "Vehicle Type")
+    # vehicle_type = fields.Selection([('owned', 'Owned'), ('rented', 'Rented')], "Vehicle Type")
+    vehicle_type = fields.Selection(selection=[('internal', 'Internal'), ('external', 'External')],
+                                    string="Vehicle Type")
     vehicle_detail_id = fields.Many2one('fleet.vehicle', string="Our Vehicle Details")
 
     stock_picking_id = fields.Many2one('stock.picking', string='Delivery Order', help="Related Delivery Order for this Invoice", domain="[('sale_id', 'in', related_sale_order_ids)]")
