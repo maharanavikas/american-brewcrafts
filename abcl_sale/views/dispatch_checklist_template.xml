@@ -72,7 +72,7 @@
                                                         </select>
                                                     </div>
                                                     <div id="vehicle_number_div">
-                                                        <label for="select_vehicle_name" class="mb-2">
+                                                        <label for="vehicle_number_div" class="mb-2">
                                                             Selected Vehicle Number :
                                                         </label>
                                                         <input type="text" class="form-controls input-wrapper" id="vehicle_no" name="vehicle_no" disabled="disabled" t-att-value="picking.vehicle_no or ''"/>

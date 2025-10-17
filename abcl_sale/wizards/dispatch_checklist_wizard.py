@@ -71,5 +71,7 @@ class StockPickingSignRequestRole(models.TransientModel):
         
         if picking.is_dispatch_sent != True:
             picking.is_dispatch_sent = True
+        if picking.is_incharge_sign != True:
+            picking.is_incharge_sign = True
 
         return {'type': 'ir.actions.act_window_close'}

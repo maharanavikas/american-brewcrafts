@@ -26,6 +26,7 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
         // this._wireSignatureSuccessHooks();
         this._injectStatusCheckAllButton();
         this._bindCheckAllHandler();
+        this._bindModalCloseEvent();
     },
 
     // ---------- helpers ----------
@@ -86,13 +87,36 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
         });
 
         // --- Vehicle selection handler ---
-        vehicleNumberInput.val("");
         vehicleSelect.on("change", () => {
             const $opt = vehicleSelect.find("option:selected");
             const number = $opt.data("number") || "";
             vehicleNumberInput.val(number).trigger("change");
             vehicleNumberInput.valid && $(vehicleNumberInput).valid();
         });
+    },
+    _bindModalCloseEvent() {
+        // Bind for Accountant Modal Close
+        const modalAccountant = $('#modal_accountant');
+        modalAccountant.on('hidden.bs.modal', function () {
+            location.reload(); // Reload the page after modal close
+        });
+
+        // Bind for Dispatch in Charge Modal Close
+        const modalDispatchInCharge = $('#modal_dispatch_in_charge'); // Assuming this is the ID of the other modal
+        modalDispatchInCharge.on('hidden.bs.modal', function () {
+            location.reload(); // Reload the page after modal close
+        });
+    },
+
+    _checkDispatchSignature() {
+        const dispatchSignature = $('#dispatch_signature').val(); // Assuming you have an input with ID dispatch_signature
+        return dispatchSignature && dispatchSignature !== "";
+    },
+
+    // Custom validation method to check if is_incharge_sign is true
+    _checkInchargeSignature() {
+        const isInchargeSign = $('#is_incharge_sign').prop('checked'); // Assuming is_incharge_sign is a checkbox
+        return isInchargeSign;
     },
 
     _initValidation() {
