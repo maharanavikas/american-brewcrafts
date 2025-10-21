@@ -29,7 +29,10 @@ class StockPicking(models.Model):
 
     accountant_sign_status = fields.Selection([('pending', 'Pending'),('signed', 'Signed')], 
                                               string="Accountant Sign Status", default='pending')
- 
+    
+    is_incharge_sign = fields.Boolean(default=False)
+    is_accountant_sign = fields.Boolean(default=False)
+    
     def _compute_journal_entry_count(self):
         for picking in self:
             picking.journal_entry_count = self.env['account.move'].search_count([

@@ -26,6 +26,7 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
         // this._wireSignatureSuccessHooks();
         this._injectStatusCheckAllButton();
         this._bindCheckAllHandler();
+        this._bindModalCloseEvent();
     },
 
     // ---------- helpers ----------
@@ -86,13 +87,36 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
         });
 
         // --- Vehicle selection handler ---
-        vehicleNumberInput.val("");
         vehicleSelect.on("change", () => {
             const $opt = vehicleSelect.find("option:selected");
             const number = $opt.data("number") || "";
             vehicleNumberInput.val(number).trigger("change");
             vehicleNumberInput.valid && $(vehicleNumberInput).valid();
         });
+    },
+    _bindModalCloseEvent() {
+        // Bind for Accountant Modal Close
+        const modalAccountant = $('#modal_accountant');
+        modalAccountant.on('hidden.bs.modal', function () {
+            location.reload(); // Reload the page after modal close
+        });
+
+        // Bind for Dispatch in Charge Modal Close
+        const modalDispatchInCharge = $('#modal_dispatch');
+        modalDispatchInCharge.on('hidden.bs.modal', function () {
+            location.reload(); // Reload the page after modal close
+        });
+    },
+
+    _checkDispatchSignature() {
+        const dispatchSignature = $('#dispatch_signature').val(); // Assuming you have an input with ID dispatch_signature
+        return dispatchSignature && dispatchSignature !== "";
+    },
+
+    // Custom validation method to check if is_incharge_sign is true
+    _checkInchargeSignature() {
+        const isInchargeSign = $('#is_incharge_sign').prop('checked'); // Assuming is_incharge_sign is a checkbox
+        return isInchargeSign;
     },
 
     _initValidation() {
@@ -149,6 +173,37 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
                 } else {
                     error.insertAfter(element);
                 }
+            },
+            submitHandler: function (el) {
+                // Check if dispatch_signature is missing or is_incharge_sign is false
+                const isInchargeSign = $("#is_incharge_sign").val();
+                console.log("isInchargeSign --->", isInchargeSign);
+
+                // Check if accountant_signature is missing or is_incharge_sign is false
+                const isAccountantSign = $("#is_accountant_sign").val();
+                console.log("isAccountantSign --->", isAccountantSign);
+
+                if (!isInchargeSign || !isAccountantSign) {
+                    // Show an error popup if the conditions are not met
+                    swal({
+                        title: "Error",
+                        text: "You must provide a signature.",
+                        icon: "error",
+                        button: "OK",
+                    });
+                    return false;
+                }
+                // If everything is valid, proceed with form submission
+                swal({
+                    title: "Are you sure?",
+                    text: "Do you want to submit the form?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    closeOnClickOutside: false,
+                }).then((willSubmit) => {
+                    if (willSubmit) frm.submit();
+                });
             },
         });
     },
