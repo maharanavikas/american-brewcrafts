@@ -72,7 +72,7 @@
                                                         </select>
                                                     </div>
                                                     <div id="vehicle_number_div">
-                                                        <label for="select_vehicle_name" class="mb-2">
+                                                        <label for="vehicle_number_div" class="mb-2">
                                                             Selected Vehicle Number :
                                                         </label>
                                                         <input type="text" class="form-controls input-wrapper" id="vehicle_no" name="vehicle_no" disabled="disabled" t-att-value="picking.vehicle_no or ''"/>
@@ -1778,7 +1778,7 @@
                                                     </t>
                                                     <div id="dispatch_content">
                                                         <div class="mb-4">
-                                                            <t t-if="not picking.dispatch_signature">
+                                                            <t t-if="not picking.dispatch_signature and picking.is_incharge_sign">
                                                                 <h4>Dispatch In-Charge</h4>
                                                                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_dispatch">Accept &amp; Sign</a>
                                                             </t>
@@ -1824,9 +1824,9 @@
                                                             </p>
                                                         </div>
                                                     </t>
-                                                    <div id="accountant_content" t-if="not picking.accountant_signature">
+                                                    <div id="accountant_content" t-if="not picking.accountant_signature and picking.is_accountant_sign">
                                                         <div class="mb-4">
-                                                            <t t-if="not picking.accountant_signature">
+                                                            <t t-if="not picking.accountant_signature ">
                                                                 <h4>Accountant</h4>
                                                                 <a role="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_accountant">
                                                                     Accept &amp; Sign
