@@ -178,12 +178,19 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
                 // Check if dispatch_signature is missing or is_incharge_sign is false
                 const isInchargeSign = $("#is_incharge_sign").val();
                 console.log("isInchargeSign --->", isInchargeSign);
+                const hasDispatchSignature = $("#dispatch_signature_container img").length > 0;
 
                 // Check if accountant_signature is missing or is_incharge_sign is false
                 const isAccountantSign = $("#is_accountant_sign").val();
                 console.log("isAccountantSign --->", isAccountantSign);
+                const hasAccountantSignature = $("#accountant_signature_container img").length > 0;
 
-                if (!isInchargeSign || !isAccountantSign) {
+                console.log("Dispatch Signature Present:", hasDispatchSignature);
+                console.log("Accountant Signature Present:", hasAccountantSignature);
+
+//                if (!isInchargeSign || !isAccountantSign) {
+//                if (!hasDispatchSignature || !hasAccountantSignature) {
+                if (!hasDispatchSignature) {
                     // Show an error popup if the conditions are not met
                     swal({
                         title: "Error",
@@ -202,11 +209,13 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
                     dangerMode: true,
                     closeOnClickOutside: false,
                 }).then((willSubmit) => {
-                    if (willSubmit) frm.submit();
+                    if (willSubmit) el.submit();
                 });
             },
+
         });
     },
+
 
     _initDatePicker() {
         const field = this.el.querySelector("#dispatch_date");
