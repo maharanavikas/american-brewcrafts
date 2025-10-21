@@ -1768,7 +1768,7 @@
                                                 <!-- Dispatch Signature -->
                                                 <div class="col-md-6">
                                                     <t t-if="picking.dispatch_signature">
-                                                        <div class="col-sm-6">
+                                                        <div class="col-sm-6" id="dispatch_signature_container">
                                                             <h5>Dispatch In-Charge</h5>
                                                             <img t-att-src="image_data_uri(picking.dispatch_signature)" style="max-height: 6rem; max-width: 100%;"/>
                                                             <p class="mt-2 mb-0">
@@ -1816,7 +1816,7 @@
                                                 <!-- Accountant Signature -->
                                                 <div class="col-md-6 text-end">
                                                     <t t-if="picking.accountant_signature">
-                                                        <div class="text-end">
+                                                        <div class="text-end" id="accountant_signature_container">
                                                             <h5>Accountant</h5>
                                                             <img t-att-src="image_data_uri(picking.accountant_signature)" style="max-height: 6rem; max-width: 100%;"/>
                                                             <p class="mt-2 mb-0">
