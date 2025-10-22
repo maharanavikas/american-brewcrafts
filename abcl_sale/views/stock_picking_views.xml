@@ -6,17 +6,17 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <field name="group_id" position="after">
-                <field name="dispatch_checklist_id" invisible="picking_type_code != 'outgoing'"/>
+<!--                <field name="dispatch_checklist_id" invisible="picking_type_code != 'outgoing'"/>-->
                 <!-- <field name="sign_request_id" invisible="picking_type_code != 'outgoing'"/> -->
-                <field name="signer_ids" readonly="1" invisible="not sign_request_id or picking_type_code != 'outgoing'">
-                    <list no_open="True">
-                        <field name="mail_sent_order" string="Sign Order"/>
-                        <field name="role_id"/>
-                        <field name="partner_id"/>
-                    </list>
-                </field>
+<!--                <field name="signer_ids" readonly="1" invisible="not sign_request_id or picking_type_code != 'outgoing'">-->
+<!--                    <list no_open="True">-->
+<!--                        <field name="mail_sent_order" string="Sign Order"/>-->
+<!--                        <field name="role_id"/>-->
+<!--                        <field name="partner_id"/>-->
+<!--                    </list>-->
+<!--                </field>-->
                 <!-- <field name="sign_request_state" invisible="picking_type_code != 'outgoing'" readonly="0"/> -->
-                <field name="signature_state" readonly="0"/>
+                <field name="signature_state" readonly="1"/>
                 <field name="is_dispatch_sent" string="Is Dispatch Sent" readonly="1"/>
                 <field name="dispatch_signature" widget="image" readonly="1"/>
                 <field name="accountant_signature" widget="image" readonly="1"/>
