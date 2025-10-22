@@ -96,16 +96,16 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
     },
     _bindModalCloseEvent() {
         // Bind for Accountant Modal Close
-        const modalAccountant = $('#modal_accountant');
-        modalAccountant.on('hidden.bs.modal', function () {
-            location.reload(); // Reload the page after modal close
-        });
+//        const modalAccountant = $('#modal_accountant');
+//        modalAccountant.on('hidden.bs.modal', function () {
+//            location.reload(); // Reload the page after modal close
+//        });
 
         // Bind for Dispatch in Charge Modal Close
-        const modalDispatchInCharge = $('#modal_dispatch');
-        modalDispatchInCharge.on('hidden.bs.modal', function () {
-            location.reload(); // Reload the page after modal close
-        });
+//        const modalDispatchInCharge = $('#modal_dispatch');
+//        modalDispatchInCharge.on('hidden.bs.modal', function () {
+//            location.reload(); // Reload the page after modal close
+//        });
     },
 
     _checkDispatchSignature() {
@@ -174,44 +174,44 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
                     error.insertAfter(element);
                 }
             },
-            submitHandler: function (el) {
-                // Check if dispatch_signature is missing or is_incharge_sign is false
-                const isInchargeSign = $("#is_incharge_sign").val();
-                console.log("isInchargeSign --->", isInchargeSign);
-                const hasDispatchSignature = $("#dispatch_signature_container img").length > 0;
-
-                // Check if accountant_signature is missing or is_incharge_sign is false
-                const isAccountantSign = $("#is_accountant_sign").val();
-                console.log("isAccountantSign --->", isAccountantSign);
-                const hasAccountantSignature = $("#accountant_signature_container img").length > 0;
-
-                console.log("Dispatch Signature Present:", hasDispatchSignature);
-                console.log("Accountant Signature Present:", hasAccountantSignature);
-
-//                if (!isInchargeSign || !isAccountantSign) {
-//                if (!hasDispatchSignature || !hasAccountantSignature) {
-                if (!hasDispatchSignature) {
-                    // Show an error popup if the conditions are not met
-                    swal({
-                        title: "Error",
-                        text: "You must provide a signature.",
-                        icon: "error",
-                        button: "OK",
-                    });
-                    return false;
-                }
-                // If everything is valid, proceed with form submission
-                swal({
-                    title: "Are you sure?",
-                    text: "Do you want to submit the form?",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                    closeOnClickOutside: false,
-                }).then((willSubmit) => {
-                    if (willSubmit) el.submit();
-                });
-            },
+//            submitHandler: function (el) {
+//                // Check if dispatch_signature is missing or is_incharge_sign is false
+//                const isInchargeSign = $("#is_incharge_sign").val();
+//                console.log("isInchargeSign --->", isInchargeSign);
+//                const hasDispatchSignature = $("#dispatch_signature_container img").length > 0;
+//
+//                // Check if accountant_signature is missing or is_incharge_sign is false
+//                const isAccountantSign = $("#is_accountant_sign").val();
+//                console.log("isAccountantSign --->", isAccountantSign);
+//                const hasAccountantSignature = $("#accountant_signature_container img").length > 0;
+//
+//                console.log("Dispatch Signature Present:", hasDispatchSignature);
+//                console.log("Accountant Signature Present:", hasAccountantSignature);
+//
+////                if (!isInchargeSign || !isAccountantSign) {
+////                if (!hasDispatchSignature || !hasAccountantSignature) {
+//                if (!hasDispatchSignature) {
+//                    // Show an error popup if the conditions are not met
+//                    swal({
+//                        title: "Error",
+//                        text: "You must provide a signature.",
+//                        icon: "error",
+//                        button: "OK",
+//                    });
+//                    return false;
+//                }
+//                // If everything is valid, proceed with form submission
+//                swal({
+//                    title: "Are you sure?",
+//                    text: "Do you want to submit the form?",
+//                    icon: "warning",
+//                    buttons: true,
+//                    dangerMode: true,
+//                    closeOnClickOutside: false,
+//                }).then((willSubmit) => {
+//                    if (willSubmit) el.submit();
+//                });
+//            },
 
         });
     },
