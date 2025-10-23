@@ -5,7 +5,7 @@
             <xpath expr="//img[@t-if='company.logo']" position="replace">
                 <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">
                     <img src="/abcl_accounting/static/src/img/lilasons_logo.png"
-                         style="max-width: 400px;"/>
+                         style="max-width: 250px; height: 150px;"/>
                 </t>
                 <t t-else="">
                     <img t-if="company.logo" class="o_company_logo_big" t-att-src="image_data_uri(company.logo)"
