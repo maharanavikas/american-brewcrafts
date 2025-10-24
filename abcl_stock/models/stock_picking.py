@@ -124,6 +124,40 @@ class StockPicking(models.Model):
         template.with_context(ctx).send_mail(self.id, email_values=email_values)
         self.message_post(body=f"Sign request sent to accountant: {partner.name}")
 
+    def action_split_transfer(self):
+        print("Inside action_split_transfer")
+        res = super().action_split_transfer()
+        new_checks = []
+        print("Split transfer done, now checking for QC creation...")
+        if self.picking_type_code == 'outgoing':
+            for picking in self:
+                if not picking.check_ids:
+                    qp = self.env['quality.point'].sudo()
+                    for move in picking.move_ids:
+                        points = qp.search([
+                            ('measure_on', '=', 'product'),
+                            ('product_ids', 'in', move.product_id.id),
+                            ('picking_type_ids', '=', move.picking_type_id.id),
+                        ])
+                        if points:
+                            print(f"Quality points found for product {move.product_id.name} in picking {picking.name}")
+                            for point in points:
+                                new_checks.append({
+                                    'point_id': point.id,
+                                    'team_id': point.team_id.id,
+                                    'measure_on': 'product',
+                                    'product_id': move.product_id.id,
+                                    'picking_id': picking.id,
+                                    'company_id': picking.company_id.id,
+                                })
+
+                    if new_checks:
+                        self.env['quality.check'].sudo().create(new_checks)
+                        print(f"Created {len(new_checks)} quality checks for picking {picking.name}.")            
+                            
+                else:
+                    print(f"Picking {picking.name} already has quality checks; skipped QC creation.")
+        return res 
     
 ############for historical data import#########333
     def button_validate(self):
