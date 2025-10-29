@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from Tools.scripts.dutree import store
 from odoo import models, fields, api, _
 from datetime import date
 from odoo.exceptions import UserError
