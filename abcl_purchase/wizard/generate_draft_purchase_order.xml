@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Create Draft Purchase Order">
                 <group>
-                    <field name="product_id"/>
+                    <field name="product_id" domain="[('purchase_ok', '=', True)]" options="{'no_open': True, 'no_create': True}"/>
                     <field name="categ_id" readonly="1"/>
                     <field name="supplierinfo_ids" readonly="1">
                         <list>

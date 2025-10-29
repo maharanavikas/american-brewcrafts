@@ -37,3 +37,5 @@ class MrpProductionSchedule(models.Model):
         #         f"The planned quantity must be between  {lesser_10_percent} to {additional_10_percent} for product {product.name} as the planning threshold is allowed +/- 10% of the actual quantity.")
         
         return super(MrpProductionSchedule, self).set_forecast_qty(date_index, quantity, period_scale)
+
+

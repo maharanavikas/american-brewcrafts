@@ -13,15 +13,23 @@ class PurchaseOrderLine(models.Model):
 
     from_mps = fields.Boolean(string="From MPS", readonly=True)
 
-#     def write(self, vals):
-#         if "product_qty" in vals:
-#             for line in self:
-#                 print("line.from_mps",line.from_mps)
-#                 if line.from_mps:
-#                     raise UserError(
-#                         "You cannot change the quantity of this line because it was created from the MPS."
-#                     )
-#         return super().write(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super().create(vals_list)
+        for line in lines:
+            # Only allow creation from MPS (context flag)
+            print('line._context',line._context)
+            # if not line._context.get('from_mps', False):
+            if not line.from_mps:
+                bom_line_exists = self.env['mrp.bom.line'].search_count([
+                    ('product_id', '=', line.product_id.id)
+                ])
+                if bom_line_exists:
+                    raise ValidationError(_(
+                        "You cannot manually create a Purchase Order for '%s' "
+                        "because it is used as a component in a Bill of Materials."
+                    ) % line.product_id.display_name)
+        return lines
 
 
 class StockRule(models.Model):
@@ -125,13 +133,19 @@ class StockRule(models.Model):
                                      precision_rounding=procurement.product_uom.rounding) <= 0:
                         continue
                     partner = procurement.values['supplier'].partner_id
-                    po_line_values.append(self.env['purchase.order.line']._prepare_purchase_order_line_from_procurement(
-                        *procurement, po))
+                    # po_line_values.append(self.env['purchase.order.line']._prepare_purchase_order_line_from_procurement(
+                    #     *procurement, po))
+                    line_vals = self.env['purchase.order.line']._prepare_purchase_order_line_from_procurement(
+                        *procurement, po
+                    )
+                    line_vals['from_mps'] = True
+                    po_line_values.append(line_vals)
+
                     order_date_planned = procurement.values['date_planned'] - relativedelta(
                         days=procurement.values['supplier'].delay)
                     if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order):
                         po.date_order = order_date_planned
-            self.env['purchase.order.line'].sudo().create(po_line_values)
+            self.env['purchase.order.line'].with_context(from_mps=True).sudo().create(po_line_values)
 
     def _prepare_purchase_order(self, company_id, origins, values):
         vals = super()._prepare_purchase_order(company_id, origins, values)
@@ -154,15 +168,53 @@ class StockRule(models.Model):
 
         return domain
 
+    @api.model
+    def _run_manufacture(self, procurements):
+        new_productions_values_by_company = defaultdict(lambda: defaultdict(list))
+        for procurement, rule in procurements:
+            if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
+                # If procurement contains negative quantity, don't create a MO that would be for a negative value.
+                continue
+            bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
 
-#
-#     def _run_buy(self, procurements):
-#         # Call original
-#         res = super()._run_buy(procurements)
-#         # Update PO lines created from MPS
-#         for procurement, rule in procurements:
-#             if procurement.origin and "MPS" in procurement.origin:
-#                 po_lines = self.env['purchase.order.line'].search([('order_id.origin', '=', procurement.origin)])
-#                 po_lines.write({'from_mps': True})
-#         return res
+            mo = self.env['mrp.production']
+            if procurement.origin != 'MPS':
+                domain = rule._make_mo_get_domain(procurement, bom)
+                mo = self.env['mrp.production'].sudo().search(domain, limit=1)
+            if not mo:
+                procurement_qty = procurement.product_qty
+                batch_size = procurement.values.get('batch_size', procurement_qty)
+                if batch_size <= 0:
+                    batch_size = procurement_qty
+                vals = rule._prepare_mo_vals(*procurement, bom)
+
+                if procurement.origin == 'MPS':
+                    vals.update({'from_mps': True})
+
+                while float_compare(procurement_qty, 0, precision_rounding=procurement.product_uom.rounding) > 0:
+                    current_qty = min(procurement_qty, batch_size)
+                    new_productions_values_by_company[procurement.company_id.id]['values'].append({
+                        **vals,
+                        'product_qty': procurement.product_uom._compute_quantity(current_qty,
+                                                                                 bom.product_uom_id) if bom else current_qty,
+                    })
+                    new_productions_values_by_company[procurement.company_id.id]['procurements'].append(procurement)
+                    procurement_qty -= current_qty
+            else:
+                self.env['change.production.qty'].sudo().with_context(skip_activity=True).create({
+                    'mo_id': mo.id,
+                    'product_qty': mo.product_id.uom_id._compute_quantity(
+                        (mo.product_uom_qty + procurement.product_qty), mo.product_uom_id)
+                }).change_prod_qty()
+
+        for company_id in new_productions_values_by_company:
+            productions_vals_list = new_productions_values_by_company[company_id]['values']
+            # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
+            # productions = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(
+            #     productions_vals_list)
+            productions = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).with_context(from_mps=True).create(
+                productions_vals_list)
+            productions.filtered(self._should_auto_confirm_procurement_mo).action_confirm()
+            productions._post_run_manufacture(new_productions_values_by_company[company_id]['procurements'])
+        return True
 

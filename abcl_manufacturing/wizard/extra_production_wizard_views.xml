@@ -8,7 +8,7 @@
                 <group>
                     <field name="production_id" readonly="1"/>
                     <field name="product_id" readonly="1"/>
-                    <field name="lot_id"/>
+                    <field name="lot_id" invisible="1"/>
                     <field name="location_id" readonly="1"/>
                     <field name="extra_production"/>
                 </group>
