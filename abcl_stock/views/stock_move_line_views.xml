@@ -10,4 +10,19 @@
             </field>
         </field>
     </record>
+
+    <record id="view_stock_move_line_list_inherit_view_button" model="ir.ui.view">
+        <field name="name">stock.move.line.tree.inherit.view.button</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <button name="open_form_view"
+                        string="View"
+                        type="object"
+                        icon="fa-eye"
+                        class="btn-link"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>

@@ -10,16 +10,6 @@ class SupplierInfo(models.Model):
     min_qty = fields.Float('Quantity', default=1, required=True, digits="Product Unit of Measure",
     help="The quantity to purchase from this vendor to benefit from the price, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise.")
     minimum_order_qty = fields.Float('Minimum Order Quantity' )
-    # approval_status = fields.Selection(
-    #     [
-    #         ('draft', 'Draft'),
-    #         ('requested', 'Requested'),
-    #         ('approved', 'Approved'),
-    #         ('rejected', 'Rejected'),
-    #     ],
-    #     string="Approval Status",
-    #     default="draft", tracking=True
-    # )
     requested_price = fields.Float("Requested Price")
     requested_by = fields.Many2one('res.users', string="Requested By", default=lambda self: self.env.user)
     price = fields.Float('Price', default=0.0, digits='Product Price', required=True, help="The price to purchase a product", tracking=True )
@@ -37,62 +27,6 @@ class SupplierInfo(models.Model):
             'target': 'new',
             'context': {'default_supplierinfo_id': self.id},
         }
-
-    # def action_for_request(self):
-    #     vp_group = self.env.ref("abcl_base.group_vice_president", raise_if_not_found=False)
-    #     template = self.env.ref("abcl_purchase.abcl_vendor_pricelist_approval_mail_template", raise_if_not_found=False)
-    #
-    #     if not vp_group or not vp_group.users:
-    #         return
-    #
-    #     vp_users = vp_group.users
-    #
-    #     for rec in self:
-    #         rec.approval_status = "requested"
-    #
-    #         for user in vp_users:
-    #             rec.activity_schedule(
-    #                 'abcl_purchase.abcl_pricelist_approval_mail_act',
-    #                 user_id=user.id,
-    #                 note="Please review and approve the Vendor Pricelist",
-    #             )
-    #
-    #         if template:
-    #             template.send_mail(
-    #                 rec.id,
-    #                 force_send=True,
-    #                 email_values={'recipient_ids': [(6, 0, vp_users.mapped('partner_id').ids)]}
-    #             )
-    #
-    # def action_approve_request(self):
-    #     for rec in self:
-    #         if rec.requested_price:
-    #             rec.price = rec.requested_price
-    #             rec.approval_status = "approved"
-    #             rec.requested_price = 0.0
-    #             rec.activity_feedback(['abcl_purchase.abcl_pricelist_approval_mail_act'], feedback='Approved')
-    #
-    #             template = self.env.ref('abcl_purchase.abcl_vendor_pricelist_result_mail_template')
-    #             if template and rec.requested_by and rec.requested_by.partner_id:
-    #                 template.send_mail(rec.id, force_send=True, email_values={'email_to': rec.requested_by.partner_id.email})
-    #         else:
-    #             rec.approval_status = "approved"
-    #             rec.activity_feedback(['abcl_purchase.abcl_pricelist_approval_mail_act'], feedback='Approved')
-    #
-    #             template = self.env.ref('abcl_purchase.abcl_vendor_pricelist_result_mail_template')
-    #             if template and rec.requested_by and rec.requested_by.partner_id:
-    #                 template.send_mail(rec.id, force_send=True,
-    #                                    email_values={'email_to': rec.requested_by.partner_id.email})
-    #
-    # def action_reject_request(self):
-    #     for rec in self:
-    #         rec.approval_status = "rejected"
-    #         rec.requested_price = 0.0
-    #         rec.activity_feedback(['abcl_purchase.abcl_pricelist_approval_mail_act'], feedback='Rejected')
-    #
-    #         template = self.env.ref('abcl_purchase.abcl_vendor_pricelist_result_mail_template')
-    #         if template and rec.requested_by and rec.requested_by.partner_id:
-    #             template.send_mail(rec.id, force_send=True, email_values={'email_to': rec.requested_by.partner_id.email})
 
     def action_for_request(self):
         vp_group = self.env.ref("abcl_base.group_vice_president", raise_if_not_found=False)
@@ -208,4 +142,20 @@ class SupplierInfo(models.Model):
         for rec in self:
             if rec.minimum_order_qty < 0:
                 raise ValidationError(_("Minimum Order Quantity cannot be less than zero."))
+
+    @api.onchange('product_tmpl_id')
+    def _onchange_product_tmpl_id(self):
+        for rec in self:
+            if rec.product_tmpl_id:
+                variants = rec.product_tmpl_id.product_variant_ids
+                if len(variants) == 1:
+                    rec.product_id = variants.id
+                else:
+                    rec.product_id = False
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        for rec in self:
+            if rec.product_id and not rec.product_tmpl_id:
+                rec.product_tmpl_id = rec.product_id.product_tmpl_id
     
