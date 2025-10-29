@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Tools.scripts.dutree import store
 from odoo import models, fields, api, _
 from datetime import date
 from odoo.exceptions import UserError
@@ -7,23 +8,48 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     bom_uom_qty = fields.Float(
-        'BoM Demand',
+        'Consumption Quantity',
         digits='Product Unit of Measure',
         default=0,
+        compute="update_bom_demand",
+        store=True
     )
     deviation_percentage = fields.Float(
         "Deviation Percentage", compute="_compute_bom_quantity_deviations", digits='Product Unit of Measure', store=True)
     qty_difference = fields.Float(
         "Quantity Difference", compute="_compute_bom_quantity_deviations", digits='Product Unit of Measure', store=True)
+    date_start = fields.Datetime(
+        'Start',related='raw_material_production_id.date_start',)
+    date_finished = fields.Datetime(
+        'End', related='raw_material_production_id.date_finished',)
 
-    @api.depends('bom_uom_qty','product_uom_qty', 'quantity')
+    @api.depends('raw_material_production_id.qty_producing','bom_uom_qty','product_uom_qty', 'quantity')
     def _compute_bom_quantity_deviations(self):
         for move in self:
-            move.qty_difference = move.bom_uom_qty and not move.product_uom_qty
-            if (not move.bom_uom_qty and not move.product_uom_qty):
-                move.deviation_percentage = 0
-                continue
-            move.deviation_percentage = (move.bom_uom_qty - move.product_uom_qty) / move.product_uom_qty * 100
+            move.qty_difference = move.bom_uom_qty - move.quantity
+            # if (not move.bom_uom_qty and not move.quantity):
+            #     move.deviation_percentage = 0
+            #     continue
+            # move.deviation_percentage = (move.bom_uom_qty - move.quantity) / move.quantity * 100
+            if not move.quantity:
+                move.deviation_percentage = 0.0
+            else:
+                move.deviation_percentage = ((move.bom_uom_qty - move.quantity) / move.quantity) * 100
+
+    @api.depends('raw_material_production_id.qty_producing','product_uom_qty','quantity')
+    def update_bom_demand(self):
+        print('raw_material_production_id.qty_producing')
+        for rec in self:
+            # production = rec.production_id
+            production = rec.raw_material_production_id
+            print('raw_material_production_id//',production)
+            if production.bom_id and production.product_id and production.product_qty > 0:
+                moves_raw_values = production.with_context(qty_producing_value=production.qty_producing)._get_moves_raw_values()
+                move_raw_dict = {move.bom_line_id.id: move for move in
+                                 production.move_raw_ids.filtered(lambda m: m.bom_line_id)}
+                for move_raw_values in moves_raw_values:
+                    if move_raw_values['bom_line_id'] in move_raw_dict:
+                        move_raw_dict[move_raw_values['bom_line_id']].bom_uom_qty = move_raw_values['bom_uom_qty']
 
     def action_view_lots(self):
         self.ensure_one()
@@ -81,3 +107,13 @@ class StockMove(models.Model):
                 lot = self.env['stock.lot'].browse(vals['lot_id'])
                 lot.product_id.write({'manufacturing_date': vals['manufacturing_date']})
 
+    def open_form_view(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.move',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'target': 'current',
+            'views': [(self.env.ref('stock.view_move_form').id, 'form')],
+        }
