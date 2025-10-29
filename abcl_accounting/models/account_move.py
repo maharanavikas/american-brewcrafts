@@ -103,6 +103,15 @@ class AccountMove(models.Model):
             self.po_no = ''
             self.po_date = False
 
+    def action_post(self):
+        res = super(AccountMove, self).action_post()
+
+        for move in self:
+            if move.move_type in ['out_invoice', 'in_invoice', 'out_refund', 'in_refund'] and move.partner_id:
+                move.message_unsubscribe([move.partner_id.id])
+
+        return res
+
 
 
 
