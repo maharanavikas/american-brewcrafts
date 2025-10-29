@@ -40,7 +40,7 @@ class PurchaseOrder(models.Model):
     # ])
     priority_type = fields.Selection(
         [('normal', 'Normal'),('urgent', 'Urgent'), ('special', 'Special')],
-        string="Priority Type",
+        string="Priority",
         default='normal'
     )
     sent_for_approval = fields.Boolean("Sent for Approval", default=False)
@@ -408,4 +408,12 @@ class PurchaseOrder(models.Model):
             'context': {'default_purchase_order': self.id, 'default_vendor_ids': [(5, 0, 0)]},
             'target': 'new',
         }
+
+    def button_confirm(self):
+        res = super().button_confirm()
+
+        for order in self:
+            if order.partner_id:
+                order.message_unsubscribe([order.partner_id.id])
+        return res
     

@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api
 from odoo.exceptions import UserError
+from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
 
 class ExtraProductionWizard(models.TransientModel):
     _name = 'extra.production.wizard'
@@ -28,14 +29,24 @@ class ExtraProductionWizard(models.TransientModel):
 
         production = self.production_id
 
-        production.extra_production += self.extra_production
+        # production.extra_production += self.extra_production
 
-        self.env['stock.quant']._update_available_quantity(
-            self.product_id,
-            self.location_id,
-            self.extra_production,
-            lot_id=self.lot_id,
-        )
+        # self.env['stock.quant']._update_available_quantity(
+        #     self.product_id,
+        #     self.location_id,
+        #     self.extra_production,
+        #     lot_id=self.lot_id,
+        # )
+        # self.production_id.with_context(force_update=True).qty_producing = self.extra_production
+        self.production_id.qty_producing = self.extra_production
+        production.extra_production = production.qty_producing - production.product_qty
+        if production.bom_id and production.product_id and production.product_qty > 0:
+            moves_raw_values = production.with_context(qty_producing_value=production.qty_producing)._get_moves_raw_values()
+            move_raw_dict = {move.bom_line_id.id: move for move in production.move_raw_ids.filtered(lambda m: m.bom_line_id)}
+            for move_raw_values in moves_raw_values:
+                if move_raw_values['bom_line_id'] in move_raw_dict:
+                    move_raw_dict[move_raw_values['bom_line_id']].bom_uom_qty = move_raw_values['bom_uom_qty']
+
 
         production.message_post(
             body=f"Extra production of {self.extra_production} units added for {self.product_id.display_name} (Lot: {self.lot_id.name})."

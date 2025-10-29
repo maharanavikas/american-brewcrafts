@@ -12,7 +12,7 @@
     'category': 'Inventory/Inventory',
     'version': '18.0',
 
-    'depends': ['stock', 'quality', 'spreadsheet', 'quality_control', 'fleet','website','quality_mrp', 'mrp', 'stock_account'],
+    'depends': ['stock', 'quality', 'spreadsheet', 'quality_control', 'fleet','website','quality_mrp', 'mrp', 'stock_account', 'abcl_base'],
     'data': [
         'security/ir.model.access.csv',
         'data/abcl_stock_activity_data.xml',

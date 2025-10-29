@@ -9,6 +9,9 @@
                 <field name="product_categ_id"/>
                 <field name="bom_source" string="Bom Source"/>
             </xpath>
+            <xpath expr="//field[@name='bom_line_ids']/list/field[@name='product_qty']" position="before">
+                <field name="product_consumed_qty" string="Consumed Quantity"/>
+            </xpath>
         </field>
     </record>
 
