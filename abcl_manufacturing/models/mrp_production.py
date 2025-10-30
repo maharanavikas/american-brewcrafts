@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models,_
+from odoo import api, fields, models, _, Command, SUPERUSER_ID
 from datetime import date
 from odoo.exceptions import UserError, ValidationError
 
@@ -13,32 +13,7 @@ class MrpProduction(models.Model):
     brew_label = fields.Char(compute="_compute_brew_label")
     quantity_available = fields.Float(string="Quantity Available", compute="_compute_quantity_available", store=False)
     extra_production = fields.Float(string="Extra Production", tracking=True)
-
-    # def action_update_extra_quantity(self):
-    #     """Update on-hand quantity for the same lot used in this MO."""
-    #     for record in self:
-    #         if not record.product_id:
-    #             raise UserError("No product defined for this production order.")
-    #         if record.extra_production <= 0:
-    #             raise UserError("Please enter a valid extra production quantity greater than zero.")
-    #         if not record.finished_move_line_ids:
-    #             raise UserError("No finished move lines found for this production order.")
-    #
-    #         finished_move_line = record.finished_move_line_ids.filtered(lambda l: l.lot_id)
-    #         if not finished_move_line:
-    #             raise UserError("No lot/serial number found in finished move lines.")
-    #         lot = finished_move_line[0].lot_id
-    #
-    #         location = record.location_dest_id or record.location_src_id
-    #         if not location:
-    #             raise UserError("No valid location found to update stock.")
-    #
-    #         self.env['stock.quant']._update_available_quantity(
-    #             record.product_id,
-    #             location,
-    #             record.extra_production,
-    #             lot_id=lot,
-    #         )
+    from_mps = fields.Boolean(string="From MPS", readonly=True)
 
     def action_open_extra_production_wizard(self):
         """Open the Extra Production Wizard with default values."""
@@ -84,14 +59,14 @@ class MrpProduction(models.Model):
         vals['manufacturing_date'] = date.today()
         return vals
     
-    def _get_move_raw_values(self, product, product_uom_qty, product_uom, operation_id=False, bom_line=False):
-        data = super(MrpProduction, self)._get_move_raw_values(
-            product, product_uom_qty, product_uom, operation_id, bom_line)
-        data.update({
-            'bom_uom_qty': data['product_uom_qty'],
-            'deviation_percentage': 0,
-        })
-        return data
+    # def _get_move_raw_values(self, product, product_uom_qty, product_uom, operation_id=False, bom_line=False):
+    #     data = super(MrpProduction, self)._get_move_raw_values(
+    #         product, product_uom_qty, product_uom, operation_id, bom_line)
+    #     data.update({
+    #         'bom_uom_qty': data['product_uom_qty'],
+    #         'deviation_percentage': 0,
+    #     })
+    #     return data
 
     def button_mark_done(self):
         res = super(MrpProduction, self).button_mark_done()
@@ -200,3 +175,129 @@ class MrpProduction(models.Model):
                 invalid_qcs = mo_qcs.filtered(lambda qc: qc.lot_id.id not in valid_lot_ids)
                 if invalid_qcs:
                     invalid_qcs.sudo().unlink()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        productions = super().create(vals_list)
+        for rec in productions:
+            # if not rec._context.get('from_mps', False):
+            if not rec.from_mps:
+                bom_line_exists = self.env['mrp.bom.line'].search_count([('product_id', '=', rec.product_id.id)])
+                bom_master_exists = self.env['mrp.bom'].search_count(
+                    [('product_tmpl_id', '=', rec.product_id.product_tmpl_id.id)])
+
+                if bom_line_exists or bom_master_exists:
+                    raise ValidationError(_(
+                        "You cannot manually create a Manufacturing Order for '%s' "
+                        "because it is already used in a Bill of Materials."
+                    ) % rec.product_id.display_name)
+        return productions
+
+    def action_split(self):
+        self._pre_action_split_merge_hook(split=True)
+        if len(self) > 1:
+            productions = [Command.create({'production_id': production.id}) for production in self]
+            # Wizard need a real id to have buttons enable in the view
+            wizard = self.env['mrp.production.split.multi'].create({'production_ids': productions})
+            action = self.env['ir.actions.actions']._for_xml_id('mrp.action_mrp_production_split_multi')
+            action['res_id'] = wizard.id
+            action['context'] = {
+                'default_from_mps': any(self.mapped('from_mps')),
+            }
+            return action
+        else:
+            action = self.env['ir.actions.actions']._for_xml_id('mrp.action_mrp_production_split')
+            action['context'] = {
+                'default_production_id': self.id,
+            }
+            return action
+
+    def action_merge(self):
+        self._pre_action_split_merge_hook(merge=True)
+        products = set([(production.product_id, production.bom_id) for production in self])
+        product_id, bom_id = products.pop()
+        users = set([production.user_id for production in self])
+        if len(users) == 1:
+            user_id = users.pop()
+        else:
+            user_id = self.env.user
+
+        origs = self._prepare_merge_orig_links()
+        dests = {}
+        for move in self.move_finished_ids:
+            dests.setdefault(move.byproduct_id.id, []).extend(move.move_dest_ids.ids)
+        from_mps_flag = any(self.mapped(lambda p: p._context.get('from_mps') or getattr(p, 'from_mps', False)))
+
+        production = self.env['mrp.production'].with_context(default_picking_type_id=self.picking_type_id.id,from_mps=from_mps_flag).create({
+            'product_id': product_id.id,
+            'bom_id': bom_id.id,
+            'picking_type_id': self.picking_type_id.id,
+            'product_qty': sum(production.product_uom_qty for production in self),
+            'product_uom_id': product_id.uom_id.id,
+            'user_id': user_id.id,
+            'origin': ",".join(sorted([production.name for production in self])),
+            'from_mps': from_mps_flag,
+        })
+
+        for move in production.move_raw_ids:
+            for field, vals in origs[move.bom_line_id.id].items():
+                move[field] = vals
+
+        for move in production.move_finished_ids:
+            move.move_dest_ids = [Command.set(dests[move.byproduct_id.id])]
+
+        self.move_dest_ids.created_production_id = production.id
+
+        self.procurement_group_id.stock_move_ids.group_id = production.procurement_group_id
+
+        if 'confirmed' in self.mapped('state'):
+            production.move_raw_ids._adjust_procure_method()
+            (production.move_raw_ids | production.move_finished_ids).write({'state': 'confirmed'})
+            production.action_confirm()
+
+        self.with_context(skip_activity=True)._action_cancel()
+        # set the new deadline of origin moves (stock to pre prod)
+        production.move_raw_ids.move_orig_ids.with_context(date_deadline_propagate_ids=set(production.move_raw_ids.ids)).write({'date_deadline': production.date_start})
+        for p in self:
+            p._message_log(body=_('This production has been merge in %s', production.display_name))
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'mrp.production',
+            'view_mode': 'form',
+            'res_id': production.id,
+        }
+
+    def _get_moves_raw_values(self):
+        moves = []
+        for production in self:
+            if not production.bom_id:
+                continue
+            producing_factor = self._context.get('qty_producing_value', 0)
+            factor = production.product_uom_id._compute_quantity(
+                'qty_producing_value' in self._context and self._context['qty_producing_value'] or production.product_qty, production.bom_id.product_uom_id) / production.bom_id.product_qty
+            _boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id, never_attribute_values=production.never_product_template_attribute_value_ids)
+            for bom_line, line_data in lines:
+                if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom' or\
+                        bom_line.product_id.type != 'consu':
+                    continue
+                operation = bom_line.operation_id.id or line_data['parent_line'] and line_data['parent_line'].operation_id.id
+                moves.append(production.with_context(qty_should_consume=line_data['qty_should_consume'])._get_move_raw_values(
+                    bom_line.product_id,
+                    line_data['qty'],
+                    bom_line.product_uom_id,
+                    operation,
+                    bom_line
+                ))
+        return moves
+
+
+    def _get_move_raw_values(self, product, product_uom_qty, product_uom, operation_id=False, bom_line=False):
+        data = super(MrpProduction, self)._get_move_raw_values(
+            product, product_uom_qty, product_uom, operation_id=operation_id, bom_line=bom_line
+        )
+        data.update({
+            'bom_uom_qty': 'qty_should_consume' in self._context and self._context['qty_should_consume'] or product_uom_qty,
+        })
+        return data
+

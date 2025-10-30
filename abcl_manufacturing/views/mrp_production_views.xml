@@ -10,17 +10,27 @@
             </xpath>
             <xpath expr="//header" position="inside">
                 <button name="action_generate_component_lot_qc"
-                type="object"
-                string="Generate Component Lot QC"
-                class="oe_highlight" invisible="not show_lot_ids or not origin or state in ['progress', 'done']"/>
+                        type="object"
+                        string="Generate Component Lot QC"
+                        class="oe_highlight"
+                        invisible="not show_lot_ids or not origin or state in ['progress', 'done']"/>
             </xpath>
             <xpath expr="//field[@name='move_raw_ids']/list/field[@name='quantity']" position="after">
                 <field name="bom_uom_qty" readonly="1" force_save="1" optional="hide"/>
                 <field name="qty_difference" readonly="1" force_save="1" optional="hide"/>
+                <!--                <field name="product_consumed_qty" optional="hide"/>-->
                 <field name="deviation_percentage" optional="hide"/>
             </xpath>
             <xpath expr="//field[@name='move_raw_ids']/list/field[@name='location_id']" position="attributes">
                 <attribute name="readonly">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_raw_ids']/list/field[@name='should_consume_qty']" position="attributes">
+                <attribute name="column_invisible">0</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_raw_ids']/list/field[@name='quantity']" position="attributes">
+                <attribute name="column_invisible">parent.state not in ['draft','confirmed','progress','to_close','done']
+                </attribute>
             </xpath>
             <xpath expr="//field[@name='product_id']" position="before">
                 <field name="production_source"/>
@@ -62,18 +72,21 @@
                 <div class="o_row align-items-center" name="extra_production_div" invisible="state != 'done'">
                     <label for="extra_production" string="Extra Production" class="me-2"/>
                     <field name="extra_production" widget="float" class="me-3" readonly="1"/>
-<!--                    <button name="action_update_extra_quantity"-->
-<!--                            string="Update Quantity"-->
-<!--                            type="object"-->
-<!--                            class="btn btn-primary"-->
-<!--                            icon="fa-refresh"/>-->
+                    <!--                    <button name="action_update_extra_quantity"-->
+                    <!--                            string="Update Quantity"-->
+                    <!--                            type="object"-->
+                    <!--                            class="btn btn-primary"-->
+                    <!--                            icon="fa-refresh"/>-->
                 </div>
+            </xpath>
+            <xpath expr="//field[@name='log_note']" position="after">
+                <field name="from_mps"/>
             </xpath>
             <header position="inside">
                 <button name="action_open_extra_production_wizard"
-                    string="Register Extra Production"
-                    type="object"
-                    class="btn-primary" invisible="state != 'done'"/>
+                        string="Register Extra Production"
+                        type="object"
+                        class="btn-primary" invisible="state != 'done'"/>
             </header>
         </field>
     </record>
@@ -104,9 +117,10 @@
     </record>
 
     <record id="stock_view_move_tree_inherit" model="ir.ui.view">
-        <field name="name">stocl.view.move.tree.inherit</field>
+        <field name="name">stock.view.move.tree.inherit</field>
         <field name="model">stock.move</field>
         <field name="inherit_id" ref="stock.view_move_tree"/>
+        <field name="mode">primary</field>
         <field name="arch" type="xml">
             <field name="quantity" position="after">
                 <field name="bom_uom_qty" optional="hide"/>
@@ -116,12 +130,44 @@
         </field>
     </record>
 
+    <record id="view_stock_move_tree_inherit_view_button" model="ir.ui.view">
+        <field name="name">stock.move.tree.inherit.view.button</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <button name="open_form_view"
+                        string="View"
+                        type="object"
+                        icon="fa-eye"
+                        class="btn-link"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_search_inherit_component_analysis" model="ir.ui.view">
+        <field name="name">stock.move.search.inherit.component.analysis</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="MO Wise Component Usage"
+                        name="groupby_raw_material_production_id"
+                        domain="[('state','=','done')]"
+                        context="{'group_by': 'raw_material_production_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+
     <record id="component_usage_analysis_action" model="ir.actions.act_window">
         <field name="name">Component Usage Analysis</field>
         <field name="res_model">stock.move</field>
         <field name="view_mode">pivot,list,graph</field>
-        <field name="view_id" ref="stock.view_move_tree"/>
-        <field name="search_view_id" ref="stock.view_move_search"/>
+        <!--        <field name="view_id" ref="stock.view_move_tree"/>-->
+        <field name="view_id" ref="stock_view_move_tree_inherit"/>
+<!--        <field name="search_view_id" ref="stock.view_move_search"/>-->
+        <field name="search_view_id" ref="view_move_search_inherit_component_analysis"/>
         <field name="context">{'search_default_done': 1,
             'pivot_measures': ['quantity', '__count__'],
             }
@@ -139,9 +185,44 @@
         </field>
     </record>
 
+    <record id="view_mrp_component_deviation_tree_inherit" model="ir.ui.view">
+        <field name="name">mrp.component.deviation.tree.inherit</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_uom']" position="before">
+                <field name="bom_uom_qty"/>
+                <field name="qty_difference"/>
+                <field name="deviation_percentage"/>
+            </xpath>
+            <field name="reference" position="replace">
+                <field name="raw_material_production_id" string="Manufacturing Order"/>
+            </field>
+            <field name="date" position="replace">
+                <field name="date_start"/>
+                <field name="date_finished"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_mrp_components" model="ir.actions.act_window">
+        <field name="name">Manufacturing Loss Report</field>
+        <field name="res_model">stock.move</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_mrp_component_deviation_tree_inherit"/>
+        <field name="domain">[('raw_material_production_id', '!=', False), ('deviation_percentage', '&lt;', 0)]</field>
+    </record>
+
     <menuitem id="menu_component_usage_analysis"
               name="Component Usage Analysis"
               parent="mrp.menu_mrp_reporting"
               action="component_usage_analysis_action"
               sequence="20"/>
+
+    <menuitem id="menu_beer_loss"
+              name="Manufacturing Loss Report"
+              parent="mrp.menu_mrp_reporting"
+              action="action_mrp_components"
+              sequence="21"/>
 </odoo>

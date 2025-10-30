@@ -1,7 +1,4 @@
 /** @odoo-module **/
-
-/** abcl_sale/static/src/js/dispatch_checklist.js */
-import { Component } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { loadJS } from "@web/core/assets";
 import publicWidget from "@web/legacy/js/public/public_widget";
@@ -26,13 +23,11 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
         this._initHelpers();
         this._initDatePicker();
         this._initVehicleToggles();
-        // this._wireSignatureSuccessHooks();
         this._injectStatusCheckAllButton();
         this._bindCheckAllHandler();
         this._bindModalCloseEvent();
-//        this._bindModalEvents();
-//        this._manageFormState();
-        this._bindFormFieldValidation();
+        this._restoreFormDataFromLocalStorage();
+        this._checkAccessTokenChange();
     },
 
     // ---------- helpers ----------
@@ -100,212 +95,83 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
             vehicleNumberInput.valid && $(vehicleNumberInput).valid();
         });
     },
-//    _bindModalCloseEvent() {
-        // Bind for Accountant Modal Close
-//        const modalAccountant = $('#modal_accountant');
-//        modalAccountant.on('hidden.bs.modal', function () {
-//            location.reload(); // Reload the page after modal close
-//        });
 
-        // Bind for Dispatch in Charge Modal Close
-//        const modalDispatchInCharge = $('#modal_dispatch');
-//        modalDispatchInCharge.on('hidden.bs.modal', function () {
-//            location.reload(); // Reload the page after modal close
-//        });
-//    },
-////////
-    _bindModalCloseEvent() {
-        const modalDispatch = $('#modal_dispatch');
-        modalDispatch.on('hidden.bs.modal', () => {
-//            this._manageFormState();
-            location.reload();
-
-        });
-        const modalAccountant = $('#modal_accountant');
-        modalAccountant.on('hidden.bs.modal', () => {
-            console.log('Accountant modal closed');
-//            this._manageFormState();
-
-            setTimeout(() => {
-                const $form = $('#frm_dispatch_checklist');
-                console.log(`Form detected: ${$form.length ? 'Yes' : 'No'}`);
-
-                if (!$form.length) return console.error('Form #frm_dispatch_checklist not found');
-
-                const validator = $form.validate();
-                if (!validator || typeof validator.settings.submitHandler !== 'function') {
-                    return console.error('Invalid validator or missing submitHandler', validator);
-                }
-
-                try {
-                    validator.settings.submitHandler.call(this, $form[0]);
-                    console.log('submitHandler executed successfully');
-                } catch (err) {
-                    console.error('Error executing submitHandler:', err);
-                }
-            }, 10); // Allow brief DOM update
-        });
-
-    },
-//     _bindModalCloseEvent() {
-//        const modalDispatch = $('#modal_dispatch');
-//        const modalAccountant = $('#modal_accountant');
-//
-//        // Dispatch modal close handler
-//        modalDispatch.on('hidden.bs.modal', async () => {
-//            console.log("Dispatch modal closed");
-//            try {
-//                await this._refreshSignatures();
-//                console.log("Signatures refreshed successfully after dispatch modal close");
-//            } catch (err) {
-//                console.error("Error refreshing signatures:", err);
-//            }
-//        });
-//
-//        // Accountant modal close handler
-//        modalAccountant.on('hidden.bs.modal', async () => {
-//            console.log("Accountant modal closed");
-//            try {
-//                await this._refreshSignatures();
-//                console.log("Signatures refreshed successfully after accountant modal close");
-//            } catch (err) {
-//                console.error("Error refreshing signatures:", err);
-//            }
-//        });
-//    },
-//    _bindModalEvents() {
-//    // Handle signature form submission
-//        $('#modal_dispatch form, #modal_accountant form').on('submit', async (ev) => {
-//            ev.preventDefault();
-//            const $form = $(ev.currentTarget);
-//            const role = $form.closest('.modal').attr('id') === 'modal_dispatch' ? 'dispatch' : 'accountant';
-//            const recordId = this.$el.data('record-id');
-//            const signature = $form.find('input[name="signature"]').val(); // Base64-encoded signature
-//            const signedBy = $form.find('input[name="signer_name"]').val();
-//
-//            if (!recordId) {
-//                console.error("Missing record ID for signature submission");
-//                return;
-//            }
-//
-//            try {
-//                await this.rpc({
-//                    model: 'stock.picking',
-//                    method: 'write',
-//                    args: [
-//                        [parseInt(recordId)],
-//                        {
-//                            [`${role}_signature`]: signature.split(',')[1], // Remove data URI prefix
-//                            [`${role}_signed_by`]: signedBy,
-//                            [`is_${role}_sign`]: true,
-//                        },
-//                    ],
-//                });
-//
-//                console.log(`${role} signature saved successfully`);
-//                $form.closest('.modal').modal('hide'); // Close modal
-//            } catch (error) {
-//                console.error(`Error saving ${role} signature:`, error);
-//            }
-//        });
-//    },
-//
-//
-//    async _refreshSignatures() {
-//        const recordId = this.$el.data('record-id');
-//        console.log("Record ID:", recordId); // Debug
-//        if (!recordId) {
-//            console.error("Missing data-record-id on form element");
-//            return;
-//        }
-//
-//        try {
-//            const result = await this.rpc({
-//                model: 'stock.picking',
-//                method: 'read',
-//                args: [[parseInt(recordId)], ['dispatch_signature', 'accountant_signature', 'dispatch_signed_by', 'accountant_signed_by']],
-//            });
-//            console.log("RPC Result:", result); // Debug
-//
-//            if (result && result.length) {
-//                const record = result[0];
-//
-//                // Update Dispatch Signature
-//                const dispatchContainer = $("#dispatch_signature_container");
-//                const dispatchContent = $("#dispatch_content");
-//                if (record.dispatch_signature) {
-//                    dispatchContainer.html(`
-//                        <h5>Dispatch In-Charge</h5>
-//                        <img src="data:image/png;base64,${record.dispatch_signature}" class="img-fluid" alt="Dispatch Signature" style="max-height: 6rem; max-width: 100%;" />
-//                        <p class="mt-2 mb-0">${record.dispatch_signed_by || ''}</p>
-//                    `);
-//                    dispatchContent.empty(); // Hide "Accept & Sign" button
-//                } else {
-//                    dispatchContainer.empty();
-//                }
-//
-//                // Update Accountant Signature
-//                const accountantContainer = $("#accountant_signature_container");
-//                const accountantContent = $("#accountant_content");
-//                if (record.accountant_signature) {
-//                    accountantContainer.html(`
-//                        <h5>Accountant</h5>
-//                        <img src="data:image/png;base64,${record.accountant_signature}" class="img-fluid" alt="Accountant Signature" style="max-height: 6rem; max-width: 100%;" />
-//                        <p class="mt-2 mb-0">${record.accountant_signed_by || ''}</p>
-//                    `);
-//                    accountantContent.empty(); // Hide "Accept & Sign" button
-//                } else {
-//                    accountantContainer.empty();
-//                }
-//
-//                // Update form state
-//                this._manageFormState();
-//            } else {
-//                console.error("No data returned from RPC call");
-//            }
-//        } catch (error) {
-//            console.error("Error fetching signatures:", error.message, error.data, error.stack);
-//        }
-//    },
-//
-    _checkSignatures() {
-        const hasDispatchSignature = $("#dispatch_signature_container img").length > 0;
-        const hasAccountantSignature = $("#accountant_signature_container img").length > 0;
-//        return hasDispatchSignature && hasAccountantSignature;
-        return hasDispatchSignature;
+    // Get a unique key for this specific form instance
+    _getFormStorageKey() {
+        return `dispatch_checklist/${this.access_token}`;
     },
 
-//    _manageFormState() {
-//        const formFields = this.$el.find('input, select, textarea').not('[name="csrf_token"]').not('#modal_dispatch input, #modal_accountant input');
-//        const signatureButtons = this.$el.find('#dispatch_content a, #accountant_content a');
-//
-//        if (this._checkSignatures()) {
-//            formFields.prop('disabled', false);
-//            formFields.css('background-color', '#ffffff');
-//            signatureButtons.prop('disabled', true);
-//        } else {
-//            formFields.prop('disabled', true);
-//            formFields.css('background-color', '#f0f0f0');
-//            signatureButtons.prop('disabled', false);
-//        }
-//    },
+    // Save all current form data to localStorage
+    _saveFormDataToLocalStorage() {
+        const data = {};
+        this.$el.find('input, select, textarea').each(function () {
+            const $field = $(this);
+            const name = $field.attr('name');
+            if (!name) return;
 
-    _bindFormFieldValidation() {
-        const formFields = $('#frm_dispatch_checklist').find('input, select, textarea').not('[name="csrf_token"]').not('#modal_dispatch input, #modal_accountant input');
-        console.log('Binding validation to form fields:', formFields.length);
-        formFields.on('focus click input', (event) => {
-            if (!this._checkSignatures()) {
-                console.log('Dispatch signature missing, showing validation message for field:', event.target);
-                swal({
-                    title: "Signature Required",
-                    text: "Please sign before entering the details.",
-                    icon: "warning",
-                    button: "OK",
-                });
-                $(event.target).blur();
+            if ($field.attr('type') === 'checkbox') {
+                data[name] = $field.prop('checked');
+            } else if ($field.attr('type') === 'file') {
+                // Binary field - skip or handle separately if needed
+            } else {
+                data[name] = $field.val();
+            }
+        });
+
+        const key = this._getFormStorageKey();
+        localStorage.setItem(key, JSON.stringify(data));
+    },
+
+    // Restore previously saved form data
+    _restoreFormDataFromLocalStorage() {
+        const key = this._getFormStorageKey();
+        const json = localStorage.getItem(key);
+        if (!json) return;
+
+        const data = JSON.parse(json);
+        this.$el.find('input, select, textarea').each(function () {
+            const $field = $(this);
+            const name = $field.attr('name');
+            if (!name || !(name in data)) return;
+
+            if ($field.attr('type') === 'checkbox') {
+                $field.prop('checked', !!data[name]);
+            } else {
+                $field.val(data[name]);
             }
         });
     },
+
+    // Clear localStorage after form submission (optional)
+    _checkAccessTokenChange() {
+        const currentToken = this.access_token;
+        const lastToken = localStorage.getItem('dispatch_form_last_token');
+
+        if (lastToken && lastToken !== currentToken) {
+            // The user switched to a new form -> clear old data
+            const oldKey = `dispatch_checklist/${lastToken}`;
+            localStorage.removeItem(oldKey);
+        }
+
+        // Update last token reference
+        localStorage.setItem('dispatch_form_last_token', currentToken);
+    },
+
+    // Bind modal close event and preserve form data
+    _bindModalCloseEvent() {
+        const modalAccountant = $('#modal_accountant');
+        const modalDispatchInCharge = $('#modal_dispatch');
+
+        // Use arrow function so `this` stays bound correctly
+        const handleModalClose = () => {
+            this._saveFormDataToLocalStorage();
+            location.reload(); // Reload the page to reflect new changes
+        };
+
+        modalAccountant.on('hidden.bs.modal', handleModalClose);
+        modalDispatchInCharge.on('hidden.bs.modal', handleModalClose);
+    },
+
 
     _checkDispatchSignature() {
         const dispatchSignature = $('#dispatch_signature').val(); // Assuming you have an input with ID dispatch_signature
@@ -374,26 +240,29 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
                 }
             },
             submitHandler: function (el) {
-                // Check if dispatch_signature is missing or is_incharge_sign is false
-                const isInchargeSign = $("#is_incharge_sign").val();
-                console.log("isInchargeSign --->", isInchargeSign);
+                // Check if dispatch_signature is missing or false
                 const hasDispatchSignature = $("#dispatch_signature_container img").length > 0;
+                const isInchargeSign = $("#frm_dispatch_checklist").data("is_incharge_sign");
 
-                // Check if accountant_signature is missing or is_incharge_sign is false
-                const isAccountantSign = $("#is_accountant_sign").val();
-                console.log("isAccountantSign --->", isAccountantSign);
+                // Check if accountant_signature is missing or false
                 const hasAccountantSignature = $("#accountant_signature_container img").length > 0;
+                const isAccountantSign =$("#frm_dispatch_checklist").data("is_accountant_sign");
 
-                console.log("Dispatch Signature Present:", hasDispatchSignature);
-                console.log("Accountant Signature Present:", hasAccountantSignature);
-
-//                if (!isInchargeSign || !isAccountantSign) {
-//                if (!hasDispatchSignature || !hasAccountantSignature) {
-                if (!hasDispatchSignature) {
+                if (isInchargeSign && !hasDispatchSignature) {
                     // Show an error popup if the conditions are not met
                     swal({
-                        title: "Error",
-                        text: "You must provide a signature.",
+                        title: "Signature is missing",
+                        text: "You must provide dispatch inchange signature.",
+                        icon: "error",
+                        button: "OK",
+                    });
+                    return false;
+                }
+                if (isAccountantSign && !hasAccountantSignature) {
+                    // Show an error popup if the conditions are not met
+                    swal({
+                        title: "Signature is missing",
+                        text: "You must provide accountant signature.",
                         icon: "error",
                         button: "OK",
                     });
@@ -411,10 +280,8 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
                     if (willSubmit) el.submit();
                 });
             },
-
         });
     },
-
 
     _initDatePicker() {
         const field = this.el.querySelector("#dispatch_date");
@@ -498,44 +365,17 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
         });
     },
 
-//    _bindCheckAllHandler() {
-//        // Delegate: listen for clicks on any .check-all-btn inside the widget
-//        this.$el.on("click", ".check-all-btn", function () {
-//            const $card = $(this).closest(".card");
-//            const $boxes = $card.find('.checkrequired[type="checkbox"]');
-//
-//            $boxes.prop("checked", true).trigger("change");
-//
-//            // Re-validate if needed
-//            $boxes.each(function () {
-//                const $cb = $(this);
-//                if (typeof $cb.valid === "function") $cb.valid();
-//            });
-//        });
-//    },
     _bindCheckAllHandler() {
-        $('#frm_dispatch_checklist').on("click", ".check-all-btn", (event) => {
-            if (!this._checkSignatures()) {
-                console.log('Dispatch signature missing, showing validation message for Check All button');
-                swal({
-                    title: "Signature Required",
-                    text: "Please sign before entering the details.",
-                    icon: "warning",
-                    button: "OK",
-                });
-                return;
-            }
-            const $card = $(event.currentTarget).closest(".card");
+        // Delegate: listen for clicks on any .check-all-btn inside the widget
+        this.$el.on("click", ".check-all-btn", function () {
+            const $card = $(this).closest(".card");
             const $boxes = $card.find('.checkrequired[type="checkbox"]');
 
             $boxes.prop("checked", true).trigger("change");
             $boxes.each(function () {
                 const $cb = $(this);
-                $cb[0].checked = true;
                 if (typeof $cb.valid === "function") $cb.valid();
             });
         });
     },
 });
-
-export default publicWidget.registry.DispatchChecklistWidget;

@@ -51,9 +51,32 @@ class SplitPOWizard(models.TransientModel):
         self.create_new_pos(self.vendor_ids)
         self.purchase_order.button_cancel()
 
+    # def create_new_pos(self, vendors_info=False):
+    #     if vendors_info:
+    #         for line in vendors_info:
+    #             vals = {
+    #                 'partner_id': line.partner_id.id,
+    #                 'origin': line.po_id.name if line.po_id else '',
+    #                 'product_categ_id': line.product_id.categ_id.id,
+    #                 'order_line': [(0, 0, {
+    #                     'date_planned': fields.Date.today(),
+    #                     'name': line.product_id.display_name,
+    #                     'product_id': line.product_id.id,
+    #                     'product_qty': line.quantity,
+    #                     'product_uom': line.product_id.uom_id.id,
+    #                 })]
+    #             }
+    #             new_purchase = self.env['purchase.order'].create(vals)
+    #             print("new_po created", new_purchase.name)
     def create_new_pos(self, vendors_info=False):
         if vendors_info:
             for line in vendors_info:
+                # Detect if original PO or line was created from MPS
+                from_mps = line.po_id.order_line.filtered(lambda l: l.product_id == line.product_id).mapped('from_mps')
+                from_mps_flag = any(from_mps)
+                print("from_mps",from_mps)
+                print("from_mps_flag",from_mps_flag)
+
                 vals = {
                     'partner_id': line.partner_id.id,
                     'origin': line.po_id.name if line.po_id else '',
@@ -64,7 +87,9 @@ class SplitPOWizard(models.TransientModel):
                         'product_id': line.product_id.id,
                         'product_qty': line.quantity,
                         'product_uom': line.product_id.uom_id.id,
+                        'from_mps': from_mps_flag,  # Store flag
                     })]
                 }
-                new_purchase = self.env['purchase.order'].create(vals)
-                print("new_po created", new_purchase.name)
+                print("vals", vals)
+
+                new_purchase = self.env['purchase.order'].with_context(from_mps=from_mps_flag).create(vals)

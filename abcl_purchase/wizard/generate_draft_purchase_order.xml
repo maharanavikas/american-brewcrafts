@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Create Draft Purchase Order">
                 <group>
-                    <field name="product_id"/>
+                    <field name="product_id" domain="[('purchase_ok', '=', True), ('is_bom_component', '=', False)]" options="{'no_open': True, 'no_create': True}"/>
                     <field name="categ_id" readonly="1"/>
                     <field name="supplierinfo_ids" readonly="1">
                         <list>
@@ -15,7 +15,7 @@
                             <field name="delay"/>
                         </list>
                     </field>
-                    <field name="vendor_id" can_create="True"/>
+                    <field name="vendor_id" options="{'no_open': True, 'no_create': True}"/>
                     <!-- <field name="unit_price" readonly="1"/> -->
                     <field name="allowed_vendor_ids" widget="many2many_tags" invisible="1"/>
                 </group>
