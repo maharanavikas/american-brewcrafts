@@ -416,4 +416,13 @@ class PurchaseOrder(models.Model):
             if order.partner_id:
                 order.message_unsubscribe([order.partner_id.id])
         return res
+
+    def copy(self, default=None):
+        for order in self:
+            if any(line.from_mps for line in order.order_line):
+                raise ValidationError(_(
+                    "You cannot duplicate the Purchase Order '%s' because it contains lines created from MPS."
+                ) % order.name)
+
+        return super(PurchaseOrder, self).copy(default)
     
