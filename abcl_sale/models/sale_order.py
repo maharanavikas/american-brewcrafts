@@ -391,6 +391,17 @@ class SaleOrder(models.Model):
             'domain': [('id', 'in', move_lines.ids)],
             'context': {'default_picking_id': self.picking_ids[:1].id if self.picking_ids else False},
         }
+
+    def action_confirm(self):
+        """Override to unsubscribe the partner after confirming the order."""
+        res = super(SaleOrder, self).action_confirm()
+
+        for order in self:
+            if order.partner_id:
+                order.message_unsubscribe(partner_ids=[order.partner_id.id])
+
+        return res
+
 class DispatchChecklistQstnnr(models.Model):
     _name = "sale.order.dispatch.checklist"
     _rec_name = 'order_id'
