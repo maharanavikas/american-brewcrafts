@@ -176,22 +176,22 @@ class MrpProduction(models.Model):
                 if invalid_qcs:
                     invalid_qcs.sudo().unlink()
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        productions = super().create(vals_list)
-        for rec in productions:
-            # if not rec._context.get('from_mps', False):
-            if not rec.from_mps:
-                bom_line_exists = self.env['mrp.bom.line'].search_count([('product_id', '=', rec.product_id.id)])
-                bom_master_exists = self.env['mrp.bom'].search_count(
-                    [('product_tmpl_id', '=', rec.product_id.product_tmpl_id.id)])
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     productions = super().create(vals_list)
+    #     for rec in productions:
+    #         # if not rec._context.get('from_mps', False):
+    #         if not rec.from_mps:
+    #             bom_line_exists = self.env['mrp.bom.line'].search_count([('product_id', '=', rec.product_id.id)])
+    #             bom_master_exists = self.env['mrp.bom'].search_count(
+    #                 [('product_tmpl_id', '=', rec.product_id.product_tmpl_id.id)])
 
-                if bom_line_exists or bom_master_exists:
-                    raise ValidationError(_(
-                        "You cannot manually create a Manufacturing Order for '%s' "
-                        "because it is already used in a Bill of Materials."
-                    ) % rec.product_id.display_name)
-        return productions
+    #             if bom_line_exists or bom_master_exists:
+    #                 raise ValidationError(_(
+    #                     "You cannot manually create a Manufacturing Order for '%s' "
+    #                     "because it is already used in a Bill of Materials."
+    #                 ) % rec.product_id.display_name)
+    #     return productions
 
     def action_split(self):
         self._pre_action_split_merge_hook(split=True)
