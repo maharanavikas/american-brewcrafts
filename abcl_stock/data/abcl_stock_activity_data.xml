@@ -14,5 +14,12 @@
             <field name="res_model">quality.check</field>
             <field name="active">False</field>
         </record>
+
+        <record id="quality_check_notification" model="mail.activity.type">
+            <field name="name">Quality Check</field>
+            <field name="icon">fa-check-circle</field>
+            <field name="res_model">quality.check</field>
+            <field name="active">False</field>
+        </record>    
     </data>
 </odoo>

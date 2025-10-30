@@ -226,6 +226,20 @@
         <field name="view_mode">list,form,pivot,graph,calendar</field>
     </record>
 
+<!--        <record id="action_purchase_bom_products" model="ir.actions.act_window">-->
+<!--        <field name="name">Master Production Schedule</field>-->
+<!--        <field name="res_model">mrp.production.schedule</field>-->
+<!--        <field name="domain"></field>-->
+<!--        <field name="context"></field>-->
+<!--    </record>-->
+
+
+<!--    <menuitem id="menu_purchase_mps"-->
+<!--              name="MPS"-->
+<!--              parent="purchase.menu_purchase_root"-->
+<!--              action="action_purchase_bom_products"-->
+<!--              sequence="30"/>-->
+
     <menuitem id="menu_product_purchase_nalysis"
               name="Product Purchase Analysis"
               parent="purchase.purchase_report_main"
