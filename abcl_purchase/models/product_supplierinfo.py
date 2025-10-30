@@ -14,7 +14,7 @@ class SupplierInfo(models.Model):
     requested_by = fields.Many2one('res.users', string="Requested By", default=lambda self: self.env.user)
     price = fields.Float('Price', default=0.0, digits='Product Price', required=True, help="The price to purchase a product", tracking=True )
     is_approval_requested = fields.Boolean(string="Approval Requested", default=False, tracking=True)
-    active = fields.Boolean(string="Active", default=False, tracking=True)
+    active = fields.Boolean(string="Active", default=False, tracking=True,copy=False)
     is_new_request = fields.Boolean(string="New request", default=False, tracking=True)
     approver_comment = fields.Text(string="Approver Comment", tracking=True)
 

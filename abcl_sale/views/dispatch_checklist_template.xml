@@ -24,7 +24,7 @@
                             <form name="frm_dispatch_checklist" id="frm_dispatch_checklist" class="form-horizontal" 
                                 method="post" t-attf-action="/dispatch_checklist/{{ access_token }}" 
                                 t-attf-accesstoken="{{access_token}}" t-att-data-record-id="picking and picking.id or ''"
-                                autocomplete="off" enctype="multipart/form-data">
+                                autocomplete="off" enctype="multipart/form-data" t-att-data-is_incharge_sign="picking.is_incharge_sign" t-att-data-is_accountant_sign="picking.is_accountant_sign">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
                                 <div class="text-dark fw-bold">
