@@ -151,10 +151,32 @@
         <field name="inherit_id" ref="stock.view_move_search"/>
         <field name="arch" type="xml">
             <xpath expr="//group" position="inside">
-                <filter string="MO Wise Component Usage"
+                <filter string="MO Wise Component Consumption"
                         name="groupby_raw_material_production_id"
                         domain="[('state','=','done')]"
                         context="{'group_by': 'raw_material_production_id'}"/>
+                <filter string="MO Wise FG Consumption"
+                        name="groupby_production_id"
+                        domain="[('state','=','done')]"
+                        context="{'group_by': 'production_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="abcl_stock_move_line_search_view" model="ir.ui.view">
+        <field name="name">abcl.stock.move.line.search.view</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.stock_move_line_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Category Wise Component Consumption"
+                        name="groupby_product_category_name"
+                        domain="[('state','=','done'),('production_id', '!=', False)]"
+                        context="{'group_by': 'product_category_name'}"/>
+                <filter string="MO Wise Component Usage"
+                        name="groupby_production_id"
+                        domain="[('state','=','done')]"
+                        context="{'group_by': 'production_id'}"/>
             </xpath>
         </field>
     </record>

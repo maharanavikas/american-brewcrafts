@@ -21,6 +21,7 @@
         'data/quality_check_fail_template.xml',
         'data/quality_check_pass_template.xml',
         'data/fleet_tracking_mail.xml',
+        'data/quality_check_mail.xml',
         'wizard/quality_approval_wizard_views.xml',
         'views/stock_picking_views.xml',
         'views/portal_delivery_template.xml',

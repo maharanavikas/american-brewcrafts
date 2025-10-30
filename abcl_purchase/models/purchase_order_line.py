@@ -218,3 +218,4 @@ class StockRule(models.Model):
             productions._post_run_manufacture(new_productions_values_by_company[company_id]['procurements'])
         return True
 
+

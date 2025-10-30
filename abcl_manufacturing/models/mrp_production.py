@@ -193,6 +193,15 @@ class MrpProduction(models.Model):
                     ) % rec.product_id.display_name)
         return productions
 
+    def copy(self, default=None):
+        for record in self:
+            if record.from_mps:
+                raise ValidationError(_(
+                    "You cannot duplicate the Manufacturing Order '%s' because it was created from MPS."
+                ) % record.name)
+
+        return super(MrpProduction, self).copy(default)
+
     def action_split(self):
         self._pre_action_split_merge_hook(split=True)
         if len(self) > 1:
@@ -300,4 +309,36 @@ class MrpProduction(models.Model):
             'bom_uom_qty': 'qty_should_consume' in self._context and self._context['qty_should_consume'] or product_uom_qty,
         })
         return data
+
+    # def _link_bom(self, bom):
+    #     """ Links the given BoM to the MO. Assigns BoM's lines, by-products and operations
+    #     to the corresponding MO's components, by-products and workorders.
+    #     """
+    #     self.ensure_one()
+    #     product_qty = self.product_qty
+    #     uom = self.product_uom_id
+    #     qty_should_consume = self._context.get('qty_should_consume', 0.0)
+    #     print('qty_should_consume',qty_should_consume)
+    #     moves_to_unlink = self.env['stock.move']
+    #     workorders_to_unlink = self.env['mrp.workorder']
+    #     # For draft MO, all the work will be done by compute methods.
+    #     # For cancelled and done MO, we don't want to do anything more than assinging the BoM.
+    #     if self.state == 'draft' and self.bom_id == bom:
+    #         # Empties `bom_id` field so when the BoM is reassigns to this field, depending computes
+    #         # will be triggered (doesn't happen if the field's value doesn't change).
+    #         self.bom_id = False
+    #     if self.state in ['cancel', 'done', 'draft']:
+    #         if self.state == 'draft':
+    #             # Don't straight delete the moves/workorders to avoid to cancel the MO, those will
+    #             # be deleted once the BoM is assigned (and thus after new moves/WO were created).
+    #             moves_to_unlink = self.move_raw_ids
+    #             workorders_to_unlink = self.workorder_ids
+    #         self.bom_id = bom
+    #         moves_to_unlink.unlink()
+    #         workorders_to_unlink.unlink()
+    #         if self.state == 'draft':
+    #             # we reset the product_qty/uom when the bom is changed on a draft MO
+    #             # change them back to the original value
+    #             self.write({'product_qty': product_qty, 'product_uom_id': uom.id,'qty_should_consume': qty_should_consume})
+    #         return
 

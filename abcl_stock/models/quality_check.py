@@ -162,3 +162,32 @@ class QualityCheck(models.Model):
                 'default_action_type': 'fail'
             }
         }
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super(QualityCheck, self).create(vals_list)
+        
+        manger_group_id = 'quality.group_quality_manager'
+        group = self.env.ref(manger_group_id, raise_if_not_found=False)
+        if not group:
+            return records
+
+        managers = group.users
+        if not managers:
+            return records
+
+        for record in records:
+            for manager in managers:
+                print("manager", manager.name)
+                record.activity_schedule('abcl_stock.quality_check_notification', user_id=manager.id, note=f'New Quality Check {record.name} has been created.')
+                print("activity scheduled")
+                template = self.env.ref('abcl_stock.template_quality_check_mail')
+                if template:
+                    template.with_context(manager_name=manager.name,
+                                        reference=(record.production_id.name
+                                                    or record.picking_id.name
+                                                    or record.inventory_id.name
+                                                    or 'Manual'),
+                                        ).send_mail(record.id, email_values={'email_to': manager.email})
+                
+        return records
