@@ -12,7 +12,7 @@
     'category': 'Manufacturing/Manufacturing',
     'version': '18.0',
 
-    'depends': ['mrp', 'mrp_mps', 'stock'],
+    'depends': ['mrp', 'mrp_mps', 'stock','product', 'abcl_purchase'],
     'data': [
         "security/ir.model.access.csv",
         "wizard/extra_production_wizard_views.xml",
@@ -20,7 +20,7 @@
         "views/mrp_bom_views.xml",
         'views/mrp_production_schedule.xml',
         'views/stock_quant_views.xml',
-
+        'views/work_order_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
