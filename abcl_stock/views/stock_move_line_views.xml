@@ -25,4 +25,21 @@
             </xpath>
         </field>
     </record>
+
+    <!-- Deactivate Jobs menu -->
+        <record id="stock_picking_batch.menu_stock_jobs" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+        <!-- Deactivate Master Production Schedule menu -->
+        <record id="mrp_mps.stock_mrp_mps_report_menu" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+        <!--     Deactivate Procurement Compute menu -->
+        <record id="stock.menu_procurement_compute" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+        <!--    Rename Internal to Internal Transfers -->
+        <record id="stock.int_picking" model="ir.ui.menu">
+            <field name="name">Internal Transfers</field>
+        </record>
 </odoo>

@@ -12,7 +12,7 @@
     'category': 'Manufacturing/Manufacturing',
     'version': '18.0',
 
-    'depends': ['base','mrp', 'mrp_mps', 'stock','purchase', 'product','abcl_purchase'],
+    'depends': ['base','mrp', 'mrp_mps', 'stock','purchase', 'product'],
     'data': [
         "security/ir.model.access.csv",
         "wizard/extra_production_wizard_views.xml",
