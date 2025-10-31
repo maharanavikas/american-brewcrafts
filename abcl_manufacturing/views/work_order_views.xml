@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="work_order_add_products" model="ir.ui.view">
+        <field name="name">work.order.add.products</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_view_search_catalog"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='goods']" position="after">
+                <separator/>
+                <filter name="bom_components" string="Products in all Boms" domain="[('bom_line_ids', 'ilike', '')]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
