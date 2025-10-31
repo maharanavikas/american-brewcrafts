@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_auto_generate_mo" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.auto.generate.mo</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id"
+               ref="mrp.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='mrp_byproduct']" position="after">
+                <setting id="restrict_manual_mo_creation" string="Restrict Manual Manufacturing Orders"
+                         help="Allow creating manufacturing order from MPS only.">
+                    <field name="restrict_manual_mo_creation"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form_purchase_inherit_mps" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.purchase.mps</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="purchase.res_config_settings_view_form_purchase"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='manage_purchase_agreements']" position="after">
+                <setting
+                    id="restrict_manual_po_creation_setting"
+                    string="Restrict Manual PO Creation"
+                    help="Allow creating manufacturing order from MPS only.">
+                    <field name="restrict_manual_po_creation"/>
+                </setting>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

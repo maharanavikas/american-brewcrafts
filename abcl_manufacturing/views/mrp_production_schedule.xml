@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <odoo>
     <record id="abcl_mrp_production_search_view" model="ir.ui.view">
         <field name="name">abcl.mrp.production.search.view</field>
@@ -148,4 +147,5 @@
             </xpath>
         </field>
     </record>
+
 </odoo>
