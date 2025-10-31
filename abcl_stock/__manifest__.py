@@ -12,9 +12,11 @@
     'category': 'Inventory/Inventory',
     'version': '18.0',
 
-    'depends': ['stock', 'quality', 'spreadsheet', 'quality_control', 'fleet','website','quality_mrp', 'mrp', 'stock_account', 'abcl_base'],
+    'depends': ['stock', 'quality', 'spreadsheet', 'quality_control', 'fleet', 'website', 'quality_mrp', 'mrp',
+                'stock_account', 'abcl_base','quality','abcl_base','product'],
     'data': [
         'security/ir.model.access.csv',
+        'security/security.xml',
         'data/abcl_stock_activity_data.xml',
         'data/delivery_approval_template.xml',
         'data/delivery_order_approved_template.xml',
@@ -34,6 +36,8 @@
         'views/stock_lot_views.xml',
         'views/stock_move_line_views.xml',
         'views/stock_valuation_layer_views.xml',
+        'views/stock_warehouse_orderpoint_views.xml',
+        'views/stock_report_views.xml',
     ],
 
     'assets': {

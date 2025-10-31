@@ -16,11 +16,17 @@ class PurchaseOrderLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         lines = super().create(vals_list)
+        restrict_po = self.env['ir.config_parameter'].sudo().get_param(
+            'purchase.restrict_manual_po_creation', 'False'
+        ) == 'True'
+        print("restrict_po", restrict_po)
+
         for line in lines:
             # Only allow creation from MPS (context flag)
             print('line._context',line._context)
             # if not line._context.get('from_mps', False):
-            if not line.from_mps:
+            # if not line.from_mps:
+            if restrict_po and not line.from_mps:
                 bom_line_exists = self.env['mrp.bom.line'].search_count([
                     ('product_id', '=', line.product_id.id)
                 ])

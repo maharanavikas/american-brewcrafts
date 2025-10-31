@@ -8,5 +8,9 @@
         <record id="group_vice_president" model="res.groups">
                 <field name="name">Vice President</field>
         </record>
+<!--Reordering Rules Administrator to access buttons in reordering rules-->
+        <record id="group_reordering_rules" model="res.groups">
+                <field name="name">Reordering Rules Administrator</field>
+        </record>
     </data>
 </odoo>
