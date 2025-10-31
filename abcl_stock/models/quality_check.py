@@ -27,6 +27,9 @@ class QualityCheck(models.Model):
 
     def do_pass(self):
         is_plant_manager = self.env.user.has_group('abcl_base.group_plant_manager')
+        is_quality_manager = self.env.user.has_group('quality.group_quality_manager')
+        if not is_quality_manager or is_plant_manager:
+            raise UserError("Only a Quality Manager and Plant Manager can approve quality checks.")
         print("is_plant_manager", is_plant_manager)
         for check in self:
             # If there is no related production, run default behavior
@@ -92,6 +95,10 @@ class QualityCheck(models.Model):
 
     def do_fail(self):
         res = super().do_fail()
+        is_plant_manager = self.env.user.has_group('abcl_base.group_plant_manager')
+        is_quality_manager = self.env.user.has_group('quality.group_quality_manager')
+        if not is_quality_manager or is_plant_manager:
+            raise UserError("Only a Quality Manager and Plant Manager can approve quality checks.")
 
         for check in self.filtered(lambda c: c.production_id):
             users = self.env.ref('abcl_base.group_plant_manager').users
