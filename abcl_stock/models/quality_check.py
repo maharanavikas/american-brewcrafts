@@ -194,7 +194,7 @@ class QualityCheck(models.Model):
         if not group:
             return records
 
-        managers = group.users
+        managers = group.users.filtered(lambda u: u.login != 'admin') # Exclude admin user
         if not managers:
             return records
 
