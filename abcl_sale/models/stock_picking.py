@@ -317,6 +317,23 @@ class StockPicking(models.Model):
     br_availability_status = fields.Boolean('Status')
 
     checklist_ids = fields.One2many('dispatch.checklist', 'picking_id', string='Dispatch Checklists')
+    product_qty_uom_summary = fields.Char(
+        string="Products (Qty/UoM)",
+        compute="_compute_product_qty_uom_summary",
+    )
+
+    @api.depends('move_ids_without_package.product_id','move_ids_without_package.product_uom_qty','move_ids_without_package.product_uom')
+    def _compute_product_qty_uom_summary(self):
+        for picking in self:
+            lines = []
+            for move in picking.move_ids_without_package:
+                name = move.product_id.display_name or ''
+                qty = move.product_uom_qty or 0
+                uom = move.product_uom.name or ''
+                print("uom",uom)
+                print("move.product_uom",move.product_uom)
+                lines.append(f"{name} / {qty} / {uom}")
+            picking.product_qty_uom_summary = ", ".join(lines)
 
     @api.model
     def _validate_access_token(self, access_token):
