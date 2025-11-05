@@ -76,7 +76,7 @@ class SaleOrder(models.Model):
         compute="_compute_latest_approval_state",
         store=False
     )
-    sent_for_approval = fields.Boolean("Sent for Approval", default=False)
+    sent_for_approval = fields.Boolean("Sent for Approval", default=False, copy=False)
     move_line_count = fields.Integer(string="Stock Move Lines", compute="_compute_move_line_count")
 
     @api.depends("approval_line_ids.state", "approval_line_ids.sequence")
@@ -400,6 +400,21 @@ class SaleOrder(models.Model):
             if order.partner_id:
                 order.message_unsubscribe(partner_ids=[order.partner_id.id])
 
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('order_line'):
+                raise ValidationError(_("You cannot create a Sale Order without Order Lines."))
+
+        return super().create(vals_list)
+
+    def write(self, vals):
+        res = super().write(vals)
+        for order in self:
+            if not order.order_line:
+                raise ValidationError(_("Sale Order must have at least one Order Line."))
         return res
 
 class DispatchChecklistQstnnr(models.Model):
