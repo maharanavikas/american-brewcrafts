@@ -992,7 +992,7 @@
                                                                         t-att-value="picking.e_permit_lr_copy_no_date or ''"/>
                                                                     </div>
                                                                     <div class="col-sm-2">
-                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_permit_lr_copy_no_date_date_status else None" type="checkbox" id="e_permit_lr_copy_no_date_datecheck" name="e_permit_lr_copy_no_date_datecheck"/>
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_permit_lr_copy_no_date_status else None" type="checkbox" id="e_permit_lr_copy_no_date_datecheck" name="e_permit_lr_copy_no_date_datecheck"/>
                                                                     </div>
                                                                     <div class="col-sm-3">
                                                                         <input id="e_permit_lr_copy_no_date_dateremarks" name="e_permit_lr_copy_no_date_dateremarks" type="text" class="form-controls input-wrapper"
