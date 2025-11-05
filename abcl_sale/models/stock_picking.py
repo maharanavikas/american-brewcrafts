@@ -41,7 +41,7 @@ class StockPicking(models.Model):
     lr_no = fields.Char("LR No.")
 
     finance_user_id = fields.Many2one('res.users', string='Accountant')
-    access_token = fields.Char("Access Token", required=True, default=lambda s: uuid.uuid4().hex, size=43)
+    access_token = fields.Char("Access Token", copy=False, required=True, default=lambda s: uuid.uuid4().hex, size=43)
     dispatch_signed_by = fields.Char()
     dispatch_signature = fields.Binary()
     accountant_signed_by = fields.Char()

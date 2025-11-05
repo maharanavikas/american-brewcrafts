@@ -972,14 +972,14 @@
                                                                         OFS No.
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <input id="e_permit_ofs_no_datespecifications" name="e_permit_ofs_no_datespecifications" type="text" class="form-controls input-wrapper"
+                                                                        <input id="e_permit_ofs_no_date_specifications" name="e_permit_ofs_no_date_specifications" type="text" class="form-controls input-wrapper"
                                                                         t-att-value="picking.e_permit_ofs_no_date or ''"/>
                                                                     </div>
                                                                     <div class="col-sm-2">
-                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_permit_ofs_no_date_status else None" type="checkbox" id="e_permit_ofs_no_datecheck" name="e_permit_ofs_no_datecheck"/>
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_permit_ofs_no_date_status else None" type="checkbox" id="e_permit_ofs_no_date_check" name="e_permit_ofs_no_date_check"/>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <input id="e_permit_ofs_no_dateremarks" name="e_permit_ofs_no_dateremarks" type="text" class="form-controls input-wrapper"
+                                                                        <input id="e_permit_ofs_no_date_remarks" name="e_permit_ofs_no_date_remarks" type="text" class="form-controls input-wrapper"
                                                                         t-att-value="picking.e_permit_ofs_no_date_remarks or ''"/>
                                                                     </div>
                                                                 </div>
@@ -992,11 +992,11 @@
                                                                         t-att-value="picking.e_permit_lr_copy_no_date or ''"/>
                                                                     </div>
                                                                     <div class="col-sm-2">
-                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_permit_lr_copy_no_date_status else None" type="checkbox" id="e_permit_lr_copy_no_date_datecheck" name="e_permit_lr_copy_no_date_datecheck"/>
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_permit_lr_copy_no_date_status else None" type="checkbox" id="e_permit_lr_copy_no_date_check" name="e_permit_lr_copy_no_date_check"/>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <input id="e_permit_lr_copy_no_date_dateremarks" name="e_permit_lr_copy_no_date_dateremarks" type="text" class="form-controls input-wrapper"
-                                                                        t-att-value="picking.e_permit_lr_copy_no_date_date_remarks or ''"/>
+                                                                        <input id="e_permit_lr_copy_no_date_remarks" name="e_permit_lr_copy_no_date_remarks" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.e_permit_lr_copy_no_date_remarks or ''"/>
                                                                     </div>
                                                                 </div>
                                                             </t>
@@ -1072,15 +1072,15 @@
                                                                         Export permit No
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <input id="export_permit_no_specifications" name="export_permit_no_specifications" type="text" class="form-controls input-wrapper"
-                                                                        t-att-value="picking.export_permit_id or ''"/>
+                                                                        <input id="e_permit_no_specifications" name="e_permit_no_specifications" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.e_permit_no or ''"/>
                                                                     </div>
                                                                     <div class="col-sm-2">
-                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.export_permit_no_status else None" type="checkbox" id="export_permit_no_check" name="export_permit_no_check"/>
+                                                                         <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_permit_no_status else None" type="checkbox" id="e_permit_no_check" name="e_permit_no_check"/>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <input id="export_permit_no_remarks" name="export_permit_no_remarks" type="text" class="form-controls input-wrapper"
-                                                                        t-att-value="picking.export_permit_no_remarks or ''"/>
+                                                                        <input id="e_permit_no_remarks" name="e_permit_no_remarks" type="text" class="form-controls input-wrapper"
+                                                                        t-att-value="picking.e_permit_no_remarks or ''"/>
                                                                     </div>
                                                                 </div>
                                                             </t>
@@ -1112,7 +1112,7 @@
                                                                     <button type="button" class="btn btn-sm btn-outline-primary ms-2 check-all-btn">
                                                                     Check All
                                                                 </button>
-                                                                </div>/
+                                                                </div>
                                                                 <div class="col-sm-3 fs-6 fw-bold">
                                                                     Remarks
                                                                 </div>
