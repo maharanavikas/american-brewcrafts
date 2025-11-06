@@ -22,6 +22,7 @@ class StockPicking(models.Model):
         readonly=False,
         store=False, copy=False
     )
+    total_qty = fields.Float("Total Quantity", compute='_compute_total_qty', store=False)
 
     import_permit_id = fields.Many2one("import.permit",string="Import Permit", domain="[('order_id','=',sale_id)]")
     import_permit_date = fields.Date(related="import_permit_id.import_permit_date", string="Import Permit Date", store=True)
@@ -317,6 +318,11 @@ class StockPicking(models.Model):
     br_availability_status = fields.Boolean('Status')
 
     checklist_ids = fields.One2many('dispatch.checklist', 'picking_id', string='Dispatch Checklists')
+
+    def _compute_total_qty(self):
+        all_goods_lines = self.move_line_ids.filtered(lambda move: move.product_id.type == 'consu')
+        total_goods_qty = sum(product.quantity for product in all_goods_lines)
+        self.total_qty = total_goods_qty
 
     @api.model
     def _validate_access_token(self, access_token):

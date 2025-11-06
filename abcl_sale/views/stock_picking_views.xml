@@ -471,7 +471,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <tr invisible="partner_state_code not in ['JH','PY','TN','KL']">
                                             <td>Export permit No.</td>
                                             <td>
                                                 <field name="e_pass_permit_no" readonly="1"/>
@@ -483,7 +483,7 @@
                                                 <field name="e_pass_permit_no_remarks" readonly="1"/>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr invisible="partner_state_code not in ['JH','PY','TN','KL']">
                                             <td>Dispatch date &amp; time</td>
                                             <td>
                                                 <field name="e_pass_dispatch_date_time" readonly="1"/>
@@ -495,7 +495,7 @@
                                                 <field name="e_pass_dispatch_date_time_remarks" readonly="1"/>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr invisible="partner_state_code not in ['JH','PY','TN','KL']">
                                             <td>Import permit Validity days</td>
                                             <td>
                                                 <field name="e_pass_import_validity" readonly="1"/>
@@ -507,7 +507,7 @@
                                                 <field name="e_pass_import_validity_remarks" readonly="1"/>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr invisible="partner_state_code not in ['JH','PY','TN','KL']">
                                             <td>Quantity</td>
                                             <td>
                                                 <field name="e_pass_quantity" readonly="1"/>
@@ -1176,7 +1176,7 @@
                         </div>
                     </div>
                     <div class=" mb-2 border-0">
-                        <div class="mt-auto" invisible="partner_state_code not in ['PY']">
+                        <div class="mt-auto" invisible="partner_state_code not in ['KL']">
                             <div class="d-flex bg-dark text-white">
                                 <p class="fs-5 fw-bold m-2">
                                     Unloading Challan
@@ -1224,7 +1224,7 @@
                         </div>
                     </div>
                     <div class=" mb-2 border-0">
-                        <div class="mt-auto" invisible="partner_state_code not in ['PY']">
+                        <div class="mt-auto" invisible="partner_state_code not in ['KL']">
                             <div class="d-flex bg-dark text-white">
                                 <p class="fs-5 fw-bold m-2">
                                     Brand registration
