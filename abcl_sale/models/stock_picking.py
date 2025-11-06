@@ -39,6 +39,7 @@ class StockPicking(models.Model):
     po_no = fields.Char("PO No.")
     po_date = fields.Date("PO Date")
     lr_no = fields.Char("LR No.")
+    state = fields.Selection(readonly=False)
 
     finance_user_id = fields.Many2one('res.users', string='Accountant')
     access_token = fields.Char("Access Token", copy=False, required=True, default=lambda s: uuid.uuid4().hex, size=43)
@@ -321,6 +322,8 @@ class StockPicking(models.Model):
         string="Products (Qty/UoM)",
         compute="_compute_product_qty_uom_summary",
     )
+    export_pass_doc = fields.Binary("Export Pass", attachment=True, copy=False, exportable=False)
+    export_pass_doc_name = fields.Char("Export Pass Name")
 
     @api.depends('move_ids_without_package.product_id','move_ids_without_package.product_uom_qty','move_ids_without_package.product_uom')
     def _compute_product_qty_uom_summary(self):
@@ -330,8 +333,6 @@ class StockPicking(models.Model):
                 name = move.product_id.display_name or ''
                 qty = move.product_uom_qty or 0
                 uom = move.product_uom.name or ''
-                print("uom",uom)
-                print("move.product_uom",move.product_uom)
                 lines.append(f"{name} / {qty} / {uom}")
             picking.product_qty_uom_summary = ", ".join(lines)
 

@@ -24,6 +24,10 @@
             <field name="sale_id" position="attributes">
                 <attribute name="invisible">picking_type_code == 'incoming'</attribute>
             </field>
+            <field name="origin" position="after">
+                <field name="export_pass_doc_name" invisible="1"/>
+                <field name="export_pass_doc" filename="export_pass_doc_name" widget="binary"/>
+            </field>
             <field name="user_id" position="after">
                 <field name="finance_user_id"/>
             </field>

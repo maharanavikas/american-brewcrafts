@@ -40,11 +40,8 @@ class MrpBom(models.Model):
 
             if current_line._skip_bom_line(current_product, never_attribute_values):
                 continue
-            print("current_line", current_line)
             line_quantity = current_qty * current_line.product_qty
             should_consume_line_quantity = current_qty * (current_line.product_consumed_qty or current_line.product_qty)
-            print("line_quantity",line_quantity)
-            print("current_qty",current_qty)
             if current_line.product_id not in product_boms:
                 update_product_boms()
                 product_ids.clear()

@@ -149,9 +149,9 @@
             <xpath expr="//field[@name='origin']" position="after">
                 <field name="po_ref_no" string="PO Reference No"/>
             </xpath>
-            <xpath expr="//list" position="attributes">
-                <attribute name="js_class">custom_po_list_controller</attribute>
-            </xpath>
+<!--            <xpath expr="//list" position="attributes">-->
+<!--                <attribute name="js_class">custom_po_list_controller</attribute>-->
+<!--            </xpath>-->
             <xpath expr="//field[@name='priority']" position="replace">
                 <field name="priority_type"/>
             </xpath>

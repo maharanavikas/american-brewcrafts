@@ -10,9 +10,7 @@ from odoo.http import request, route, Controller
 
 def validate_access_token(func):
     def wrapper(object, access_token, *args, **kwargs):
-        print("access_token ---->", access_token)
         picking = request.env['stock.picking'].sudo()._validate_access_token(access_token)
-        print("picking --->", picking)
         if not picking:
             return request.not_found()
         if picking.signature_state == 'signed':
@@ -47,7 +45,6 @@ class DispatchChecklistController(Controller):
                                                                             })
         elif method == 'POST':
             vehicle_type = kw.get("vehicle_type", '')
-            print("vehicle_type --->", vehicle_type)
             vehicle_no = ''
 
             dispatch_wizard = request.env['dispatch.checklist.wizard'].sudo().search([])
@@ -311,8 +308,6 @@ class DispatchChecklistController(Controller):
     @validate_access_token
     def dispatch_accept_signature(self, picking, role, **payload):
         # role is already provided by the route; DON'T overwrite it
-        print("HIT:", request.httprequest.path, "role=", role)
-
         name = (payload.get('name') or '').strip()
         signature = payload.get('signature') or ''
         if not signature:
