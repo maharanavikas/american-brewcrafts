@@ -38,24 +38,3 @@ class MrpProductionSchedule(models.Model):
         
         return super(MrpProductionSchedule, self).set_forecast_qty(date_index, quantity, period_scale)
 
-    # @api.model
-    # def _get_lines_domain(self):
-    #     domain = super()._get_lines_domain()
-    #
-    #     if self.env.context.get('show_purchase_mps'):
-    #         domain += [("route_id", "in", [7])]
-    #
-    #     return domain
-    # mps_mode = fields.Selection([
-    #     ('manufacture', 'Manufacture'),
-    #     ('purchase', 'Purchase'),
-    # ], string="MPS Mode", default='manufacture')
-    # @api.model
-    # def _get_lines_domain(self):
-    #     domain = super()._get_lines_domain()
-    #
-    #     if self.env.context.get('show_purchase_mps'):
-    #         domain += [("product_id.purchase_ok", "=", True)]
-    #
-    #     return domain
-

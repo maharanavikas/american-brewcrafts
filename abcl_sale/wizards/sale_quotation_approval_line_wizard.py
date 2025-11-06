@@ -63,7 +63,6 @@ class SaleQuotationApprovalLineWizard(models.TransientModel):
 
                 if next_line:
                     next_user = next_line.user_id
-                    print("next_user",next_user)
                     # next_line.write({'state': 'pending'})
 
                     self.sale_id.activity_schedule(

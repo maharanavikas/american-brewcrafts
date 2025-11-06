@@ -85,7 +85,6 @@ class MrpProduction(models.Model):
 
 
     def action_generate_component_lot_qc(self):
-        print("inside action_generate_component_lot_qc .........")
         QP = self.env['quality.point'].sudo()
         QualityCheck = self.env['quality.check'].sudo()
 
@@ -180,7 +179,6 @@ class MrpProduction(models.Model):
     def create(self, vals_list):
         productions = super().create(vals_list)
         restrict_mo = self.env['ir.config_parameter'].sudo().get_param('mrp.restrict_manual_mo_creation', 'False') == 'True'
-        print("restrict_mo",restrict_mo)
         for rec in productions:
             # if not rec._context.get('from_mps', False):
             # if not rec.from_mps:

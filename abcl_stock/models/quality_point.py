@@ -35,7 +35,6 @@ class QualityPoint(models.Model):
     #     self.quality_point_product_ids = product_lines
 
     def _get_checks_values(self, products, company_id, existing_checks=False):
-        print("_get_checks_values .......")
         quality_points_list = []
         point_values = []
         if not existing_checks:
@@ -61,7 +60,6 @@ class QualityPoint(models.Model):
                 point_products |= products
 
             if point.measure_on == 'lots_serial_no':
-                print("If it is lot a serial number .....")
                 production = self.env.context.get('production')
                 if production:
                     for move in production.move_finished_ids.filtered(lambda m: not m.scrapped):

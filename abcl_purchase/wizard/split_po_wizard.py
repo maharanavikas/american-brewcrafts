@@ -74,8 +74,6 @@ class SplitPOWizard(models.TransientModel):
                 # Detect if original PO or line was created from MPS
                 from_mps = line.po_id.order_line.filtered(lambda l: l.product_id == line.product_id).mapped('from_mps')
                 from_mps_flag = any(from_mps)
-                print("from_mps",from_mps)
-                print("from_mps_flag",from_mps_flag)
 
                 vals = {
                     'partner_id': line.partner_id.id,
@@ -90,6 +88,5 @@ class SplitPOWizard(models.TransientModel):
                         'from_mps': from_mps_flag,  # Store flag
                     })]
                 }
-                print("vals", vals)
 
                 new_purchase = self.env['purchase.order'].with_context(from_mps=from_mps_flag).create(vals)

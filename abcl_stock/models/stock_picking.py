@@ -125,10 +125,8 @@ class StockPicking(models.Model):
         self.message_post(body=f"Sign request sent to accountant: {partner.name}")
 
     def action_split_transfer(self):
-        print("Inside action_split_transfer")
         res = super().action_split_transfer()
         new_checks = []
-        print("Split transfer done, now checking for QC creation...")
         if self.picking_type_code == 'outgoing':
             for picking in self:
                 if not picking.check_ids:
@@ -217,7 +215,6 @@ class StockMove(models.Model):
         ondelete='set null', index='btree_not_null', readonly=False)
 
     def _create_quality_checks_for_mo(self):
-        print("_create_quality_checks_for_mo ..........")
         mo_moves = defaultdict(lambda: self.env['stock.move'])
         check_vals_list = []
         seen = set()
@@ -274,29 +271,23 @@ class StockMove(models.Model):
                 ('measure_on', '=', 'lots_serial_no'),
                 ('picking_type_ids.name', '=', 'Manufacturing')
             ])
-            print("manu_points ------>", manu_points)
             if not manu_points:
                 continue
 
             # get raw material (component) moves
             component_moves = production.move_raw_ids.filtered(lambda m: not m.scrapped)
-            print("component_moves --->", component_moves)
             for move in component_moves:
                 lots = (move.mapped('move_line_ids.lot_id') | move.lot_ids)
-                print("lots ------>", lots)
                 if not lots:
                     continue
 
                 for lot in lots:
-                    print("lot --->", lot)
                     for point in manu_points:
-                        print("point --->", point)
                         # skip unrelated points if restricted to certain products
                         if point.product_ids and move.product_id not in point.product_ids:
                             continue
 
                         key = (point.id, production.id, move.product_id.id, lot.id, 'lots_serial_no')
-                        print("key ---->", key)
                         if key in seen:
                             continue
                         seen.add(key)
@@ -312,7 +303,6 @@ class StockMove(models.Model):
                         })
 
         if check_vals_list:
-            print("check_vals_list ---->", check_vals_list)
             self.env['quality.check'].sudo().create(check_vals_list)
             print(f"Created {len(check_vals_list)} quality checks (including lot/serial).")
         else:
