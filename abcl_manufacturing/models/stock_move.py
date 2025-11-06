@@ -37,11 +37,9 @@ class StockMove(models.Model):
 
     @api.depends('raw_material_production_id.qty_producing','product_uom_qty','quantity')
     def update_bom_demand(self):
-        print('raw_material_production_id.qty_producing')
         for rec in self:
             # production = rec.production_id
             production = rec.raw_material_production_id
-            print('raw_material_production_id//',production)
             if production.bom_id and production.product_id and production.product_qty > 0:
                 moves_raw_values = production.with_context(qty_producing_value=production.qty_producing)._get_moves_raw_values()
                 move_raw_dict = {move.bom_line_id.id: move for move in
@@ -92,7 +90,6 @@ class StockMove(models.Model):
             for i, lot_name in enumerate(lot_names)
             if vals_list[i].get('manufacturing_date')
         ]
-        print("lots_to_create_vals",lots_to_create_vals)
         lot_ids |= self.env['stock.lot'].create(lots_to_create_vals)
 
         lot_id_by_name = {lot.name: lot.id for lot in lot_ids}

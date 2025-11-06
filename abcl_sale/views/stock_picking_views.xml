@@ -6,15 +6,15 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <field name="group_id" position="after">
-<!--                <field name="dispatch_checklist_id" invisible="picking_type_code != 'outgoing'"/>-->
+                <!--                <field name="dispatch_checklist_id" invisible="picking_type_code != 'outgoing'"/>-->
                 <!-- <field name="sign_request_id" invisible="picking_type_code != 'outgoing'"/> -->
-<!--                <field name="signer_ids" readonly="1" invisible="not sign_request_id or picking_type_code != 'outgoing'">-->
-<!--                    <list no_open="True">-->
-<!--                        <field name="mail_sent_order" string="Sign Order"/>-->
-<!--                        <field name="role_id"/>-->
-<!--                        <field name="partner_id"/>-->
-<!--                    </list>-->
-<!--                </field>-->
+                <!--                <field name="signer_ids" readonly="1" invisible="not sign_request_id or picking_type_code != 'outgoing'">-->
+                <!--                    <list no_open="True">-->
+                <!--                        <field name="mail_sent_order" string="Sign Order"/>-->
+                <!--                        <field name="role_id"/>-->
+                <!--                        <field name="partner_id"/>-->
+                <!--                    </list>-->
+                <!--                </field>-->
                 <!-- <field name="sign_request_state" invisible="picking_type_code != 'outgoing'" readonly="0"/> -->
                 <field name="signature_state" readonly="1"/>
                 <field name="is_dispatch_sent" string="Is Dispatch Sent" readonly="1"/>
@@ -23,6 +23,10 @@
             </field>
             <field name="sale_id" position="attributes">
                 <attribute name="invisible">picking_type_code == 'incoming'</attribute>
+            </field>
+            <field name="origin" position="after">
+                <field name="export_pass_doc_name" invisible="1"/>
+                <field name="export_pass_doc" filename="export_pass_doc_name" widget="binary"/>
             </field>
             <field name="user_id" position="after">
                 <field name="finance_user_id"/>
@@ -39,7 +43,7 @@
                         type="object"
                         class="oe_highlight"
                         invisible="picking_type_code == 'incoming' or (state == 'done' or not sale_id or sign_request_id) or is_dispatch_sent == True"/>
-                        
+
                 <!-- <button name="action_review_dispatch_checkilist_template" string="Review Dispatch Checklist" type="object" class="oe_highlight" invisible="is_dispatch_sent != True"/> -->
                 <!-- <button name="action_review_dispatch_checkilist_template" string="Review Dispatch Checklist" type="object" class="oe_highlight"/> -->
                 <!-- <button name="download_dispatch_checklist_pdf" string="Download Dispatch Checklist" type="object" class="oe_highlight"/> -->
@@ -195,7 +199,7 @@
                                         LR Copy
                                     </p>
                                 </div>
-                                
+
                                 <div class="mt-2 border-0 shadow 
                             ">
                                     <table class="table table-bordered align-middle mb-0">
@@ -994,7 +998,7 @@
                                                 <field name="invoice_basic_price" readonly="1"/>
                                             </td>
                                             <td>
-                                               <field name="invoice_basic_price_status" readonly="1"/>
+                                                <field name="invoice_basic_price_status" readonly="1"/>
                                             </td>
                                             <td>
                                                 <field name="invoice_basic_price_remarks" readonly="1"/>
@@ -1264,4 +1268,16 @@
             </xpath>
         </field>
     </record>
+
+    <record id="abcl_stock_picking_list_view" model="ir.ui.view">
+        <field name="name">abcl.stock.picking.list.view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="product_qty_uom_summary" string="Products Summary" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

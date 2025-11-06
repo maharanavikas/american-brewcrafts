@@ -40,6 +40,7 @@ class StockPicking(models.Model):
     po_no = fields.Char("PO No.")
     po_date = fields.Date("PO Date")
     lr_no = fields.Char("LR No.")
+    state = fields.Selection(readonly=False)
 
     finance_user_id = fields.Many2one('res.users', string='Accountant')
     access_token = fields.Char("Access Token", copy=False, required=True, default=lambda s: uuid.uuid4().hex, size=43)
@@ -318,6 +319,23 @@ class StockPicking(models.Model):
     br_availability_status = fields.Boolean('Status')
 
     checklist_ids = fields.One2many('dispatch.checklist', 'picking_id', string='Dispatch Checklists')
+    product_qty_uom_summary = fields.Char(
+        string="Products (Qty/UoM)",
+        compute="_compute_product_qty_uom_summary",
+    )
+    export_pass_doc = fields.Binary("Export Pass", attachment=True, copy=False, exportable=False)
+    export_pass_doc_name = fields.Char("Export Pass Name")
+
+    @api.depends('move_ids_without_package.product_id','move_ids_without_package.product_uom_qty','move_ids_without_package.product_uom')
+    def _compute_product_qty_uom_summary(self):
+        for picking in self:
+            lines = []
+            for move in picking.move_ids_without_package:
+                name = move.product_id.display_name or ''
+                qty = move.product_uom_qty or 0
+                uom = move.product_uom.name or ''
+                lines.append(f"{name} / {qty} / {uom}")
+            picking.product_qty_uom_summary = ", ".join(lines)
 
     def _compute_total_qty(self):
         all_goods_lines = self.move_line_ids.filtered(lambda move: move.product_id.type == 'consu')

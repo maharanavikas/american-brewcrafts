@@ -104,7 +104,6 @@ class PurchaseOrder(models.Model):
                     date=order.date_order and order.date_order.date(),
                     uom_id=uom
                 )
-                print("seller",seller)
 
                 if seller and line.product_qty < seller.minimum_order_qty:
                     lines_to_warn |= line
@@ -261,7 +260,6 @@ class PurchaseOrder(models.Model):
 
                     # elif approval_type == 'price_based' and price_limit and total > price_limit:
                     elif approval_type == 'price_based' and price_limit and line.price_total > price_limit:
-                        print("line.price_total",line.price_total)
                         need_vp = True
                         break
 
