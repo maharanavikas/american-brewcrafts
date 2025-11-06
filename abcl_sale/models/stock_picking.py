@@ -39,6 +39,7 @@ class StockPicking(models.Model):
     po_no = fields.Char("PO No.")
     po_date = fields.Date("PO Date")
     lr_no = fields.Char("LR No.")
+    state = fields.Selection(readonly=False)
 
     finance_user_id = fields.Many2one('res.users', string='Accountant')
     access_token = fields.Char("Access Token", copy=False, required=True, default=lambda s: uuid.uuid4().hex, size=43)
