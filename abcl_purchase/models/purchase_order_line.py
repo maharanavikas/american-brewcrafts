@@ -19,11 +19,9 @@ class PurchaseOrderLine(models.Model):
         restrict_po = self.env['ir.config_parameter'].sudo().get_param(
             'purchase.restrict_manual_po_creation', 'False'
         ) == 'True'
-        print("restrict_po", restrict_po)
 
         for line in lines:
             # Only allow creation from MPS (context flag)
-            print('line._context',line._context)
             # if not line._context.get('from_mps', False):
             # if not line.from_mps:
             if restrict_po and not line.from_mps:
@@ -168,7 +166,6 @@ class StockRule(models.Model):
     def _make_po_get_domain(self, company_id, values, partner):
         domain = super()._make_po_get_domain(company_id, values, partner)
         product = values.get('product_id')
-        print("product",product)
         if product:
             domain += (('product_categ_id', '=', product.categ_id.id),)
 

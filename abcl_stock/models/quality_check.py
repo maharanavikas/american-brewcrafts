@@ -30,7 +30,6 @@ class QualityCheck(models.Model):
         is_quality_manager = self.env.user.has_group('quality.group_quality_manager')
         if not (is_quality_manager or is_plant_manager):
             raise UserError("Only a Quality Manager and Plant Manager can approve quality checks.")
-        print("is_plant_manager", is_plant_manager)
 
         activity = self.env['mail.activity'].search([
                 ('res_id', '=', self.id), 
@@ -46,7 +45,6 @@ class QualityCheck(models.Model):
                 continue
 
             if check.quality_state == 'fail':
-                print("is_plant_manager",is_plant_manager)
                 if not is_plant_manager:
                     raise UserError("Only a Plant Manager can reapprove a failed quality check.")
 
@@ -200,9 +198,7 @@ class QualityCheck(models.Model):
 
         for record in records:
             for manager in managers:
-                print("manager", manager.name)
                 record.activity_schedule('abcl_stock.quality_check_notification', user_id=manager.id, note=f'New Quality Check {record.name} has been created.')
-                print("activity scheduled")
                 template = self.env.ref('abcl_stock.template_quality_check_mail')
                 if template:
                     template.with_context(manager_name=manager.name,

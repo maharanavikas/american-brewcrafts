@@ -12,7 +12,6 @@ class VendorDocumentUpload(Controller):
         if not token:
             return "Access Declined."
         partner = request.env['res.partner'].sudo().search([('upload_access_key', '=', token)], limit=1)
-        print("partner", partner.name)
 
         if partner.document_recevied:
             return request.render('abcl_purchase.link_expired', status=404)
@@ -47,8 +46,7 @@ class VendorDocumentUpload(Controller):
                 'type': 'folder',
                 'folder_id': customer_workspace.id,
             })
-            print("Vendor folder created:", existing_vendor_folder.name)
-        
+
         def save_attachment(partner, file, filename):
             print('document called for field:', filename)
             if file:
@@ -67,7 +65,6 @@ class VendorDocumentUpload(Controller):
         save_attachment(partner, post.get('msme_certificate'), 'MSME Certificate')
         save_attachment(partner, post.get('cancel_cheque'), 'Cancelled Cheque')
 
-        print("Document upload successful", partner.name)
         partner.document_recevied = True
 
         #After Uploading the documents by vendor to notify this information to group_purchase_manager
@@ -81,14 +78,12 @@ class VendorDocumentUpload(Controller):
             <p>The vendor <strong>{partner.name}</strong> has uploaded their documents for verification.</p>
             <p>You can view the documents under their profile.</p>
             <p>With Regards,<br/>{user.company_id.name}</p>"""
-            print("Mail send to : ", user.name)
             if user.email:
                 request.env['mail.mail'].sudo().create({
                     'subject': subject,
                     'body_html': body_html,
                     'email_to': user.email,
                 }).send()
-                print("mail : ",user.email)
 
                 
 
