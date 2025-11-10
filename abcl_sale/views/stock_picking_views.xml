@@ -86,6 +86,7 @@
                         <group>
                             <field name="excise_leaf_no"/>
                             <field name="transport_permit_no"/>
+                            <field name="delivery_route"/>
                         </group>
                     </group>
                     <div id="questionnaire_div">

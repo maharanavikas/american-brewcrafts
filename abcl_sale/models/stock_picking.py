@@ -59,6 +59,7 @@ class StockPicking(models.Model):
         related='partner_id.state_id.code',
         store=True, readonly=True,
     )
+    delivery_route = fields.Text("Delivery Route")
 
     # Gate Pass Fields
     gp_p_no_date = fields.Char("TP No. & Date")
