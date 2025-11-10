@@ -671,7 +671,7 @@
                                                                     </div>
                                                                     <div class="col-sm-3">
                                                                         <input id="e_pass_permit_no_specifications" name="e_pass_permit_no_specifications" type="text" class="form-controls input-wrapper"
-                                                                        t-att-value="picking.export_permit_id.display_name or ''"/>
+                                                                        t-att-value="picking.export_permit_id.display_name or ''"  readonly="readonly"/>
                                                                     </div>
                                                                     <div class="col-sm-2">
                                                                          <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.e_pass_permit_no_status else None" type="checkbox" id="e_pass_permit_no_check" name="e_pass_permit_no_check"/>
