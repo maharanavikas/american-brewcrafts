@@ -36,3 +36,7 @@ class ABCLSalePack(models.Model):
     _description = 'ABCL Sale Pack'
 
     name = fields.Char(string='Name')
+
+
+
+

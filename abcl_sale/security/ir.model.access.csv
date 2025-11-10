@@ -24,3 +24,5 @@ access_dispatch_checklist,access_dispatch_checklist,model_dispatch_checklist,bas
 access_dispatch_checklist_line,access_dispatch_checklist_line,model_dispatch_checklist_line,base.group_user,1,1,1,1
 
 access_dispatch_checklist_wizard,access_dispatch_checklist_wizard,model_dispatch_checklist_wizard,base.group_user,1,1,1,1
+access_bottled_beer_admin,access_bottled_beer_admin,model_bottled_beer,stock.group_stock_manager,1,1,1,1
+access_bottled_beer_user,access_bottled_beer_user,model_bottled_beer,base.group_user,1,1,0,0
