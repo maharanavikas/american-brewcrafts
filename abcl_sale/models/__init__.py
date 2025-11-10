@@ -14,3 +14,4 @@ from . import export_permit
 from . import dispatch_checklist
 from . import bottled_beer
 from . import product_template
+from . import res_company

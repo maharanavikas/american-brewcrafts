@@ -3,174 +3,14 @@
     <record id="action_gate_pass_report" model="ir.actions.report">
         <field name="name">Gate Pass</field>
         <field name="model">stock.picking</field>
-                <field name="report_type">qweb-pdf</field>
-<!--        <field name="report_type">qweb-html</field>-->
+        <field name="report_type">qweb-pdf</field>
+        <!-- <field name="report_type">qweb-html</field> -->
         <field name="report_name">abcl_sale.gate_pass_template</field>
         <field name="report_file">abcl_sale.gate_pass_template</field>
         <field name="print_report_name">'Gate Pass - %s' % (object.name)</field>
         <field name="binding_model_id" ref="stock.model_stock_picking"/>
         <field name="binding_type">report</field>
     </record>
-
-
-    <!--    <template id="gate_pass_template">-->
-    <!--        <t t-call="web.html_container">-->
-    <!--            <t t-foreach="docs" t-as="o">-->
-    <!--                <t t-call="web.basic_layout">-->
-    <!--                    <div class="page">-->
-    <!--                        <main>-->
-    <!--                            <div style="border:3px solid #000; border-radius:16px; padding:28px 34px; height:940px; font-family:Arial; font-size:13pt; position:relative;">-->
-
-    <!--                                &lt;!&ndash; COMPANY NAME &ndash;&gt;-->
-    <!--                                <div style="text-align:center; font-weight:900; font-size:24pt; letter-spacing:1px; margin-bottom:10px;">-->
-    <!--                                    LILASONS ALCO BEV PVT. LTD.-->
-    <!--                                </div>-->
-
-    <!--                                &lt;!&ndash; HEADER &ndash;&gt;-->
-    <!--                                <table style="width:100%; margin:10px 0 25px;" class="table table-borderless">-->
-    <!--                                    <tr>-->
-    <!--                                        <td style="width:25%; text-align:left;">-->
-    <!--&lt;!&ndash;                                            <img src="/abcl_sale/static/src/img/lilasons_logo.png"&ndash;&gt;-->
-    <!--&lt;!&ndash;                                                 style="height:80px; width:auto;"/>&ndash;&gt;-->
-    <!--                                            <img src="/abcl_sale/static/src/img/lilasons_logo.png"-->
-    <!--                                                 style="max-width: 150px; height: 100px;"/>-->
-    <!--                                        </td>-->
-    <!--                                        <td style="width:50%; text-align:center;">-->
-    <!--                                            <span style="background:#000; color:#fff; padding:8px 45px; font-size:20pt; font-weight:900; border-radius:40px;">-->
-    <!--                                                GATE PASS-->
-    <!--                                            </span>-->
-    <!--                                        </td>-->
-    <!--                                        <td style="width:25%;"></td>-->
-    <!--                                    </tr>-->
-    <!--                                </table>-->
-
-    <!--                                &lt;!&ndash; TP No & Date &ndash;&gt;-->
-    <!--                                <table style="width:100%; font-size:13pt; margin-bottom:20px;"-->
-    <!--                                       class="table table-borderless">-->
-    <!--                                    <tr>-->
-    <!--                                        <td style="width:55%; white-space:nowrap;">-->
-    <!--                                            <strong>T.P. No.</strong>-->
-    <!--                                            <span style="padding-left:20px; display:inline-block; width:300px;">-->
-    <!--                                                <t t-esc="o.gp_p_no_date"/>-->
-    <!--                                            </span>-->
-    <!--                                        </td>-->
-    <!--                                        <td style="text-align:right;">-->
-    <!--                                            <strong>Date</strong>-->
-    <!--                                            <span style="padding-left:20px; display:inline-block; width:180px; border-bottom:1.6px solid #000; text-align:left;">-->
-    <!--                                                <t t-esc="o.scheduled_date.strftime('%d/%m/%Y')"/>-->
-    <!--                                            </span>-->
-    <!--                                        </td>-->
-    <!--                                    </tr>-->
-    <!--                                </table>-->
-
-    <!--                                &lt;!&ndash; PARTY NAME &ndash;&gt;-->
-    <!--                                <div style="margin:20px 0; font-size:14pt;">-->
-    <!--                                    <strong>Name of the party</strong>-->
-    <!--                                    <span style="margin-left:15px; display:inline-block; width:75%; border-bottom:1.6px solid #000; padding:3px 6px;">-->
-    <!--                                        <t t-esc="o.gp_party_name or o.partner_id.name or ''"/>-->
-    <!--                                    </span>-->
-    <!--                                </div>-->
-    <!--                                &lt;!&ndash;                                <div style="margin:20px 0; font-size:14pt; display:flex; align-items:center;">&ndash;&gt;-->
-    <!--                                &lt;!&ndash;                                    <strong style="white-space:nowrap;">Name of the party</strong>&ndash;&gt;-->
-    <!--                                &lt;!&ndash;                                    <span style="flex:1; margin-left:15px; border-bottom:1.6px solid #000; padding:3px 6px; display:inline-block;">&ndash;&gt;-->
-    <!--                                &lt;!&ndash;                                        <t t-esc="o.gp_party_name or o.partner_id.name or ''"/>&ndash;&gt;-->
-    <!--                                &lt;!&ndash;                                    </span>&ndash;&gt;-->
-    <!--                                &lt;!&ndash;                                </div>&ndash;&gt;-->
-
-
-    <!--                                &lt;!&ndash; PACK & QTY &ndash;&gt;-->
-
-    <!--                                <table style="width:100%; font-size:14pt; margin:18px 0; border-collapse:collapse; border:none;"-->
-    <!--                                       class="table table-borderless">-->
-    <!--                                    <tr>-->
-    <!--                                        &lt;!&ndash; BOTTLED BEER label &ndash;&gt;-->
-    <!--                                        <td style="width:170px; font-weight:600; padding-left: 0px;">-->
-    <!--                                            BOTTLED BEER-->
-    <!--                                        </td>-->
-
-    <!--                                        &lt;!&ndash; Pack Size underline &ndash;&gt;-->
-    <!--                                        <td style="width:250; border-bottom:1.6px solid #000; padding:3px 6px;">-->
-    <!--                                            <t t-esc="o.gp_pack_size or ''"/>-->
-    <!--                                        </td>-->
-
-    <!--                                        &lt;!&ndash; Qts / Doz label &ndash;&gt;-->
-    <!--                                        <td style="width:110px; text-align:center; font-weight:600;">-->
-    <!--                                            Qts.Doz-->
-    <!--                                        </td>-->
-
-    <!--                                        &lt;!&ndash; Quantity underline &ndash;&gt;-->
-    <!--                                        <td style="width:160px; border-bottom:1.6px solid #000; text-align:right; padding:3px 6px; text-align:left;">-->
-    <!--                                            <t t-esc="o.gp_quantity or ''"/>-->
-    <!--                                        </td>-->
-    <!--                                    </tr>-->
-    <!--                                </table>-->
-
-
-    <!--                                &lt;!&ndash; BRAND LINE &ndash;&gt;-->
-    <!--                                <div style="font-size:14pt; margin:18px 0;">-->
-    <!--                                    <strong>Brand</strong>-->
-    <!--                                    <span style="margin-left:15px; display:inline-block; width:90%; border-bottom:1.6px solid #000; padding:3px 6px;">-->
-    <!--                                        <t t-esc="o.gp_brand or ''"/>-->
-    <!--                                    </span>-->
-
-    <!--                                </div>-->
-
-    <!--                                &lt;!&ndash; BLANK LINES FOR ADDITIONAL BRANDS &ndash;&gt;-->
-    <!--                                <t t-foreach="range(2)" t-as="i">-->
-    <!--                                    <div style="margin:12px 0; border-bottom:1.6px solid #000; height:24px;"></div>-->
-    <!--                                </t>-->
-
-    <!--                                &lt;!&ndash; VEHICLE &ndash;&gt;-->
-    <!--                                <div style="margin:18px 0; font-size:14pt;">-->
-    <!--                                    <strong>Vehicle No.</strong>-->
-    <!--                                    <span style="margin-left:15px; display:inline-block; width:75%; border-bottom:1.6px solid #000; padding:3px 6px;">-->
-    <!--                                        <t t-esc="o.gp_vehicle_no_date or ''"/>-->
-    <!--                                    </span>-->
-    <!--                                </div>-->
-
-    <!--                                &lt;!&ndash; DATE AGAIN &ndash;&gt;-->
-    <!--                                <div style="margin:12px 0; font-size:14pt;">-->
-    <!--                                    <strong>Date</strong>-->
-    <!--                                    <span style="margin-left:20px; display:inline-block; width:200px; border-bottom:1.6px solid #000;">-->
-    <!--                                        <t t-esc="o.scheduled_date.strftime('%d/%m/%Y')"/>-->
-    <!--                                    </span>-->
-    <!--                                </div>-->
-
-
-    <!--                                <div style="position:absolute; bottom:50px; left:34px; right:34px;">-->
-
-    <!--                                    &lt;!&ndash; First line: For LILASONS... &ndash;&gt;-->
-    <!--                                    <div style="font-size:16pt; font-weight:900; margin-bottom:50px;">-->
-    <!--                                        For LILASONS ALCO BEV PVT. LIMITED-->
-    <!--                                    </div>-->
-
-    <!--                                    &lt;!&ndash; Signature line &ndash;&gt;-->
-    <!--                                    <div style="font-size:15pt; font-weight:900; margin-bottom:25px;">-->
-    <!--                                        Authorised Signatory-->
-    <!--                                    </div>-->
-
-    <!--                                    &lt;!&ndash; BREWERY OFFICER block &ndash;&gt;-->
-    <!--                                    <div style="float:right; width:45%; margin-top:10px; text-align:center; font-size:11pt; line-height:1.35;">-->
-    <!--                                        <strong style="font-size:14pt;">BREWERY OFFICER</strong>-->
-    <!--                                        <br/>-->
-    <!--                                        M/s. LILASONS ALCO BEV PVT. LIMITED-->
-    <!--                                        <br/>-->
-    <!--                                        Survey # 238, (V) Mallepally, (M) Kondapur,-->
-    <!--                                        <br/>-->
-    <!--                                        Sangareddy Dist. - T.S. - 502 295.-->
-    <!--                                    </div>-->
-
-    <!--                                </div>-->
-
-    <!--                                &lt;!&ndash; FOOTER – PERFECTLY BALANCED &ndash;&gt;-->
-
-    <!--                            </div>-->
-    <!--                        </main>-->
-    <!--                    </div>-->
-    <!--                </t>-->
-    <!--            </t>-->
-    <!--        </t>-->
-    <!--    </template>-->
 
     <template id="gate_pass_template">
         <t t-call="web.html_container">
@@ -228,92 +68,28 @@
                                     </span>
                                 </div>
 
-                                <!-- Prepare ORDER LINE data -->
-                                <!-- BOTTLED BEER LIST -->
-                                <t t-set="bottled_beer_list">
-                                    <t t-if="o.move_ids_without_package">
-                                        <t t-foreach="o.move_ids_without_package" t-as="m" t-foreach-index="i">
-                                            <t t-if="m.product_id.bottled_beer_id">
-                                                <span t-esc="m.product_id.bottled_beer_id.name"/>
-                                                <t t-if="i != len(o.move_ids_without_package) - 1">,</t>
-                                            </t>
-                                        </t>
-                                    </t>
-                                </t>
-                                <t t-set="brands">
-                                    <t t-if="o.move_ids_without_package">
-                                        <t t-foreach="o.move_ids_without_package" t-as="m">
-                                            <t t-if="m.product_id">
-                                                <t t-esc="m.product_id.name"/>
-                                                <t t-if="not m == o.move_ids_without_package[-1]">,</t>
-                                            </t>
-                                        </t>
-                                    </t>
-                                </t>
-                                <!-- QUANTITY LIST -->
-                                <t t-set="quantities">
-                                    <t t-if="o.move_ids_without_package">
-                                        <t t-foreach="o.move_ids_without_package" t-as="m" t-foreach-index="i">
-                                            <t t-if="m.product_uom_qty">
-                                                <span t-esc="m.product_uom_qty"/>
-                                                <t t-if="i != len(o.move_ids_without_package) - 1">,</t>
-                                            </t>
-                                        </t>
-                                    </t>
-                                </t>
-
-
                                 <!-- PACK + QTY DISPLAY -->
+                                <t t-set="bottled_beer" t-value="o.move_ids_without_package.product_id.bottled_beer_id"/>
 
                                 <table style="width:100%; font-size:14pt; margin:18px 0 18px 0; border-collapse:collapse; margin-left: -5px;" class="table table-borderless">
                                     <tr>
                                         <td style="width:110px; font-weight:600; padding:3px 6px;">BOTTLED BEER</td>
-                                        <td style="width:150px; border-bottom:1.6px solid #000; padding:3px 6px;">
-                                            <t t-esc="bottled_beer_list"/>
-                                        </td>
+                                        <td style="width:150px; border-bottom:1.6px solid #000; padding:3px 6px;"
+                                            t-out="', '.join(bottled_beer.mapped('name')) if bottled_beer else ''"/>
+
                                         <td style="width:110px; text-align:center; font-weight:600; padding:3px 6px;">
                                             Qts.Doz
                                         </td>
                                         <td style="width:150px; border-bottom:1.6px solid #000; padding:3px 6px;">
-                                            <t t-esc="quantities"/>
+                                            <t t-esc="', '.join(o.move_ids_without_package.mapped(lambda r: str(r.product_uom_qty))) if o.move_ids_without_package else ''"/>
                                         </td>
                                     </tr>
                                 </table>
 
-                                <!-- BRAND LINES -->
-                                <!--                                <div style="font-size:14pt; margin:18px 0;">-->
-
-                                <!--                                    <strong>Brand</strong>-->
-
-                                <!--                                    <t t-if="len(o.move_ids_without_package) &lt;= 1">-->
-                                <!--                                        &lt;!&ndash; SINGLE LINE BRAND &ndash;&gt;-->
-                                <!--                                        <span style="margin-left:15px; display:inline-block; width:90%; border-bottom:1.6px solid #000; padding:3px 6px;">-->
-                                <!--                                            <t t-esc="o.move_ids_without_package and o.move_ids_without_package[0].product_id.name or ''"/>-->
-                                <!--                                        </span>-->
-                                <!--                                        &lt;!&ndash; KEEP BLANK EXTRA LINE &ndash;&gt;-->
-                                <!--                                        <div style="margin:12px 0; border-bottom:1.6px solid #000; height:24px;"></div>-->
-                                <!--                                    </t>-->
-
-                                <!--                                    <t t-if="len(o.move_ids_without_package) &gt; 1">-->
-                                <!--                                        &lt;!&ndash; MULTIPLE LINES: ONE BRAND PER LINE &ndash;&gt;-->
-                                <!--                                        <t t-foreach="o.move_ids_without_package" t-as="m">-->
-                                <!--                                            <div style="margin-left:15px; width:90%; border-bottom:1.6px solid #000; padding:3px 6px;">-->
-                                <!--                                                <t t-esc="m.product_id.name"/>-->
-                                <!--                                            </div>-->
-                                <!--                                        </t>-->
-                                <!--                                    </t>-->
-
-                                <!--                                </div>-->
-
-
-                                <!-- BLANK EXTRA LINES -->
-                                <!--                                <t t-foreach="range(1)" t-as="i">-->
-                                <!--                                    <div style="margin:12px 0; border-bottom:1.6px solid #000; height:24px;"></div>-->
-                                <!--                                </t>-->
                                 <div style="font-size:14pt; margin:18px 0; display:flex; align-items:flex-start;">
                                     <strong style="white-space:nowrap; margin-right:15px;">Brand</strong>
                                     <span style="display:inline-block; width:90%; border-bottom:1.6px solid #000; padding:3px 6px; min-height:24px; white-space:normal; word-wrap:break-word;">
-                                        <t t-esc="brands"/>
+                                        <t t-esc="', '.join(o.move_ids_without_package.product_id.mapped('name')) if o.move_ids_without_package else ''"/>
                                     </span>
                                 </div>
                                 <!-- VEHICLE NO -->
