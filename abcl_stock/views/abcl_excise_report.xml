@@ -2,7 +2,7 @@
         
 <odoo>
   <template id="excise_report_delivery_order">
-    <t t-call="web.internal_layout">
+    <t t-call="web.basic_layout">
         <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
         <div class="page" style="font-family: Calibri; font-size: 20px; line-height: 2; ">
           <div class="text-center">
