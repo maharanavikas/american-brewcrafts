@@ -12,7 +12,7 @@
     'category': 'Sales/Sales',
     'version': '18.0',
 
-    'depends': ['base', 'sale', 'mail', 'documents', 'website', 'sign','sale_stock', 'l10n_in', 'sale_management', "web", "website"],
+    'depends': ['base', 'sale', 'mail', 'documents', 'website', 'sign','sale_stock', 'l10n_in', 'sale_management', "web", "website","stock"],
     'data': [
         "security/ir.model.access.csv",
         'data/email_template_pricelist.xml',
@@ -29,6 +29,7 @@
         "wizards/dispatch_checklist_wizard_view.xml",
         # "views/sale_gate_pass_report.xml",
         "reports/dispatch_checklist_report.xml",
+        "reports/gate_pass_report.xml",
         "reports/export_pass_report.xml",
         "views/res_company_views.xml",
         "views/res_partner_views.xml",
@@ -44,7 +45,8 @@
         "views/dispatch_checklist_views.xml",
         "views/dispatch_checklist_template.xml",
         "views/dispatch_checklist_success.xml",
-        # "views/sale_report_views.xml",
+        "views/product_template_views.xml",
+        "views/bottled_beer_views.xml",
     ],
     'assets': {
         'web.assets_frontend': [
