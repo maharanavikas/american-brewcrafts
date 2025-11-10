@@ -30,6 +30,8 @@
         # "views/sale_gate_pass_report.xml",
         "reports/dispatch_checklist_report.xml",
         "reports/gate_pass_report.xml",
+        "reports/export_pass_report.xml",
+        "views/res_company_views.xml",
         "views/res_partner_views.xml",
         'views/sale_order_views.xml',
         "views/abcl_sale_history_views.xml",
