@@ -26,7 +26,7 @@
             </field>
             <field name="origin" position="after">
                 <field name="export_pass_doc_name" invisible="1"/>
-                <field name="export_pass_doc" filename="export_pass_doc_name" widget="binary" invisible="picking_type_code != 'outgoing'"/>
+                <field name="export_pass_doc" filename="export_pass_doc_name" widget="binary"/>
             </field>
             <field name="user_id" position="after">
                 <field name="finance_user_id"/>
