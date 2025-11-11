@@ -8,6 +8,7 @@
             <xpath expr="//field[@name='product_id']" position="after">
                 <field name="product_categ_id"/>
                 <field name="bom_source" string="Bom Source"/>
+                <field name="extra_production_percentage" widget="percentage"/>
             </xpath>
             <xpath expr="//field[@name='bom_line_ids']/list/field[@name='product_qty']" position="before">
                 <field name="product_consumed_qty" string="Consumed Quantity"/>

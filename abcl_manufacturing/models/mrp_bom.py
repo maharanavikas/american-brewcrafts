@@ -7,6 +7,7 @@ class MrpBom(models.Model):
 
     bom_source = fields.Selection([('self','Self'),('third_party','Third Party')] , default='self')
     product_categ_id = fields.Many2one('product.category', string='Product Category', related='product_id.categ_id')
+    extra_production_percentage = fields.Float('Extra Production Percentage', default=0.0, help='Additional percentage of products to produce on top of the ordered quantity.')
 
     def explode(self, product, quantity, picking_type=False, never_attribute_values=False):
         """
