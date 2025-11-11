@@ -68,14 +68,36 @@ class MrpProduction(models.Model):
     #     })
     #     return data
 
+    # def button_mark_done(self):
+    #     res = super(MrpProduction, self).button_mark_done()
+    #     if self.quality_check_fail:
+    #         raise ValidationError("You cannot mark the Production as Done Pre Production Quality Checks for the components have failed")
+    #     for record in self.workorder_ids:
+    #         if record.quality_check_fail:
+    #             raise ValidationError("You cannot mark the Production as Done as Quality Checks for the components have failed")
+    #     return res
+
     def button_mark_done(self):
-        res = super(MrpProduction, self).button_mark_done()
+        # Work Center Capacity Validation BEFORE Quality Checks
+        for wo in self.workorder_ids:
+            # qty = wo.qty_production or self.qty_producing
+            qty = self.qty_producing if self.qty_producing > 0 else self.product_qty
+            capacity = wo.workcenter_id.default_capacity or 1
+            if qty > capacity:
+                raise ValidationError(
+                    f"Production quantity ({qty}) exceeds Work Center capacity ({capacity}). "
+                    "Please split the Work Order before marking Production as Done."
+                )
+
         if self.quality_check_fail:
-            raise ValidationError("You cannot mark the Production as Done Pre Production Quality Checks for the components have failed")
+            raise ValidationError(
+                "You cannot mark the Production as Done. Pre-production Quality Checks for components have failed.")
+
         for record in self.workorder_ids:
             if record.quality_check_fail:
-                raise ValidationError("You cannot mark the Production as Done as Quality Checks for the components have failed") 
-        return res
+                raise ValidationError("You cannot mark the Production as Done as Component Quality Checks have failed.")
+
+        return super(MrpProduction, self).button_mark_done()
 
     # def _generate_finished_moves(self):
     #     res = super()._generate_finished_moves()
