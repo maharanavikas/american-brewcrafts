@@ -28,6 +28,23 @@ class ExtraProductionWizard(models.TransientModel):
             raise UserError("Manufacturing order not found.")
 
         production = self.production_id
+        bom = production.bom_id
+
+        # ---------------- NEW VALIDATION CHECK ----------------
+        if bom and bom.extra_production_percentage > 0:
+            percent = bom.extra_production_percentage
+
+            # Allowed range based on percentage variation
+            min_allowed_qty = production.product_qty * (1 - percent)
+            max_allowed_qty = production.product_qty * (1 + percent)
+
+            if not (min_allowed_qty <= self.extra_production <= max_allowed_qty):
+                raise UserError(
+                    f"Entered quantity is outside allowed production tolerance.\n\n"
+                    f"Planned Qty: {production.product_qty}\n"
+                    f"Allowed Range ({percent * 100:.0f}% variation): {min_allowed_qty:.2f} to {max_allowed_qty:.2f}\n"
+                    f"Entered: {self.extra_production}"
+                )
 
         # production.extra_production += self.extra_production
 
