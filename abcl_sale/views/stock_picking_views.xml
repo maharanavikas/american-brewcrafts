@@ -80,7 +80,7 @@
                         <group>
                             <field name="transporter"/>
                             <field name="vehicle_type"/>
-                            <field name="vehicle_detail_id" invisible="vehicle_type != 'owned'"/>
+                            <field name="vehicle_detail_id" invisible="vehicle_type != 'internal'"/>
                             <field name="vehicle_no"/>
                         </group>
                         <group>
