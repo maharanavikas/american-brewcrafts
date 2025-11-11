@@ -158,6 +158,7 @@
                                                                 Pack size-330/650/500ml
                                                             </div>
                                                             <div class="col-sm-3">
+                                                                <!-- <label for="gp_pack_size_specifications">Select Size</label> -->
                                                                 <select id="gp_pack_size_specifications" name="gp_pack_size_specifications" class="form-controls input-wrapper">
                                                                     <option value="">Select Size</option>
                                                                     <option value="330" t-att-selected="'selected' if picking.gp_pack_size == '330' else None">330 ml</option>
@@ -511,6 +512,7 @@
                                                             <div class="col-sm-3">
                                                                 <!-- <input id="tp_pack_size_specifications" name="tp_pack_size_specifications" type="text" class="form-controls input-wrapper"
                                                                 t-att-value="picking.tp_pack_size or ''"/> -->
+                                                                <!-- <label for="tp_pack_size_specifications">Select Size</label> -->
                                                                 <select id="tp_pack_size_specifications" name="tp_pack_size_specifications" class="form-controls input-wrapper">
                                                                     <option value="">Select Size</option>
                                                                     <option value="330" t-att-selected="'selected' if picking.tp_pack_size == '330' else None">330 ml</option>
@@ -755,6 +757,7 @@
                                                                 <div class="col-sm-3">
                                                                     <!-- <input id="e_pass_size_specifications" name="e_pass_size_specifications" type="text" class="form-controls input-wrapper"
                                                                     t-att-value="picking.e_pass_size or ''"/> -->
+                                                                    <!-- <label for="e_pass_size_specifications">Select Size</label> -->
                                                                     <select id="e_pass_size_specifications" name="e_pass_size_specifications" class="form-controls input-wrapper">
                                                                     <option value="">Select Size</option>
                                                                     <option value="330" t-att-selected="'selected' if picking.e_pass_size == '330' else None">330 ml</option>
@@ -1174,6 +1177,7 @@
                                                                 <div class="col-sm-3">
                                                                     <!-- <input id="i_permit_size_specifications" name="i_permit_size_specifications" type="text" class="form-controls input-wrapper"
                                                                     t-att-value="picking.i_permit_size or ''"/> -->
+                                                                    <!-- <label for="i_permit_size_specifications">Select Size</label> -->
                                                                     <select id="i_permit_size_specifications" name="i_permit_size_specifications" class="form-controls input-wrapper">
                                                                     <option value="">Select Size</option>
                                                                     <option value="330" t-att-selected="'selected' if picking.i_permit_size == '330' else None">330 ml</option>
@@ -1492,6 +1496,7 @@
                                                                 <div class="col-sm-3">
                                                                     <!-- <input id="dn_size_specifications" name="dn_size_specifications" type="text" class="form-controls input-wrapper"
                                                                     t-att-value="picking.dn_size or ''"/> -->
+                                                                    <!-- <label for="dn_size_specifications">Select Size</label> -->
                                                                     <select id="dn_size_specifications" name="dn_size_specifications" class="form-controls input-wrapper">
                                                                     <option value="">Select Size</option>
                                                                     <option value="330" t-att-selected="'selected' if picking.dn_size == '330' else None">330 ml</option>
