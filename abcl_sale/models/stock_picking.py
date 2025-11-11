@@ -33,7 +33,7 @@ class StockPicking(models.Model):
     transporter = fields.Char("Transporter")
     vehicle_type =fields.Selection(selection=[('internal','Internal'),('external','External')],string="Vehicle Type")
     vehicle_no = fields.Char("Vehicle No.")
-    vehicle_detail_id = fields.Many2one('fleet.vehicle', string="Our Vehicle Details")
+    vehicle_detail_id = fields.Many2one('fleet.vehicle', string="Select Vehicle")
     transport_permit_no = fields.Char("Transport Permit No.")
     lr_gc_lwb_no = fields.Char("LR/GC/LWB No.")
     lr_gc_lwb_date = fields.Date("LR/GC/LWB Date")

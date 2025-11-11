@@ -13,12 +13,14 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
 
     willStart: async function () {
         await loadJS("/abcl_sale/static/src/js/jquery.validate.min.js");
+        // await loadJS("/abcl_sale/static/src/js/multi-select-tag.js");
         return true;
     },
     rpc: rpc,
 
     start: function () {
         if (typeof this._super === "function") this._super.apply(this, arguments);
+        // this._initMultiSelect();
         this._initValidation();
         this._initHelpers();
         this._initDatePicker();
@@ -27,6 +29,7 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
         this._bindCheckAllHandler();
         this._bindModalCloseEvent();
         this._restoreFormDataFromLocalStorage();
+        // this._restoreMultiSelectFromSelect();
         this._checkAccessTokenChange();
     },
 
@@ -41,7 +44,7 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
         const vehicleType     = this.$el.find("#vehicle_type");
         const selectDiv       = this.$el.find("#select_vehicle_div");
         const enterDiv        = this.$el.find("#enter_vehicle_details_div");
-        const enterVehicleNum        = this.$el.find("#enter_vehicle_details");
+        const enterVehicleNum = this.$el.find("#enter_vehicle_details");
         const vehicleNumber   = this.$el.find("#vehicle_number_div");
         const vehicleSelect   = this.$el.find("#select_vehicle_name");
         const vehicleNumberInput = this.$el.find("#vehicle_number_div input");
@@ -141,6 +144,53 @@ publicWidget.registry.DispatchChecklistWidget = publicWidget.Widget.extend({
             }
         });
     },
+
+    // _restoreMultiSelectFromSelect: function () {
+    //     // After localStorage restore the native <select> already has the correct
+    //     this.$el.find('select[multiple]').each((i, el) => {
+    //         const $select = $(el);
+    //         if ($select.data('multiselect-initialized')) {
+    //             // Force a refresh of the tags
+    //             const current = $select.val() || [];
+    //             const instance = $select[0].multiselectInstance; // we store it below
+    //             if (instance && typeof instance.modifyDomain === 'function') {
+    //                 // Build a domain that contains *all* options with the correct .selected
+    //                 const allOpts = Array.from(el.options).map(o => ({
+    //                     value: o.value,
+    //                     label: o.textContent.trim(),
+    //                     selected: current.includes(o.value),
+    //                 }));
+    //                 instance.modifyDomain(allOpts);
+    //             }
+    //         }
+    //     });
+    // },
+
+    // _initMultiSelect: function () {
+    //     // Wait a tick – Odoo’s assets are loaded asynchronously in willStart()
+    //     this.$el.find('select[multiple]').each((i, el) => {
+    //         const $select = $(el);
+    //         // Prevent double-initialisation (e.g. when the widget is re-started)
+    //         if ($select.data('multiselect-initialized')) return;
+    //         const opts = {
+    //             rounded: true,
+    //             shadow: true,
+    //             placeholder: 'Search…',
+    //             // optional custom colours – keep the ones you already defined
+    //             tagColor: {
+    //                 textColor: '#f0f0f1ff',
+    //                 borderColor: '#6930C3',
+    //                 bgColor: '#6930C3',
+    //             },
+    //             onChange: (selected) => {
+    //                 const values = selected.map(o => o.value);
+    //                 $select.val(values).trigger('change');
+    //             },
+    //         };
+    //         new MultiSelectTag(el.id, opts);
+    //         $select.data('multiselect-initialized', true);
+    //     });
+    // },
 
     // Clear localStorage after form submission (optional)
     _checkAccessTokenChange() {
