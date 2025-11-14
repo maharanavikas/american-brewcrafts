@@ -106,7 +106,7 @@ class ABCLStockController(http.Controller):
     @http.route('/delivery_order/get_product_data', type='json', auth='user')
     def get_product_data(self):
         products = request.env['product.product'].sudo().search_read(
-            domain=[('type', '=', 'consu'), ('sale_ok', '=', True)],
+            domain=[('type', '=', 'consu'), ('categ_id.enable_internal_consumption', '=', True), ('is_bom_component', '=', False) ],
             fields=['id', 'display_name', 'uom_id'],
             limit=100
         )

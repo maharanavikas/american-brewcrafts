@@ -160,6 +160,14 @@ class StockPicking(models.Model):
 ############for historical data import#########333
     def button_validate(self):
         for picking in self:
+            if picking.picking_type_code == 'outgoing':
+                sale_ok_products = picking.move_ids_without_package.mapped('product_id').filtered(lambda p: p.sale_ok)
+
+                if sale_ok_products and not picking.sale_id:
+                    raise ValidationError(
+                        "This delivery contains saleable products but is not linked to any Sale Order."
+                    )
+
             if picking.picking_type_code == 'outgoing' and picking.sale_id:
                 if picking.is_dispatch_sent == False:
                     raise ValidationError("Please generate a sign request before validating.")

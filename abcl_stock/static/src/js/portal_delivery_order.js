@@ -47,33 +47,86 @@ publicWidget.registry.DeliveryOrderWidget = publicWidget.Widget.extend({
     },
 
 
+//    _setupValidation: function() {
+//        if ($.validator) {
+//            $("#delivery_order_form").validate({
+//                errorElement: "span",
+//                errorPlacement: function(error, element) {
+//                },
+//                highlight: function(element) {
+//                    $(element).css({'background': '#ffdddd','z-index':'999'});
+//                },
+//                unhighlight: function(element) {
+//                    $(element).css('background', '#ffffff');
+//                },
+//            });
+//        }
+//    },
     _setupValidation: function() {
-        if ($.validator) {
-            $("#delivery_order_form").validate({
-                errorElement: "span",
-                errorPlacement: function(error, element) {
-                },
-                highlight: function(element) {
-                    $(element).css({'background': '#ffdddd','z-index':'999'});
-                },
-                unhighlight: function(element) {
-                    $(element).css('background', '#ffffff');
-                },
-            });
-        }
+            if ($.validator) {
+                $("#delivery_order_form").validate({
+                    errorElement: "span",
+                    errorClass: "text-danger",
+                    errorPlacement: function(error, element) {
+                        error.insertAfter(element);
+                    },
+                    highlight: function(element) {
+                        $(element).css({'background': '#ffdddd'});
+                    },
+                    unhighlight: function(element) {
+                        $(element).css('background', '#ffffff');
+                    },
+                    rules: {
+                        // dynamic rules can go here if needed
+                    }
+                });
+            }
+        },
+    _isDuplicateProduct: function(selectedId, currentElement) {
+        let duplicate = false;
+        $(".product-select").not(currentElement).each(function() {
+            if (parseInt($(this).val()) === selectedId) {
+                duplicate = true;
+            }
+        });
+        return duplicate;
     },
 
+    _showDuplicateError: function(element) {
+        const validator = $("#delivery_order_form").validate();
+        validator.showErrors({
+            [$(element).attr("name")]: "This product is already selected in another line."
+        });
+    },
     _onProductChange: function (ev) {
         const $productSelect = $(ev.currentTarget);
         const selectedProductId = parseInt($productSelect.val());
 
-        const $uomElement = $productSelect.closest('.order-line').find("[name^='uom_id_']");
+        // Check for duplicates
+        if (this._isDuplicateProduct(selectedProductId, ev.currentTarget)) {
+            this._showDuplicateError(ev.currentTarget);
+            $productSelect.val("");  // reset value
+            return;
+        }
 
+        // Update UOM
+        const $uomElement = $productSelect.closest('.order-line').find("[name^='uom_id_']");
         const matchedProduct = this.productList.find(p => p && p.id === selectedProductId);
         const uomName = matchedProduct?.uom_name || '';
-
         $uomElement.text(uomName);
     },
+
+//    _onProductChange: function (ev) {
+//        const $productSelect = $(ev.currentTarget);
+//        const selectedProductId = parseInt($productSelect.val());
+//
+//        const $uomElement = $productSelect.closest('.order-line').find("[name^='uom_id_']");
+//
+//        const matchedProduct = this.productList.find(p => p && p.id === selectedProductId);
+//        const uomName = matchedProduct?.uom_name || '';
+//
+//        $uomElement.text(uomName);
+//    },
 
     _onAddLineClick: function(ev) {
         var self = this;

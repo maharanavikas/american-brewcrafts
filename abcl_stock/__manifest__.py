@@ -13,7 +13,7 @@
     'version': '18.0',
 
     'depends': ['stock', 'quality', 'spreadsheet', 'quality_control', 'fleet', 'website', 'quality_mrp', 'mrp',
-                'stock_account', 'abcl_base','quality','abcl_base','product'],
+                'stock_account', 'abcl_base','quality','product','abcl_purchase'],
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
