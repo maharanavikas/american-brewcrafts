@@ -155,7 +155,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>TP No. &amp; Date</td>
+                                                    <td>TP No.</td>
                                                     <td>
                                                         <span t-field="doc.gp_p_no_date"/>
                                                     </td>
@@ -170,6 +170,24 @@
                                                     </td>
                                                     <td>
                                                         <span t-field="doc.gp_p_no_date_remarks"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>TP Date</td>
+                                                    <td>
+                                                        <span t-field="doc.gp_tp_date"/>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <span t-field="doc.gp_p_no_date_status"/> -->
+                                                        <t t-if="doc.gp_tp_date_status">
+                                                            <i class="fa fa-check-square-o"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-square-o"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.gp_tp_date_remarks"/>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -190,13 +208,13 @@
                                                         <span t-field="doc.gp_party_name_remarks"/>
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                <!-- <tr>
                                                     <td>Pack size-330/650/500ml</td>
                                                     <td>
                                                         <span t-field="doc.gp_pack_size"/>
                                                     </td>
                                                     <td>
-                                                        <!-- <span t-field="doc.gp_pack_size_status"/> -->
+
                                                         <t t-if="doc.gp_pack_size_status">
                                                             <i class="fa fa-check-square-o"/>
                                                         </t>
@@ -207,7 +225,7 @@
                                                     <td>
                                                         <span t-field="doc.gp_pack_size_remarks"/>
                                                     </td>
-                                                </tr>
+                                                </tr> -->
                                                 <tr>
                                                     <td>Quantity</td>
                                                     <td>
@@ -550,13 +568,12 @@
                                                         <span t-field="doc.tp_quantity_remarks"/>
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                <!-- <tr>
                                                     <td>Size - 330/650/500ml</td>
                                                     <td>
                                                         <span t-field="doc.tp_pack_size"/>
                                                     </td>
                                                     <td>
-                                                        <!-- <span t-field="doc.tp_pack_size_status"/> -->
                                                         <t t-if="doc.tp_pack_size_status">
                                                             <i class="fa fa-check-square-o"/>
                                                         </t>
@@ -567,7 +584,7 @@
                                                     <td>
                                                         <span t-field="doc.tp_pack_size_remarks"/>
                                                     </td>
-                                                </tr>
+                                                </tr> -->
                                                 <tr>
                                                     <td>Bulk litre</td>
                                                     <td>
@@ -808,13 +825,12 @@
                                                     <span t-field="doc.e_pass_brand_remarks"/>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <!-- <tr>
                                                 <td>Size - 330/650/500 ml</td>
                                                 <td>
                                                     <span t-field="doc.e_pass_size"/>
                                                 </td>
                                                 <td>
-                                                    <!-- <span t-field="doc.e_pass_size_status"/> -->
                                                     <t t-if="doc.e_pass_size_status">
                                                             <i class="fa fa-check-square-o"/>
                                                         </t>
@@ -825,7 +841,7 @@
                                                 <td>
                                                     <span t-field="doc.e_pass_size_remarks"/>
                                                 </td>
-                                            </tr>
+                                            </tr> -->
                                             <tr>
                                                 <td>Alcohol strength</td>
                                                 <td>
@@ -1225,13 +1241,12 @@
                                                     <span t-field="doc.i_permit_brand_remarks"/>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <!-- <tr>
                                                 <td>Size 330/650/500ml</td>
                                                 <td>
                                                     <span t-field="doc.i_permit_size"/>
                                                 </td>
                                                 <td>
-                                                    <!-- <span t-field="doc.i_permit_size_status"/> -->
                                                     <t t-if="doc.i_permit_size_status">
                                                             <i class="fa fa-check-square-o"/>
                                                         </t>
@@ -1242,7 +1257,7 @@
                                                 <td>
                                                     <span t-field="doc.i_permit_size_remarks"/>
                                                 </td>
-                                            </tr>
+                                            </tr> -->
                                             <tr>
                                                 <td>Quantity &amp; BO signature &amp; Stamp</td>
                                                 <td>
@@ -1545,13 +1560,12 @@
                                                     <span t-field="doc.dn_brand_remarks"/>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <!-- <tr>
                                                 <td>Size 330/650/500ml</td>
                                                 <td>
                                                     <span t-field="doc.dn_size"/>
                                                 </td>
                                                 <td>
-                                                    <!-- <span t-field="doc.dn_size_status"/> -->
                                                     <t t-if="doc.dn_size_status">
                                                             <i class="fa fa-check-square-o"/>
                                                         </t>
@@ -1562,7 +1576,7 @@
                                                 <td>
                                                     <span t-field="doc.dn_size_remarks"/>
                                                 </td>
-                                            </tr>
+                                            </tr> -->
                                             <tr>
                                                 <td>Quantity</td>
                                                 <td>

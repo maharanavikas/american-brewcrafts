@@ -87,6 +87,7 @@
                         <group>
                             <field name="excise_leaf_no"/>
                             <field name="transport_permit_no"/>
+                            <field name="lr_no"/>
                             <field name="delivery_route"/>
                         </group>
                     </group>
@@ -118,7 +119,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>TP No. &amp; Date</td>
+                                                <td>TP No.</td>
                                                 <td>
                                                     <field name="gp_p_no_date" readonly="1"/>
                                                 </td>
@@ -127,6 +128,18 @@
                                                 </td>
                                                 <td>
                                                     <field name="gp_p_no_date_remarks" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>TP Date</td>
+                                                <td>
+                                                    <field name="gp_tp_date" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="gp_tp_date_status" readonly="1"/>
+                                                </td>
+                                                <td>
+                                                    <field name="gp_tp_date_remarks" readonly="1"/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -141,7 +154,7 @@
                                                     <field name="gp_party_name_remarks" readonly="1"/>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <!-- <tr>
                                                 <td>Pack size-330/650/500ml</td>
                                                 <td>
                                                     <field name="gp_pack_size" readonly="1"/>
@@ -152,7 +165,7 @@
                                                 <td>
                                                     <field name="gp_pack_size_remarks" readonly="1"/>
                                                 </td>
-                                            </tr>
+                                            </tr> -->
                                             <tr>
                                                 <td>Quantity</td>
                                                 <td>
@@ -358,7 +371,7 @@
                                                     <field name="tp_quantity_remarks" readonly="1"/>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <!-- <tr>
                                                 <td>Size - 330/650/500ml</td>
                                                 <td>
                                                     <field name="tp_pack_size" readonly="1"/>
@@ -369,7 +382,7 @@
                                                 <td>
                                                     <field name="tp_pack_size_remarks" readonly="1"/>
                                                 </td>
-                                            </tr>
+                                            </tr> -->
                                             <tr>
                                                 <td>Bulk litre</td>
                                                 <td>
@@ -537,7 +550,7 @@
                                                 <field name="e_pass_brand_remarks" readonly="1"/>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <!-- <tr>
                                             <td>Size - 330/650/500 ml</td>
                                             <td>
                                                 <field name="e_pass_size" readonly="1"/>
@@ -548,7 +561,7 @@
                                             <td>
                                                 <field name="e_pass_size_remarks" readonly="1"/>
                                             </td>
-                                        </tr>
+                                        </tr> -->
                                         <tr>
                                             <td>Alcohol strength</td>
                                             <td>
@@ -838,7 +851,7 @@
                                                 <field name="i_permit_brand_remarks" readonly="1"/>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <!-- <tr>
                                             <td>Size 330/650/500ml</td>
                                             <td>
                                                 <field name="i_permit_size" readonly="1"/>
@@ -849,7 +862,7 @@
                                             <td>
                                                 <field name="i_permit_size_remarks" readonly="1"/>
                                             </td>
-                                        </tr>
+                                        </tr> -->
                                         <tr>
                                             <td>Quantity &amp; BO signature &amp; Stamp</td>
                                             <td>
@@ -1066,7 +1079,7 @@
                                                 <field name="dn_brand_remarks" readonly="1"/>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <!-- <tr>
                                             <td>Size 330/650/500ml</td>
                                             <td>
                                                 <field name="dn_size" readonly="1"/>
@@ -1077,7 +1090,7 @@
                                             <td>
                                                 <field name="dn_size_remarks" readonly="1"/>
                                             </td>
-                                        </tr>
+                                        </tr> -->
                                         <tr>
                                             <td>Quantity</td>
                                             <td>
