@@ -36,7 +36,6 @@ class AccountMove(models.Model):
     vehicle_type = fields.Selection(selection=[('internal', 'Internal'), ('external', 'External')],
                                     string="Vehicle Type")
     vehicle_detail_id = fields.Many2one('fleet.vehicle', string="Our Vehicle Details")
-
     stock_picking_id = fields.Many2one('stock.picking', string='Delivery Order', help="Related Delivery Order for this Invoice", domain="[('sale_id', 'in', related_sale_order_ids)]")
 
     @api.depends('invoice_line_ids.sale_line_ids.order_id')
@@ -85,6 +84,15 @@ class AccountMove(models.Model):
             self.export_permit_date = picking.export_permit_date or False
             self.po_no = picking.po_no or ''
             self.po_date = picking.po_date or False
+
+            for inv_line in self.invoice_line_ids:
+                move_line = picking.move_ids_without_package.filtered(
+                    lambda m: m.product_id == inv_line.product_id
+                )
+                if move_line:
+                    inv_line.batch_number = move_line[0].batch_number or ''
+                else:
+                    inv_line.batch_number = ''
         else:
             # Reset all fields if stock_picking_id is cleared
             self.import_permit_id = False
@@ -102,6 +110,9 @@ class AccountMove(models.Model):
             self.export_permit_date = False
             self.po_no = ''
             self.po_date = False
+
+            for inv_line in self.invoice_line_ids:
+                inv_line.batch_number = ''
 
     def action_post(self):
         res = super(AccountMove, self).action_post()

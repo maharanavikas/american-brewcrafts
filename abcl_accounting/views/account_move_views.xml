@@ -52,6 +52,7 @@
             <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='price_unit']" position="after">
                 <field name="qty_units" optional="show"/>
                 <field name="qty_liters" optional="show"/>
+                <field name="batch_number" optional="show"/>
             </xpath>
         </field>
     </record>

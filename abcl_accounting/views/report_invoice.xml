@@ -3,7 +3,8 @@
     <data>
         <template id="abcl_account_invoice_layout_striped" inherit_id="web.external_layout_striped">
             <xpath expr="//img[@t-if='company.logo']" position="replace">
-                <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">
+                <!--                <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">-->
+                <t t-if="o and o._name == 'account.move' and o.move_type in ['out_invoice', 'in_invoice']">
                     <img src="/abcl_accounting/static/src/img/lilasons_logo.png"
                          style="max-width: 250px; height: 150px;"/>
                 </t>
@@ -74,13 +75,27 @@
                     <!--                                    <p class="fw-bold mb-1" t-if="company.partner_id.name" t-esc="company.partner_id.name"/>-->
                     <!--                                </h2>-->
                     <p class="mb-1">
-                        <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">
+                        <!--                        <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">-->
+                        <t t-if="o and o._name == 'account.move' and o.move_type in ['out_invoice', 'in_invoice']">
                             <h2>
-                                <p>Lilasons Alcobev Pvt.Ltd.</p>
+                                <strong>
+                                    <p>Lilasons Alcobev Pvt.Ltd.</p>
+                                </strong>
                             </h2>
-                            Survey # 238, Mallepally Village, Kondapur Mandal,
+                            <!--                            Survey # 238, Mallepally Village, Kondapur Mandal,-->
+                            Survey No: 238 &amp; 239, Village: Mallepally
                             <br/>
-                            Sangareddy District, Telangana-502295, Pincode : 502295
+                            Mandal: Kondapur, Dist: Sangareddy, Telangana - 502295
+                            <!--                            <br/>-->
+                            <!--                            Sangareddy District, Telangana-502295, Pincode : 502295-->
+                            <br/>
+                            PAN: AABCL7440D, GSTIN: 36AABCL7440D1ZR, Ph. No: 8099223922
+                            <br/>
+                            Regd Office: 606, Krishika Mansion, Chaitanya Nagar
+                            <br/>
+                            Vivekananda Nagar Colony, Kukatpally, Hyderabad - 500072
+                            <br/>
+                            CIN No: U15600MP2010PTC023192, Mail Id: lilasionsalcobevpvtltd@gmail.com
                         </t>
                         <t t-else="">
                             <h2>
@@ -137,10 +152,10 @@
                     </p>
                 </div>
             </xpath>
-<!--            <xpath expr="//div[contains(@class,'footer')]" position="attributes">-->
-<!--                <attribute name="t-if">not (o and o._name == 'account.move' and o.move_type == 'out_invoice')-->
-<!--                </attribute>-->
-<!--            </xpath>-->
+            <!--            <xpath expr="//div[contains(@class,'footer')]" position="attributes">-->
+            <!--                <attribute name="t-if">not (o and o._name == 'account.move' and o.move_type == 'out_invoice')-->
+            <!--                </attribute>-->
+            <!--            </xpath>-->
         </template>
 
         <template id="abcl_report_invoice_document" inherit_id="account.report_invoice_document">
@@ -213,8 +228,24 @@
                                     <span t-field="o.partner_id.l10n_in_pan"/>
                                 </div>
                                 <div t-if="o.partner_id.cin_no" id="partner_cin_address_not_same_as_shipping">
-                                    CIN NO:
+                                    CIN No:
                                     <span t-field="o.partner_id.cin_no"/>
+                                </div>
+                                <div t-if="o.transport_permit_no" id="transport_permit_no_not_same_as_shipping">
+                                    TP No:
+                                    <span t-field="o.transport_permit_no"/>
+                                </div>
+                                <div t-if="o.vehicle_no" id="vehicle_no_not_same_as_shipping">
+                                    Vehicle No:
+                                    <span t-field="o.vehicle_no"/>
+                                </div>
+                                <div t-if="o.transporter" id="transporter_not_same_as_shipping">
+                                    Transport:
+                                    <span t-field="o.transporter"/>
+                                </div>
+                                <div t-if="o.lr_no" id="lr_no_not_same_as_shipping">
+                                    LR No:
+                                    <span t-field="o.lr_no"/>
                                 </div>
                                 <div t-if="o.import_permit_id or o.import_permit_date"
                                      id="import_permit_not_same_as_shipping">
@@ -242,10 +273,10 @@
                                         <span t-field="o.export_permit_date"/>
                                     </t>
                                 </div>
-                                <div t-if="o.excise_leaf_no" id="excise_leaf_no_not_same_as_shipping">
-                                    Excise Leaf No:
-                                    <span t-field="o.excise_leaf_no"/>
-                                </div>
+                                <!--                                <div t-if="o.excise_leaf_no" id="excise_leaf_no_not_same_as_shipping">-->
+                                <!--                                    Excise Leaf No:-->
+                                <!--                                    <span t-field="o.excise_leaf_no"/>-->
+                                <!--                                </div>-->
                             </div>
                         </t>
                     </div>
@@ -333,7 +364,7 @@
                    position="replace">
                 <t t-if="o and o._name == 'account.move' and o.move_type != 'out_invoice'">
                     <td name="td_taxes"
-                        t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                        t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
                         <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
                     </td>
                 </t>
@@ -341,7 +372,7 @@
             <xpath expr="//th[@name='th_taxes']" position="replace">
                 <t t-if="o and o._name == 'account.move' and o.move_type != 'out_invoice'">
                     <th name="th_taxes"
-                        t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                        t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                         <span>Taxes</span>
                     </th>
                 </t>
@@ -353,6 +384,9 @@
                 <th name="th_description" class="text-start">
                     <span>Item Description</span>
                 </th>
+                <th name="th_batch_number" class="text-start">
+                    <span>Batch No</span>
+                </th>
             </xpath>
             <xpath expr="//tr[.//t[@name='account_invoice_line_accountable']]//td[@name='account_invoice_line_name']"
                    position="before">
@@ -361,7 +395,7 @@
                 </td>
             </xpath>
             <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_quantity']" position="replace">
-                <th name="th_quantity" class="text-end">
+                <th name="th_quantity" class="text-start">
                     <span>Qty</span>
                 </th>
             </xpath>
@@ -369,32 +403,38 @@
             <xpath expr="//div[@id='payment_term']//p[@name='payment_communication']" position="replace"/>
             <xpath expr="//th[@name='th_priceunit']" position="replace">
                 <th name="th_priceunit"
-                    t-attf-class="text-end text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                    t-attf-class="text-start text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                     <span>Unit Rate</span>
                 </th>
             </xpath>
             <xpath expr="//th[@name='th_quantity']" position="after">
-                <th name="th_uom" class="text-end">
+                <th name="th_uom" class="text-start">
                     <span>Units</span>
                 </th>
             </xpath>
             <xpath expr="//td[@name='td_quantity']" position="replace">
-                <td name="td_quantity" class="text-end text-nowrap">
+                <td name="td_batch_number" class="text-start text-nowrap">
+                    <span t-field="line.batch_number"/>
+                </td>
+                <td name="td_quantity" class="text-start text-nowrap">
                     <span t-field="line.quantity"/>
                 </td>
-                <td name="td_uom" class="text-end text-nowrap">
+                <td name="td_uom" class="text-start text-nowrap">
                     <span t-field="line.product_uom_id" groups="uom.group_uom"/>
                 </td>
             </xpath>
             <xpath expr="//td[@name='td_price_unit']"
-                   position="after">
+                   position="replace">
+                <td name="td_price_unit" t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                                <span class="text-nowrap" t-field="line.price_unit">9.00</span>
+                                            </td>
                 <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">
                     <td name="td_qty_units"
-                        t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                        t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                         <span class="text-nowrap" t-field="line.qty_units"/>
                     </td>
                     <td name="td_qty_liters"
-                        t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                        t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                         <span class="text-nowrap" t-field="line.qty_liters"/>
                     </td>
                 </t>
@@ -403,11 +443,11 @@
             <xpath expr="//th[@name='th_priceunit']" position="after">
                 <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">
                     <th name="th_qty_units"
-                        t-attf-class="text-end text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                        t-attf-class="text-start text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                         <span>Qty (Units)</span>
                     </th>
                     <th name="th_qty_liters"
-                        t-attf-class="text-end text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                        t-attf-class="text-start text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                         <span>Qty (Bulk Ltr)</span>
                     </th>
                 </t>

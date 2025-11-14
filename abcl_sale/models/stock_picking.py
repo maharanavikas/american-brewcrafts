@@ -62,9 +62,12 @@ class StockPicking(models.Model):
     delivery_route = fields.Text("Delivery Route")
 
     # Gate Pass Fields
-    gp_p_no_date = fields.Char("TP No. & Date")
+    gp_p_no_date = fields.Char("TP No.")
     gp_p_no_date_remarks = fields.Char('Remarks')
     gp_p_no_date_status = fields.Boolean('Status')
+    gp_tp_date = fields.Date("TP Date")
+    gp_tp_date_remarks = fields.Char('Remarks')
+    gp_tp_date_status = fields.Boolean('Status')
     gp_party_name = fields.Char("Party Name")
     gp_party_name_remarks = fields.Char('Remarks')
     gp_party_name_status = fields.Boolean('Status')
@@ -430,3 +433,4 @@ class StockMove(models.Model):
 
     product_status = fields.Boolean(string='Status')
     product_remark = fields.Char(string='Remarks')
+    batch_number = fields.Char("Batch No")

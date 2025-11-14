@@ -5,5 +5,6 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     qty_units = fields.Float("Qty (Units)")
-    qty_liters = fields.Float("Qty (Liters)")
+    qty_liters = fields.Float("Qty (Bulk Liters)")
+    batch_number = fields.Char("Batch No")
 
