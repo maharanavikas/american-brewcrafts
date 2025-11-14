@@ -27,8 +27,12 @@ class StockPicking(models.Model):
 
     import_permit_id = fields.Many2one("import.permit",string="Import Permit", domain="[('order_id','=',sale_id)]")
     import_permit_date = fields.Date(related="import_permit_id.import_permit_date", string="Import Permit Date", store=True)
+    import_permit_doc = fields.Binary("Import Permit Document", store=True, compute="_compute_import_permit_doc")
+    import_permit_doc_name = fields.Char(related="import_permit_id.import_permit_doc_name", string="Import Permit Doc Name", store=True)
     export_permit_id = fields.Many2one("export.permit",string="Export Permit", domain="[('order_id','=',sale_id)]")
     export_permit_date = fields.Date(related="export_permit_id.export_permit_date", string="Export Permit Date", store=True)
+    export_permit_doc = fields.Binary("Export Permit Document", store=True, compute="_compute_export_permit_doc")
+    export_permit_doc_name = fields.Char(related="export_permit_id.export_permit_doc_name", string="Export Permit Doc Name", store=True)
 
     excise_leaf_no = fields.Char("Excise Leaf No.")
     transporter = fields.Char("Transporter")
@@ -432,6 +436,16 @@ class StockPicking(models.Model):
 
     def download_dispatch_checklist_pdf(self):
         return self.env.ref('abcl_sale.report_dispatch_checklist_details').report_action(self)
+    
+    @api.depends('import_permit_id')
+    def _compute_import_permit_doc(self):
+        for record in self:
+            record.import_permit_doc = record.import_permit_id.import_permit_doc
+
+    @api.depends('export_permit_id')
+    def _compute_export_permit_doc(self):
+        for record in self:
+            record.export_permit_doc = record.export_permit_id.export_permit_doc
     
 
 class StockMove(models.Model):
