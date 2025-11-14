@@ -8,6 +8,7 @@
             <list editable="bottom" create="true">
                 <field name="name"/>
                 <field name="uom_id"/>
+                <field name="bulk_liter"/>
                 <field name="amount"/>
             </list>
         </field>

@@ -4,7 +4,7 @@
     <record id="report_export_pass" model="ir.actions.report">
         <field name="name">Export Pass</field>
         <field name="model">stock.picking</field>
-        <field name="report_type">qweb-html</field>
+        <field name="report_type">qweb-pdf</field>
         <field name="report_name">abcl_sale.export_pass_report</field>
         <field name="report_file">abcl_sale.export_pass_report</field>
         <field name="print_report_name">'Export Pass - %s' % (object.name)</field>
@@ -78,7 +78,7 @@
                             <td><h4>7</h4></td>
                             <td><h4>Quantity and quality of (Indian Liquor)/Beer issued in Liters (details of)</h4></td>
                             <td><h4>:</h4></td>
-                            <td><h4>Total : (<t t-esc="int(doc.total_qty)"/>) in  </h4><br/>
+                            <td><h4>Total : (<t t-esc="int(doc.total_qty)"/>) in (<t t-esc="int(doc.total_bulk_liter)"/>) in Bls</h4><br/>
                                 <t t-foreach="doc.move_ids" t-as="product">
                                     <t t-set="idx" t-value="product_index + 1"/>
                                     <h4> <t t-esc="idx"/>) <t t-esc="int(product.quantity)"/> <t t-esc="product.product_uom.alias"/> <t t-esc="product.product_id.name"/></h4>
