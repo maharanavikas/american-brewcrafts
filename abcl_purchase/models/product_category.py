@@ -21,6 +21,7 @@ class ProductCategory(models.Model):
     is_wort = fields.Boolean("Is Wort", help="Is Wort Beer")
     is_bbs = fields.Boolean("Is BBS", help="Is Bulk Beer Stock")
     is_yb = fields.Boolean("Is YB", help="Is Young Beer")
+    enable_internal_consumption = fields.Boolean("Internal Consumption", help="Is Internal Consumption Enabled for this Category")
 
     @api.constrains('is_fg', 'is_wort', 'is_bbs', 'is_yb')
     def _check_unique_flags(self):
