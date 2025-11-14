@@ -16,6 +16,7 @@
                                invisible="approval_condition_type != 'price_based' or not is_approval_enabled" groups="purchase.group_purchase_manager"/>
                         <field name="quantity"
                                invisible="approval_condition_type != 'quantity_based' or not is_approval_enabled" groups="purchase.group_purchase_manager"/>
+                        <field name="enable_internal_consumption"/>
                     </group>
                     <group>
                         <field name="is_deviation" groups="purchase.group_purchase_manager"/>
