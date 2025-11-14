@@ -63,6 +63,7 @@
             <xpath expr="//field[@name='move_ids_without_package']/list" position="inside">
                 <field name="product_status" column_invisible="True"/>
                 <field name="product_remark" column_invisible="True"/>
+                <field name="batch_number"/>
             </xpath>
             <xpath expr="//page[@name='operations']" position="after">
                 <page string="Transport Info" invisible="picking_type_code != 'outgoing'">

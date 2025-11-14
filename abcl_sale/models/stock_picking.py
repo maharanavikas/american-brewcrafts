@@ -430,3 +430,4 @@ class StockMove(models.Model):
 
     product_status = fields.Boolean(string='Status')
     product_remark = fields.Char(string='Remarks')
+    batch_number = fields.Char("Batch No")

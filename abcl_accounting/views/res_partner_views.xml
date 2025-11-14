@@ -9,10 +9,10 @@
                 <field name="mandal" placeholder="Mandal" class="o_address_city"/>
             </xpath>
             <xpath expr="//field[@name='category_id']" position="after">
-                <field name="survey_no" invisible="company_type != 'company'"/>
-                <field name="cin_no" invisible="company_type != 'company'"/>
-                <field name="cst_no" invisible="company_type != 'company'"/>
-                <field name="excise_regn_no" invisible="company_type != 'company'"/>
+                <field name="survey_no"/>
+                <field name="cin_no"/>
+                <field name="cst_no"/>
+                <field name="excise_regn_no"/>
             </xpath>
         </field>
     </record>
