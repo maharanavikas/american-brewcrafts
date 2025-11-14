@@ -548,7 +548,7 @@
                                                             </div>
                                                             <div class="col-sm-3">
                                                                 <input id="tp_bulk_litre_specifications" name="tp_bulk_litre_specifications" type="text" class="form-controls input-wrapper"
-                                                                t-att-value="picking.tp_bulk_litre or ''"/>
+                                                                t-att-value="picking.total_bulk_liter or ''" readonly="readonly"/>
                                                             </div>
                                                             <div class="col-sm-2">
                                                                  <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_bulk_litre_status else None" type="checkbox" id="tp_bulk_litre_check" name="tp_bulk_litre_check"/>
@@ -1436,7 +1436,7 @@
                                                             </div>
                                                         <div class="col-sm-3">
                                                                 <input id="inovice_liter_total_value_specifications" name="inovice_liter_total_value_specifications" type="text" class="form-controls input-wrapper"
-                                                                t-att-value="picking.inovice_liter_total_value or ''"/>
+                                                                t-att-value="picking.total_bulk_liter or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
                                                                  <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.inovice_liter_total_value_status else None" type="checkbox" id="inovice_liter_total_value_check" name="inovice_liter_total_value_check"/>

@@ -64,6 +64,7 @@
                 <field name="product_status" column_invisible="True"/>
                 <field name="product_remark" column_invisible="True"/>
                 <field name="batch_number"/>
+                <field name="product_bulk_liter" string="Bulk Liter" readonly="1"/>
             </xpath>
             <xpath expr="//page[@name='operations']" position="after">
                 <page string="Transport Info" invisible="picking_type_code != 'outgoing'">
