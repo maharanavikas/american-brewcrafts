@@ -26,7 +26,9 @@
             </field>
             <field name="origin" position="after">
                 <field name="export_pass_doc_name" invisible="1"/>
-                <field name="export_pass_doc" filename="export_pass_doc_name" widget="binary" invisible="picking_type_code != 'outgoing'"/>
+                <field name="export_pass_doc" filename="export_pass_doc_name" widget="binary" invisible="picking_type_code != 'outgoing' or not sale_id"/>
+                <field name="issue_slip_doc_name" invisible="1"/>
+                <field name="issue_slip_doc" filename="issue_slip_doc_name" widget="binary" invisible="picking_type_code != 'outgoing' or sale_id"/>
             </field>
             <field name="user_id" position="after">
                 <field name="finance_user_id"/>
@@ -66,7 +68,7 @@
                 <field name="batch_number"/>
             </xpath>
             <xpath expr="//page[@name='operations']" position="after">
-                <page string="Transport Info" invisible="picking_type_code != 'outgoing'">
+                <page string="Transport Info" invisible="picking_type_code != 'outgoing' or not sale_id" >
                     <group>
                         <group>
                             <field name="import_permit_id"/>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    <template id="external_layout_inherit_lilasons" inherit_id="web.external_layout">-->
+<!--        <xpath expr="//t[@t-if='company.external_report_layout_id']" position="replace">-->
+
+<!--            &lt;!&ndash; ========================= &ndash;&gt;-->
+<!--            &lt;!&ndash; CUSTOM HEADER FOR PURCHASE,-->
+<!--                 QUOTATION, RECEIPTS, IN/OUT-->
+<!--                 INVOICES ONLY               &ndash;&gt;-->
+<!--            &lt;!&ndash; ========================= &ndash;&gt;-->
+<!--            <t t-if="o and (o._name in ['purchase.order', 'stock.picking'])">-->
+
+<!--                &lt;!&ndash; ==== STATIC LOGO ==== &ndash;&gt;-->
+<!--                <div style="text-align:left; margin-bottom:10px;">-->
+<!--                    <img src="/abcl_accounting/static/src/img/lilasons_logo.png"-->
+<!--                         style="max-width:250px; height:150px;"/>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; ==== COMPANY DETAILS ==== &ndash;&gt;-->
+<!--                <div>-->
+<!--                    <h2 style="margin:0; padding:0;">-->
+<!--                        <strong>Lilasons Alcobev Pvt. Ltd.</strong>-->
+<!--                    </h2>-->
+
+<!--                    Survey No: 238 &amp; 239, Village: Mallepally-->
+<!--                    <br/>-->
+<!--                    Mandal: Kondapur, Dist: Sangareddy, Telangana - 502295-->
+<!--                    <br/>-->
+<!--                    PAN: AABCL7440D, GSTIN: 36AABCL7440D1ZR, Ph: 8099223922-->
+<!--                    <br/>-->
+<!--                    Regd Office: 606, Krishika Mansion, Chaitanya Nagar-->
+<!--                    <br/>-->
+<!--                    Vivekananda Nagar Colony, Kukatpally, Hyderabad - 500072-->
+<!--                    <br/>-->
+<!--                    CIN No: U15600MP2010PTC023192-->
+<!--                    <br/>-->
+<!--                    Email: lilasionsalcobevpvtltd@gmail.com-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; A small separator &ndash;&gt;-->
+<!--                <hr style="margin:10px 0;"/>-->
+
+<!--            </t>-->
+<!--            <t t-if="company.external_report_layout_id" t-call="{{company.external_report_layout_id.sudo().key}}"><t t-out="0"/></t>-->
+
+<!--        </xpath>-->
+<!--    </template>-->
+
+    <template id="report_purchaseorder_document_inherit" inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//div[@class='page']" position="inside">
+
+            <!-- ==== BOTTOM SECTION WRAPPER ==== -->
+            <div style="position: relative; margin-top: 40px;">
+
+                <!-- ===== LEFT BOTTOM : COMPANY PAN ===== -->
+                <div style="position: absolute; left: 0; bottom: 0;">
+                    Company's PAN:
+                    <strong>AABCL7440D</strong>
+                </div>
+
+                <!-- ===== RIGHT BOTTOM : SIGNATURE ===== -->
+                <div style="position: absolute; right: 0; bottom: 0; text-align: right;">
+                    <strong>
+                        <p>For Lilasons Alcobev Pvt.Ltd.</p>
+                    </strong>
+                    <br/>
+                    <p>Authorized Signature</p>
+                </div>
+
+            </div>
+
+        </xpath>
+    </template>
+</odoo>
