@@ -353,7 +353,7 @@ class StockPicking(models.Model):
 
     def _compute_bulk_beer_qty(self):
         all_goods_lines = self.move_ids_without_package.filtered(lambda move: move.product_id.type == 'consu')
-        bulk_liter = sum(product.bulk_liter for product in all_goods_lines)
+        bulk_liter = sum(product.product_bulk_liter for product in all_goods_lines)
         self.total_bulk_liter = bulk_liter
 
     @api.model
