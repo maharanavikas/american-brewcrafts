@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <xpath expr="//form/header" position="inside">
-                <button name="action_excise_report" type="object" string="Print EVC Report" invisible="picking_type_code != 'outgoing'"/>
+                <button name="action_excise_report" type="object" string="Print EVC Report" invisible="picking_type_code != 'outgoing' or not sale_id"/>
             </xpath>
 
             <xpath expr="//div[@name='button_box']" position="inside">
@@ -33,7 +33,7 @@
             </xpath>
 
             <xpath expr="//page[@name='extra']" position="before">
-                <page string="Delivery Fleet Track" invisible="picking_type_code != 'outgoing'">
+                <page string="Delivery Fleet Track" invisible="picking_type_code != 'outgoing' or not sale_id">
                     <group>
                         <field name="driver_id"/>
                     </group>

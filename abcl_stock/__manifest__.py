@@ -38,6 +38,7 @@
         'views/stock_valuation_layer_views.xml',
         'views/stock_warehouse_orderpoint_views.xml',
         'views/stock_report_views.xml',
+        'views/stock_picking_type_views.xml',
     ],
 
     'assets': {

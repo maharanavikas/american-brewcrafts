@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <field name="supplier_taxes_id" position="after">
                 <field name="bottled_beer_id" invisible="not sale_ok"/>
+                <field name="bulk_beer_per_liter" invisible="not sale_ok"/>
             </field>
         </field>
     </record>

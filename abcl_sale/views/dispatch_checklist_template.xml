@@ -395,7 +395,7 @@
                                                             </div>
                                                             <div class="col-sm-2">
                                                                 <!-- <span t-out="ml.lot_ids.name or '-'"/> -->
-                                                                <span t-out=""/>
+                                                                <span t-out="ml.batch_number"/>
                                                             </div>
                                                             <div class="col-sm-2">
                                                                 <span t-out="ml.quantity or '-'"/>
@@ -482,8 +482,11 @@
                                                             <div class="col-sm-4">                                                                Batch No
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="tp_batch_no_specifications" name="tp_batch_no_specifications" type="text" class="form-controls input-wrapper"
-                                                                t-att-value="picking.tp_batch_no or ''"/>
+                                                                <span t-foreach="picking.move_ids_without_package" class="rounded bg-primary text-white px-2 py-1 m-1 d-inline-block mw-100 text-break small" t-as="value" t-out="value.batch_number"/>
+                                                                <t t-set="batch_names" t-value="', '.join([m.batch_number for m in picking.move_ids_without_package if m.batch_number])"/>
+                                                                <input type="hidden" name="tp_batch_no_specifications" t-att-value="batch_names"/>
+                                                                <!-- <input id="tp_batch_no_specifications" name="tp_batch_no_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.tp_batch_no or ''"/> -->
                                                             </div>
                                                             <div class="col-sm-2">
                                                                  <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_batch_no_status else None" type="checkbox" id="tp_batch_no_check" name="tp_batch_no_check"/>
@@ -548,7 +551,7 @@
                                                             </div>
                                                             <div class="col-sm-3">
                                                                 <input id="tp_bulk_litre_specifications" name="tp_bulk_litre_specifications" type="text" class="form-controls input-wrapper"
-                                                                t-att-value="picking.tp_bulk_litre or ''"/>
+                                                                t-att-value="picking.total_bulk_liter or ''" readonly="readonly"/>
                                                             </div>
                                                             <div class="col-sm-2">
                                                                  <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.tp_bulk_litre_status else None" type="checkbox" id="tp_bulk_litre_check" name="tp_bulk_litre_check"/>
@@ -1371,8 +1374,11 @@
                                                                 Batch No.
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input id="invoice_batch_no_specifications" name="invoice_batch_no_specifications" type="text" class="form-controls input-wrapper"
-                                                                t-att-value="picking.invoice_batch_no or ''"/>
+                                                                <span t-foreach="picking.move_ids_without_package" class="rounded bg-primary text-white px-2 py-1 m-1 d-inline-block mw-100 text-break small" t-as="value" t-out="value.batch_number"/>
+                                                                <t t-set="batch_names" t-value="', '.join([m.batch_number for m in picking.move_ids_without_package if m.batch_number])"/>
+                                                                <input type="hidden" name="invoice_batch_no_specifications" t-att-value="batch_names"/>
+                                                                <!-- <input id="invoice_batch_no_specifications" name="invoice_batch_no_specifications" type="text" class="form-controls input-wrapper"
+                                                                t-att-value="picking.invoice_batch_no or ''"/> -->
                                                             </div>
                                                             <div class="col-sm-2">
                                                                  <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.invoice_batch_no_status else None" type="checkbox" id="invoice_batch_no_check" name="invoice_batch_no_check"/>
@@ -1436,7 +1442,7 @@
                                                             </div>
                                                         <div class="col-sm-3">
                                                                 <input id="inovice_liter_total_value_specifications" name="inovice_liter_total_value_specifications" type="text" class="form-controls input-wrapper"
-                                                                t-att-value="picking.inovice_liter_total_value or ''"/>
+                                                                t-att-value="picking.total_bulk_liter or ''"/>
                                                             </div>
                                                             <div class="col-sm-2">
                                                                  <input class="form-check-input ms-2 border-secondary input-wrapper checkrequired" t-att-checked="'checked' if picking.inovice_liter_total_value_status else None" type="checkbox" id="inovice_liter_total_value_check" name="inovice_liter_total_value_check"/>
