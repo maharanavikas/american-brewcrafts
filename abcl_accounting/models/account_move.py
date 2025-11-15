@@ -91,8 +91,10 @@ class AccountMove(models.Model):
                 )
                 if move_line:
                     inv_line.batch_number = move_line[0].batch_number or ''
+                    inv_line.qty_liters = move_line[0].product_bulk_liter or 0.0
                 else:
                     inv_line.batch_number = ''
+                    inv_line.qty_liters = 0.0
         else:
             # Reset all fields if stock_picking_id is cleared
             self.import_permit_id = False
@@ -113,6 +115,7 @@ class AccountMove(models.Model):
 
             for inv_line in self.invoice_line_ids:
                 inv_line.batch_number = ''
+                inv_line.qty_liters = 0.0
 
     def action_post(self):
         res = super(AccountMove, self).action_post()

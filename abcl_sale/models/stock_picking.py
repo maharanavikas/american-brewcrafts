@@ -23,11 +23,16 @@ class StockPicking(models.Model):
         store=False, copy=False
     )
     total_qty = fields.Float("Total Quantity", compute='_compute_total_qty', store=False)
+    total_bulk_liter = fields.Float("Total Bulk Liter", compute='_compute_bulk_beer_qty', store=False)
 
     import_permit_id = fields.Many2one("import.permit",string="Import Permit", domain="[('order_id','=',sale_id)]")
     import_permit_date = fields.Date(related="import_permit_id.import_permit_date", string="Import Permit Date", store=True)
+    import_permit_doc = fields.Binary("Import Permit Document", store=True, compute="_compute_import_permit_doc")
+    import_permit_doc_name = fields.Char(related="import_permit_id.import_permit_doc_name", string="Import Permit Doc Name", store=True)
     export_permit_id = fields.Many2one("export.permit",string="Export Permit", domain="[('order_id','=',sale_id)]")
     export_permit_date = fields.Date(related="export_permit_id.export_permit_date", string="Export Permit Date", store=True)
+    export_permit_doc = fields.Binary("Export Permit Document", store=True, compute="_compute_export_permit_doc")
+    export_permit_doc_name = fields.Char(related="export_permit_id.export_permit_doc_name", string="Export Permit Doc Name", store=True)
 
     excise_leaf_no = fields.Char("Excise Leaf No.")
     transporter = fields.Char("Transporter")
@@ -329,6 +334,8 @@ class StockPicking(models.Model):
     )
     export_pass_doc = fields.Binary("Export Pass", attachment=True, copy=False, exportable=False)
     export_pass_doc_name = fields.Char("Export Pass Name")
+    issue_slip_doc = fields.Binary("Issue Slip", attachment=True, copy=False, exportable=False)
+    issue_slip_doc_name = fields.Char("Issue Slip Name")
 
     @api.depends('move_ids_without_package.product_id','move_ids_without_package.product_uom_qty','move_ids_without_package.product_uom')
     def _compute_product_qty_uom_summary(self):
@@ -342,9 +349,14 @@ class StockPicking(models.Model):
             picking.product_qty_uom_summary = ", ".join(lines)
 
     def _compute_total_qty(self):
-        all_goods_lines = self.move_line_ids.filtered(lambda move: move.product_id.type == 'consu')
+        all_goods_lines = self.move_ids_without_package.filtered(lambda move: move.product_id.type == 'consu')
         total_goods_qty = sum(product.quantity for product in all_goods_lines)
         self.total_qty = total_goods_qty
+
+    def _compute_bulk_beer_qty(self):
+        all_goods_lines = self.move_ids_without_package.filtered(lambda move: move.product_id.type == 'consu')
+        bulk_liter = sum(product.product_bulk_liter for product in all_goods_lines)
+        self.total_bulk_liter = bulk_liter
 
     @api.model
     def _validate_access_token(self, access_token):
@@ -427,6 +439,16 @@ class StockPicking(models.Model):
     def download_dispatch_checklist_pdf(self):
         return self.env.ref('abcl_sale.report_dispatch_checklist_details').report_action(self)
     
+    @api.depends('import_permit_id')
+    def _compute_import_permit_doc(self):
+        for record in self:
+            record.import_permit_doc = record.import_permit_id.import_permit_doc
+
+    @api.depends('export_permit_id')
+    def _compute_export_permit_doc(self):
+        for record in self:
+            record.export_permit_doc = record.export_permit_id.export_permit_doc
+    
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
@@ -434,3 +456,13 @@ class StockMove(models.Model):
     product_status = fields.Boolean(string='Status')
     product_remark = fields.Char(string='Remarks')
     batch_number = fields.Char("Batch No")
+    # related='product_id.product_tmpl_id.bulk_beer_per_litre'
+    product_bulk_liter = fields.Float( string="Bulk Liter", store=True, compute='_compute_bulk_liter')
+
+    @api.depends('quantity')
+    def _compute_bulk_liter(self):
+        print("**********_compute_bulk_liter**********")
+        for move in self:
+            move.product_bulk_liter = move.product_id.bulk_beer_per_liter * move.quantity
+
+    
