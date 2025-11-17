@@ -29,6 +29,7 @@
         "wizards/dispatch_checklist_wizard_view.xml",
         # "views/sale_gate_pass_report.xml",
         "reports/dispatch_checklist_report.xml",
+        "reports/stock_picking_report_views.xml",
         "reports/gate_pass_report.xml",
         "reports/export_pass_report.xml",
         "views/res_company_views.xml",
