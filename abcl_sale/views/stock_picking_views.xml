@@ -24,6 +24,11 @@
             <field name="sale_id" position="attributes">
                 <attribute name="invisible">picking_type_code == 'incoming'</attribute>
             </field>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="picking_type_code != 'outgoing' or invoice_count == 0">
+                    <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                </button>
+            </xpath>
             <field name="origin" position="after">
                 <field name="export_pass_doc_name" invisible="1"/>
                 <field name="export_pass_doc" filename="export_pass_doc_name" widget="binary" invisible="picking_type_code != 'outgoing' or not sale_id"/>
@@ -76,12 +81,14 @@
                             <field name="import_permit_date"/>
                             <field name="import_permit_doc" filename="import_permit_doc_name" widget="binary"/>
                             <field name="import_permit_doc_name" invisible='1'/>
+                            <field name="validity_from_date"/>
                         </group>
                         <group>
                             <field name="export_permit_id"/>
                             <field name="export_permit_date"/>
                             <field name="export_permit_doc" filename="export_permit_doc_name" widget="binary"/>
                             <field name="export_permit_doc_name" invisible='1'/>
+                            <field name="validity_to_date"/>
                         </group>
                     </group>
                     <group>
@@ -90,6 +97,7 @@
                             <field name="vehicle_type"/>
                             <field name="vehicle_detail_id" invisible="vehicle_type != 'internal'"/>
                             <field name="vehicle_no"/>
+                            <field name="alcohol_strength_id" options="{'no_create': True, 'no_edit': True}"/>
                         </group>
                         <group>
                             <field name="excise_leaf_no"/>

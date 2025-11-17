@@ -60,6 +60,9 @@ class StockPicking(models.Model):
         for picking in self:
             if not picking.gate_entry_number:
                 picking.gate_entry_number = self.env['ir.sequence'].next_by_code('stock.picking.gate.entry.number')
+                qc = self.env['quality.check'].search([('picking_id', '=', picking.id)])
+                for check in qc:
+                    check.create_activity_for_quality_manager()
 
     """def button_validate(self):
         res = super(StockPicking, self).button_validate()

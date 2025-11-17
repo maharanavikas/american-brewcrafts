@@ -8,6 +8,9 @@
             <xpath expr="//list/field[@name='price']" position="before">
                 <field name="minimum_order_qty"/>
             </xpath>
+            <xpath expr="(//list/field)[last()]" position="before">
+                <button name="open_vendor_pricelist_change_wizard" string="Change Request" type="object" class="btn-primary"/>
+            </xpath>
         </field>
     </record>
 
@@ -19,16 +22,7 @@
             <xpath expr="//field[@name='discount']" position="before">
                 <field name="minimum_order_qty"/>
             </xpath>
-            <xpath expr="//div[field[@name='delay']]" position="after">
-                <field name="is_approval_requested" readonly="1" invisible="requested_price &lt;= 0"/>
-                <field name="active" readonly="1" invisible="active"/>
-                <field name="approver_comment" readonly="1" invisible="not active"/>
-            </xpath>
-            <xpath expr="//div[@class='o_row'][field[@name='price']]" position="after">
-                <field name="requested_price" readonly="1" invisible="requested_price &lt;= 0"/>
-                <field name="requested_by" readonly="1" invisible="not is_approval_requested or not is_new_request"/>
-                <field name="is_new_request" readonly="1" invisible="active"/>
-            </xpath>
+
             <xpath expr="//label[@for='date_start']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -40,26 +34,40 @@
             </xpath>
             <xpath expr="//sheet" position="before">
                 <header>
-                    <button name="action_for_request"
-                            string="Request For Approval"
-                            type="object"
-                            class="btn-primary" invisible="active == True or is_new_request == True"/>
-                    <button name="action_approve_wizard"
-                            string="Approve"
-                            type="object"
-                            class="btn-primary" invisible="not is_approval_requested"
-                            groups="abcl_base.group_vice_president"/>
-                    <button name="action_reject_wizard"
-                            string="Reject"
-                            type="object"
-                            class="btn-secondary" invisible="not is_approval_requested"
-                            groups="abcl_base.group_vice_president"/>
+                    <button name="action_for_request" string="Request For Approval" type="object" class="btn-primary" invisible="active or is_approval_requested"/>
+                    <button name="action_approve_wizard" string="Approve" type="object" class="btn-primary" invisible="not is_approval_requested" groups="abcl_base.group_vice_president"/>
+                    <button name="action_reject_wizard" string="Reject" type="object" class="btn-secondary" invisible="not is_approval_requested" groups="abcl_base.group_vice_president"/>
+                    <button name="open_vendor_pricelist_change_wizard" string="Change Request" type="object" class="btn-primary" invisible="not active or is_approval_requested"/>
                 </header>
             </xpath>
             <xpath expr="//sheet" position="after">
                 <chatter/>
             </xpath>
+            <xpath expr="//sheet/group[1]" position="after">
+                <notebook>
+                    <page string="Approval Log" name="approval_log">
+                        <field name="approval_log_ids">
+                            <list>
+                                <field name="create_date"/>
+                                <field name="create_uid"/>
+                                <field name="is_initial"/>
+                                <field name="old_price" optional="hide"/>
+                                <field name="new_price"/>
+                                <field name="req_remark"/>
+                                <field name="status"/>
+                                <field name="approver_id"/>
+                                <field name="approved_on"/>
+                                <field name="approve_remark"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
         </field>
+    </record>
+
+    <record id="product.product_supplierinfo_type_action" model="ir.actions.act_window">
+        <field name="context">{'visible_product_tmpl_id': False, 'search_default_all': True}</field>
     </record>
 
     <record id="abcl_product_supplierinfo_search_view" model="ir.ui.view">
@@ -70,6 +78,7 @@
             <xpath expr="//filter[@name='active']" position="after">
                 <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
                 <separator />
+                <filter string="All" name="all" domain="['|',('active', '=', False),('active', '!=', False)]"/>
             </xpath>
         </field>
     </record>
