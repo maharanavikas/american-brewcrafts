@@ -99,6 +99,59 @@ class MrpProduction(models.Model):
 
         return super(MrpProduction, self).button_mark_done()
 
+    # def button_mark_done(self):
+    #
+    #     #  Validate Workcenter Restrictions (Category + Capacity)
+    #     for wo in self.workorder_ids:
+    #
+    #         wc = wo.workcenter_id
+    #         product = wo.product_id
+    #         categories = wc.tag_ids
+    #
+    #         # --- A) Product–Category Combination Check ---
+    #         combos = self.env['workcenter.product.combination'].search([
+    #             ('workcenter_category_id', 'in', categories.ids)
+    #         ])
+    #
+    #         if not combos:
+    #             raise ValidationError(
+    #                 f"No valid product combinations configured for Work Center '{wc.name}'."
+    #             )
+    #
+    #         allowed_products = set(combos.mapped('product_ids').ids)
+    #         if product.id not in allowed_products:
+    #             allowed_names = ", ".join(
+    #                 self.env['product.product'].browse(list(allowed_products)).mapped('display_name')
+    #             )
+    #             raise ValidationError(
+    #                 f"Product '{product.display_name}' is not permitted in Work Center '{wc.name}'.\n\n"
+    #                 f"Allowed products for categories ({', '.join(categories.mapped('name'))}):\n"
+    #                 f"{allowed_names}"
+    #             )
+    #
+    #         # --- B) Workcenter Capacity Validation ---
+    #         qty = self.qty_producing or self.product_qty
+    #         cap = wc.default_capacity or 1
+    #
+    #         if qty > cap:
+    #             raise ValidationError(
+    #                 f"Production quantity ({qty}) exceeds the Work Center capacity ({cap}). "
+    #                 "Please split the Work Order before proceeding."
+    #             )
+    #
+    #     # Quality Checks
+    #     if self.quality_check_fail:
+    #         raise ValidationError(
+    #             "Production cannot be completed because pre-production quality checks have failed."
+    #         )
+    #
+    #     if any(wo.quality_check_fail for wo in self.workorder_ids):
+    #         raise ValidationError(
+    #             "Production cannot be completed because component quality checks have failed."
+    #         )
+    #
+    #     return super().button_mark_done()
+
     # def _generate_finished_moves(self):
     #     res = super()._generate_finished_moves()
     #     for move in self.move_finished_ids:

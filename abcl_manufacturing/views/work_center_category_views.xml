@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="mrp_workcenter_form_inherit_category" model="ir.ui.view">
+        <field name="name">mrp.workcenter.form.inherit.category.rename</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+        <field name="arch" type="xml">
+
+            <!-- Change the label & string of tag_ids field -->
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="string">Work Center Category</attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

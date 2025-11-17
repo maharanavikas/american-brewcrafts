@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models,_
+from odoo import api, fields, models, _
 from datetime import date
 from odoo.exceptions import UserError, ValidationError
+
 
 class MrpProductionWorkcenterLine(models.Model):
     _inherit = 'mrp.workorder'
@@ -26,6 +27,27 @@ class MrpProductionWorkcenterLine(models.Model):
                                                                     bypass=bypass)
 
         for rec in self:
+
+            # WORKCENTER CATEGORY PRODUCT VALIDATION
+            # ------------------------------------------
+            # categories = rec.workcenter_id.tag_ids
+            # mo_product = rec.product_id
+            #
+            # allowed_combinations = self.env['workcenter.product.combination'].search([
+            #     ('workcenter_category_id', 'in', categories.ids)
+            # ])
+            #
+            # allowed_products = set()
+            # for combo in allowed_combinations:
+            #     allowed_products.update(combo.product_ids.ids)
+            #
+            # if mo_product.id not in allowed_products:
+            #     raise ValidationError(
+            #         f"The product '{mo_product.display_name}' is not allowed for the selected Workcenter.\n\n"
+            #         f"Allowed products based on category: "
+            #         f"{', '.join(self.env['product.product'].browse(list(allowed_products)).mapped('display_name'))}."
+            #     )
+
             # Work Center Capacity Check
             # qty = rec.qty_producing or rec.production_id.product_qty
             qty = rec.production_id.qty_producing if rec.production_id.qty_producing > 0 else rec.production_id.product_qty
@@ -82,17 +104,21 @@ class MrpProductionWorkcenterLine(models.Model):
                 raise ValidationError("Cannot complete Work Order as Component Quality Checks failed.")
 
         return super(MrpProductionWorkcenterLine, self).action_mark_as_done()
+
     ############workcenter validation########
 
     def button_finish(self):
         for rec in self:
             if rec.production_id.quality_check_todo:
-                raise ValidationError("Please complete the Pre production Quality Checks before starting the Work Order.")
+                raise ValidationError(
+                    "Please complete the Pre production Quality Checks before starting the Work Order.")
             elif rec.production_id.quality_check_fail:
-                raise ValidationError("You cannot finish the Work Order as Pre production Quality Checks for the components have failed")
+                raise ValidationError(
+                    "You cannot finish the Work Order as Pre production Quality Checks for the components have failed")
             elif rec.quality_check_todo:
                 raise ValidationError("Please complete the Quality Checks before starting the Work Order.")
             elif rec.quality_check_fail:
-                raise ValidationError("You cannot finish the Work Order as Quality Checks for the components have failed")
+                raise ValidationError(
+                    "You cannot finish the Work Order as Quality Checks for the components have failed")
         res = super(MrpProductionWorkcenterLine, self).button_finish()
         return res
