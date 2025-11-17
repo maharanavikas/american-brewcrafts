@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- ACTION -->
+    <record id="action_pricelist_approval_log" model="ir.actions.act_window">
+        <field name="name">Pricelist Approval Report</field>
+        <field name="res_model">purchase.pricelist.approval.log</field>
+        <field name="view_mode">graph,list</field>
+    </record>
+
+    <!-- MENU ITEM -->
+    <menuitem id="menu_pricelist_approval_log" name="Pricelist Approval Logs" parent="purchase.purchase_report_main" action="action_pricelist_approval_log" sequence="30"/>
+</odoo>

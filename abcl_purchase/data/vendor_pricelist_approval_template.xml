@@ -7,9 +7,11 @@
             <field name="subject">Approval Required: Vendor Pricelist for {{ object.partner_id.name }}</field>
             <field name="email_from">{{ object.company_id.email_formatted or '' }}</field>
             <field name="email_to">{{ '' }}</field>
-            <field name="description">Sent to the approver when the Vendor Pricelist requires approval
-            </field>
+            <field name="description">Sent to the approver when the Vendor Pricelist requires approval</field>
             <field name="body_html" type="html">
+                <t t-set="product" t-value="object.product_id or object.product_tmpl_id"/>
+                <t t-set="pricelist" t-value="object"/>
+                <t t-set="approval_log" t-value="ctx.get('approval_log')"/>
                 <table>
                     <tbody>
                         <!-- HEADER -->
@@ -22,9 +24,9 @@
                                             <p style="font-size: 14px;font-weight:bold;">Vendor Pricelist Approval</p>
                                         </td>
                                         <td valign="middle" align="right">
-                                            <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
-                                                 style="padding: 0px; margin: 0px; height: auto; width: 80px;"
-                                                 t-att-alt="object.company_id.name"/>
+                                            <img t-attf-src="/logo.png?company={{ pricelist.company_id.id }}"
+                                                style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                t-att-alt="pricelist.company_id.name"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -45,27 +47,21 @@
                                     <tr>
                                         <td valign="top" style="font-size: 13px;">
                                             <div>
-                                                <t t-if="ctx.get('approver_name')">
-                                                    Dear <strong t-out="ctx.get('approver_name')"/>,
-                                                </t>
-                                                <t t-else="">
-                                                    Dear Team,
-                                                </t>
+                                                Hi <strong t-out="ctx.get('approver_name', '')"/>,
                                                 <p>
                                                     A vendor pricelist for product
-                                                    <strong t-out="object.product_tmpl_id.name or object.product_id.display_name"/>
-                                                    from vendor
-                                                    <strong t-out="object.partner_id.name"/>
+                                                    <strong t-out="product.name"/>
+                                                    of vendor <strong t-out="pricelist.partner_id.name"/> <span t-if="approval_log and approval_log.is_initial" t-out="'has been initialized and '"/>
                                                     requires your approval.
                                                 </p>
 
-                                                <p t-if="object.requested_price and object.requested_price != 0">
-                                                    Requested Price:
-                                                    <span t-out="object.requested_price"/>
+                                                <p t-if="approval_log and not approval_log.is_initial">
+                                                    Old Price:
+                                                    <span t-out="approval_log.old_price"/>
                                                 </p>
-                                                <p>
-                                                    Unit Price:
-                                                    <span t-out="object.price"/>
+                                                <p t-if="approval_log">
+                                                    <span t-if="approval_log.is_initial" t-out="'Requested Price'"/> <span t-else="" t-out="'New Price'"/>:
+                                                    <span t-out="approval_log.new_price"/>
                                                 </p>
                                                 <p>
                                                     Please review and take necessary action.
@@ -73,7 +69,7 @@
                                                 <p>
                                                     Regards,
                                                     <br/>
-                                                    <span t-out="object.company_id.name"/>
+                                                    <span t-out="pricelist.company_id.name"/>
                                                 </p>
                                             </div>
                                         </td>
@@ -96,19 +92,19 @@
                                        style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
                                     <tr>
                                         <td valign="middle" align="left" style="opacity: 0.7;">
-                                            <t t-out="object.company_id.phone or ''"/>
-                                            <t t-if="object.company_id.email">
+                                            <t t-out="pricelist.company_id.phone or ''"/>
+                                            <t t-if="pricelist.company_id.email">
                                                 |
-                                                <a t-att-href="'mailto:%s' % object.company_id.email"
+                                                <a t-att-href="'mailto:%s' % pricelist.company_id.email"
                                                    style="text-decoration:none; color: #454748;">
-                                                    <t t-out="object.company_id.email or ''"/>
+                                                    <t t-out="pricelist.company_id.email or ''"/>
                                                 </a>
                                             </t>
-                                            <t t-if="object.company_id.website">
+                                            <t t-if="pricelist.company_id.website">
                                                 |
-                                                <a t-att-href="'%s' % object.company_id.website"
+                                                <a t-att-href="'%s' % pricelist.company_id.website"
                                                    style="text-decoration:none; color: #454748;">
-                                                    <t t-out="object.company_id.website or ''"/>
+                                                    <t t-out="pricelist.company_id.website or ''"/>
                                                 </a>
                                             </t>
                                         </td>
