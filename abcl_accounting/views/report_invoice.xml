@@ -69,93 +69,66 @@
             <!--                    </p>-->
             <!--                </div>-->
             <!--            </xpath>-->
-            <xpath expr="//div[@name='company_address']/ul[@name='company_address_list']" position="replace">
-                <div name="company_address_block" class="ms-4">
-                    <!--                                <h2>-->
-                    <!--                                    <p class="fw-bold mb-1" t-if="company.partner_id.name" t-esc="company.partner_id.name"/>-->
-                    <!--                                </h2>-->
-                    <p class="mb-1">
-                        <!--                        <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">-->
-                        <t t-if="o and o._name == 'account.move' and o.move_type in ['out_invoice', 'in_invoice']">
-                            <h2>
-                                <strong>
-                                    <p>Lilasons Alcobev Pvt.Ltd.</p>
-                                </strong>
-                            </h2>
-                            <!--                            Survey # 238, Mallepally Village, Kondapur Mandal,-->
-                            Survey No: 238 &amp; 239, Village: Mallepally
-                            <br/>
-                            Mandal: Kondapur, Dist: Sangareddy, Telangana - 502295
-                            <!--                            <br/>-->
-                            <!--                            Sangareddy District, Telangana-502295, Pincode : 502295-->
-                            <br/>
-                            PAN: AABCL7440D, GSTIN: 36AABCL7440D1ZR, Ph. No: 8099223922
-                            <br/>
-                            Regd Office: 606, Krishika Mansion, Chaitanya Nagar
-                            <br/>
-                            Vivekananda Nagar Colony, Kukatpally, Hyderabad - 500072
-                            <br/>
-                            CIN No: U15600MP2010PTC023192, Mail Id: lilasionsalcobevpvtltd@gmail.com
-                        </t>
-                        <t t-else="">
-                            <h2>
-                                <p class="fw-bold mb-1" t-if="company.partner_id.name" t-esc="company.partner_id.name"/>
-                            </h2>
-                            <t t-if="company.partner_id.survey_no">
-                                SURVEY NO:
-                                <t t-esc="company.partner_id.survey_no"/>,
-                            </t>
-                            <t t-if="company.partner_id.village">
-                                VILLAGE:
-                                <t t-esc="company.partner_id.village"/>,
-                            </t>
-                            <t t-if="company.partner_id.mandal">
-                                MANDAL:
-                                <t t-esc="company.partner_id.mandal"/>,
-                            </t>
-                            <t t-if="company.partner_id.city">
-                                City:
-                                <t t-esc="company.partner_id.city"/>,
-                            </t>
-                            <t t-if="company.partner_id.state_id">
-                                <t t-esc="company.partner_id.state_id.name"/>
-                            </t>
-                            <t t-if="company.partner_id.zip">
-                                -
-                                <t t-esc="company.partner_id.zip"/>
-                            </t>
-                        </t>
-                    </p>
-                    <p class="mb-1">
-                        <t t-if="company.partner_id.l10n_in_pan">
-                            PAN:
-                            <t t-esc="company.partner_id.l10n_in_pan"/>,
-                        </t>
-                        <t t-if="company.partner_id.vat">
-                            GSTIN:
-                            <t t-esc="company.partner_id.vat"/>,
-                        </t>
-                        <t t-if="company.partner_id.phone">
-                            Ph. No:
-                            <t t-esc="company.partner_id.phone"/>
-                        </t>
-                    </p>
-                    <p class="mb-1">
-                        <t t-if="company.partner_id.cin_no">
-                            CIN No:
-                            <t t-esc="company.partner_id.cin_no"/>,
-                        </t>
-                        <t t-if="company.partner_id.email">
-                            Mail Id:
-                            <t t-esc="company.partner_id.email"/>
-                        </t>
-                    </p>
+
+            <xpath expr="//div[hasclass('d-flex')]/div[2]" position="replace">
+                <div style="padding-left: 40px;">
+                    <div class="stock_picking_details">
+                        <h2>
+                            <strong>
+                                <p>Lilasons Alcobev Pvt.Ltd.</p>
+                            </strong>
+                        </h2>
+                        Survey No: 238 &amp; 239, Village: Mallepally
+                        <br/>
+                        Mandal: Kondapur, Dist: Sangareddy, Telangana - 502295
+                        <br/>
+                        PAN: AABCL7440D, GSTIN: 36AABCL7440D1ZR, Ph. No: 8099223922
+                        <br/>
+                        Regd Office: 606, Krishika Mansion, Chaitanya Nagar
+                        <br/>
+                        Vivekananda Nagar Colony, Kukatpally, Hyderabad - 500072
+                        <br/>
+                        CIN No: U15600MP2010PTC023192, Mail Id: lilasionsalcobevpvtltd@gmail.com
+                    </div>
                 </div>
             </xpath>
-            <!--            <xpath expr="//div[contains(@class,'footer')]" position="attributes">-->
-            <!--                <attribute name="t-if">not (o and o._name == 'account.move' and o.move_type == 'out_invoice')-->
-            <!--                </attribute>-->
-            <!--            </xpath>-->
+
+            <xpath expr="//div[3]/div[hasclass('text-center')]" position="replace">
+                <div class="row" t-if="o and o._name == 'stock.picking'">
+                    <div class="col-6">
+                        <strong>
+                            Buyer's PAN: 
+                            <t t-if="company.partner_id.l10n_in_pan">
+                                <t t-esc="company.partner_id.l10n_in_pan"/>,
+                            </t>
+                        </strong>
+                        <br/><br/>
+                    </div>
+                    <div class="col-6" style="position:absolute; right: -120px;">
+                        <p>
+                            Authorised Signature <br/>
+                            <span class="mt-3">For Lilasons Alcobev Pvt.Ltd.</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="row" t-if="o and o._name == 'purchase.order'">
+                    <div class="col-6">
+                        <strong>
+                            Buyer's PAN: 
+                            <t t-if="company.partner_id.l10n_in_pan">
+                                <t t-esc="company.partner_id.l10n_in_pan"/>,
+                            </t>
+                        </strong>
+                        <br/><br/>
+                    </div>
+                    <div class="col-6" style="position:absolute; right: -120px;">
+                        <p>
+                            Authorised Signature <br/>
+                            <span class="mt-3">For Lilasons Alcobev Pvt.Ltd.</span>
+                        </p>
+                    </div>
+                </div>
+            </xpath>
         </template>
 
         <template id="abcl_report_invoice_document" inherit_id="account.report_invoice_document">

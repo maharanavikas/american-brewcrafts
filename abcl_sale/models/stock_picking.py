@@ -334,6 +334,8 @@ class StockPicking(models.Model):
     )
     export_pass_doc = fields.Binary("Export Pass", attachment=True, copy=False, exportable=False)
     export_pass_doc_name = fields.Char("Export Pass Name")
+    issue_slip_doc = fields.Binary("Issue Slip", attachment=True, copy=False, exportable=False)
+    issue_slip_doc_name = fields.Char("Issue Slip Name")
 
     @api.depends('move_ids_without_package.product_id','move_ids_without_package.product_uom_qty','move_ids_without_package.product_uom')
     def _compute_product_qty_uom_summary(self):

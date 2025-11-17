@@ -22,14 +22,26 @@ class ABCLStockController(http.Controller):
 
         company = request.env.company
         warehouse = request.env['stock.warehouse'].sudo().search([('company_id', '=', company.id)], limit=1)
-        picking_type_id = warehouse.out_type_id or request.env.ref('stock.picking_type_out')
+        internal_picking_type = request.env['stock.picking.type'].sudo().search([
+            ('company_id', '=', company.id),
+            ('is_internal_consumption', '=', True)
+        ], limit=1)
+        print("internal_picking_type", internal_picking_type)
+
+        # Final picking type selection
+        picking_type_id = internal_picking_type or warehouse.out_type_id or request.env.ref('stock.picking_type_out')
+        # picking_type_id = warehouse.out_type_id or request.env.ref('stock.picking_type_out')
         default_location = picking_type_id.default_location_src_id
 
         if method == "GET":
             if not do_id:
                 template = 'abcl_stock.delivery_order_list_template'
-                template_context['delivery_orders'] = request.env['stock.picking'].sudo().search(
-                    [('picking_type_id.code', '=', 'outgoing'), ('create_uid', '=', user.id)])
+                # template_context['delivery_orders'] = request.env['stock.picking'].sudo().search(
+                #     [('picking_type_id.code', '=', 'outgoing'), ('create_uid', '=', user.id)])
+                template_context['delivery_orders'] = request.env['stock.picking'].sudo().search([
+                    ('picking_type_id.is_internal_consumption', '=', True),
+                    ('create_uid', '=', user.id)
+                ])
             elif isinstance(do_id, int):
                 delivery_order = request.env['stock.picking'].sudo().browse(do_id).exists()
                 if not delivery_order:
