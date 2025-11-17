@@ -22,6 +22,9 @@
         'views/stock_quant_views.xml',
         'views/res_config_settings_views.xml',
         'views/work_order_views.xml',
+        'views/work_center_category_views.xml',
+        'views/mrp_workcenter_tag_views.xml',
+        'views/workcenter_product_combination_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
