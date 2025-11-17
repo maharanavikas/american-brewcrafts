@@ -45,6 +45,12 @@
             <xpath expr="//group" position="inside">
                 <filter name="control_date" string="Control Date" context="{'group_by': 'control_date'}"/>
             </xpath>
+            <xpath expr="//filter[@name='failed']" position="after">
+                <separator/>
+                <filter name="mo_related_qc" string="Manufacturing Quality Checks" domain="[('point_id.picking_type_ids', '=', [11])]"/>
+                <filter name="do_related_qc" string="Delivery Quality Checks" domain="[('point_id.picking_type_ids', '=', [1])]"/>
+                <filter name="rc_related_qc" string="Receipt Quality Checks" domain='["&amp;", ("point_id.picking_type_ids", "in", [1]), ("picking_id.gate_entry_number", "!=", False)]'/>
+            </xpath>
         </field>
     </record>
 
