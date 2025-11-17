@@ -40,6 +40,7 @@
         'wizard/alternate_vendor_wizard_views.xml',
         'wizard/split_po_wizard_views.xml',
         # 'reports/purchase_order_template.xml',
+        "views/pricelist_approval_log_views.xml",
     ],
 
     'assets': {
