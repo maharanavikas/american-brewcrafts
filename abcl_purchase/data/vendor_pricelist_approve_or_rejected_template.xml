@@ -4,14 +4,14 @@
         <record id="abcl_vendor_pricelist_result_mail_template" model="mail.template">
             <field name="name">Vendor Pricelist: Approval Status</field>
             <field name="model_id" ref="product.model_product_supplierinfo"/>
-            <field name="subject">
-                Vendor Pricelist Status
-            </field>
+            <field name="subject">Vendor Pricelist Status</field>
             <field name="email_from">{{ object.company_id.email_formatted or '' }}</field>
             <field name="email_to">{{ '' }}</field>
             <field name="description">Sent to the requestor after approval or rejection of Vendor Pricelist
             </field>
             <field name="body_html" type="html">
+                <t t-set="approval_log" t-value="ctx.get('approval_log')"/>
+                <t t-set="product" t-value="object.product_id or object.product_tmpl_id"/>
                 <table>
                     <tbody>
                         <!-- HEADER -->
@@ -21,14 +21,12 @@
                                        style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                                     <tr>
                                         <td valign="middle">
-                                            <p style="font-size: 14px;font-weight:bold;">Vendor Pricelist
-                                                <!--                                                <t t-out="object.approval_status.capitalize()"/>-->
-                                            </p>
+                                            <p style="font-size: 14px;font-weight:bold;">Vendor Pricelist Approval</p>
                                         </td>
                                         <td valign="middle" align="right">
                                             <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
-                                                 style="padding: 0px; margin: 0px; height: auto; width: 80px;"
-                                                 t-att-alt="object.company_id.name"/>
+                                                style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                t-att-alt="object.company_id.name"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -41,68 +39,6 @@
                             </td>
                         </tr>
 
-                        <!-- CONTENT -->
-                        <!--                        <tr>-->
-                        <!--                            <td align="center" style="min-width: 590px;">-->
-                        <!--                                <table border="0" cellpadding="0" cellspacing="0" width="590"-->
-                        <!--                                       style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">-->
-                        <!--                                    <tr>-->
-                        <!--                                        <td valign="top" style="font-size: 13px;">-->
-                        <!--                                            <div>-->
-                        <!--                                                <p>-->
-                        <!--                                                    Dear <strong t-out="object.requested_by.partner_id.name or ''"/>,-->
-                        <!--                                                </p>-->
-                        <!--                                                <t t-if="object.approval_status == 'approved'">-->
-                        <!--                                                    <p>-->
-                        <!--                                                        Your vendor pricelist request for product-->
-                        <!--                                                        <strong t-out="object.product_tmpl_id.name or object.product_id.display_name"/>-->
-                        <!--                                                        from vendor-->
-                        <!--                                                        <strong t-out="object.partner_id.name"/>-->
-
-                        <!--                                                        has been <span style="color:green;font-weight:bold;">-->
-                        <!--                                                        Approved</span>.-->
-                        <!--                                                    </p>-->
-                        <!--                                                    <p>-->
-                        <!--                                                        Approved Price:-->
-                        <!--                                                        <span t-out="object.price"/>-->
-                        <!--                                                    </p>-->
-                        <!--                                                </t>-->
-                        <!--                                                <t t-elif="object.approval_status == 'rejected'">-->
-                        <!--                                                    <p>-->
-                        <!--                                                        Your vendor pricelist request for product-->
-                        <!--                                                        <strong t-out="object.product_tmpl_id.name or object.product_id.display_name"/>-->
-                        <!--                                                        from vendor-->
-                        <!--                                                        <strong t-out="object.partner_id.name"/>-->
-                        <!--                                                        has been <span style="color:red;font-weight:bold;">-->
-                        <!--                                                        Rejected</span>.-->
-                        <!--                                                    </p>-->
-                        <!--&lt;!&ndash;                                                    <p>&ndash;&gt;-->
-                        <!--&lt;!&ndash;                                                        Requested Price:&ndash;&gt;-->
-                        <!--&lt;!&ndash;                                                        <span t-out="object.requested_price"/>&ndash;&gt;-->
-                        <!--&lt;!&ndash;                                                    </p>&ndash;&gt;-->
-                        <!--                                                    <p>-->
-                        <!--                                                        Please contact your approver for details.-->
-                        <!--                                                    </p>-->
-                        <!--                                                </t>-->
-
-                        <!--                                                <p>-->
-                        <!--                                                    Regards,-->
-                        <!--                                                    <br/>-->
-                        <!--                                                    <span t-out="object.company_id.name"/>-->
-                        <!--                                                </p>-->
-                        <!--                                            </div>-->
-                        <!--                                        </td>-->
-                        <!--                                    </tr>-->
-
-                        <!--                                    <tr>-->
-                        <!--                                        <td style="text-align:center;">-->
-                        <!--                                            <hr width="100%"-->
-                        <!--                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>-->
-                        <!--                                        </td>-->
-                        <!--                                    </tr>-->
-                        <!--                                </table>-->
-                        <!--                            </td>-->
-                        <!--                        </tr>-->
                         <tr>
                             <td align="center" style="min-width: 590px;">
                                 <table border="0" cellpadding="0" cellspacing="0" width="590"
@@ -111,12 +47,12 @@
                                         <td valign="top" style="font-size: 13px;">
                                             <div>
                                                 <p>
-                                                    Dear<strong t-out="object.requested_by.partner_id.name or ''"/>,
+                                                    Hi <strong t-if="approval_log" t-out="approval_log.create_uid.name"/>,
                                                 </p>
-                                                <t t-if="ctx.get('request_outcome') == 'approved'">
+                                                <t t-if="ctx.get('action_type') == 'approve'">
                                                     <p>
                                                         Your vendor pricelist request for product
-                                                        <strong t-out="object.product_tmpl_id.name or object.product_id.display_name"/>
+                                                        <strong t-out="product and product.display_name or ''"/>
                                                         from vendor
                                                         <strong t-out="object.partner_id.name"/>
                                                         has been <span style="color:green;font-weight:bold;">
@@ -124,17 +60,15 @@
                                                     </p>
                                                     <p>
                                                         Approved Price:
-                                                        <!--                                                        <span t-out="object.requested_price"/>-->
-                                                        <!--                                                    </p>-->
-                                                        <t t-if="object.is_new_request">
+                                                        <t t-if="approval_log">
                                                             <span t-out="object.price"/>
                                                         </t>
-                                                        <t t-else="">
+                                                        <!-- <t t-else="">
                                                             <span t-out="object.requested_price"/>
-                                                        </t>
+                                                        </t> -->
                                                     </p>
                                                 </t>
-                                                <t t-elif="ctx.get('request_outcome') == 'rejected'">
+                                                <t t-elif="ctx.get('action_type') == 'reject'">
                                                     <p>
                                                         Your vendor pricelist request for product
                                                         <strong t-out="object.product_tmpl_id.name or object.product_id.display_name"/>
@@ -145,13 +79,12 @@
                                                     </p>
                                                     <p>
                                                         Rejected Price:
-                                                        <!--                                                        <span t-out="object.requested_price"/>-->
-                                                        <t t-if="object.is_new_request">
-                                                            <span t-out="object.price"/>
+                                                        <t t-if="approval_log">
+                                                            <span t-out="approval_log.new_price"/>
                                                         </t>
-                                                        <t t-else="">
+                                                        <!-- <t t-else="">
                                                             <span t-out="object.requested_price"/>
-                                                        </t>
+                                                        </t> -->
                                                     </p>
                                                     <p>
                                                         Please contact your approver for details.

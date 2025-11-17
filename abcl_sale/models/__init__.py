@@ -15,3 +15,4 @@ from . import dispatch_checklist
 from . import bottled_beer
 from . import product_template
 from . import res_company
+from . import alcohol_strength

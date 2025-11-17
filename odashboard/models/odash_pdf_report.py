@@ -319,7 +319,6 @@ class OdashPdfReport(models.Model):
                     'attachment_ids': [(6, 0, [attachment.id])],
                     'email_from': self.env.company.email
                 },
-                force_send=True
             )
             
             _logger.info(f"PDF report sent successfully to {recipient['email']}")

@@ -42,7 +42,7 @@
                                         <td valign="top" style="font-size: 13px;">
                                             <div>
                                                 <p>Dear <strong t-out="ctx.get('manager_name')"/>,</p>
-                                                <p>A New quality check <t t-out="object.name"/> has been Created</p>
+                                                <p>A New quality check <t t-out="object.display_name"/> has been Created</p>
                                                 <p>Source: <strong t-out="ctx.get('reference')"/></p>
                                                 <p>Please proceed to perform the quality check at your earliest convenience.</p>
                                                 <p>

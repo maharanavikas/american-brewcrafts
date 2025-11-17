@@ -22,9 +22,5 @@ class VendorPricelistApprovalWizard(models.TransientModel):
 
     def action_submit(self):
         self.ensure_one()
-        if self.action_type == 'approve':
-            self.product_supplierinfo_id.action_approve_request()
-            self.product_supplierinfo_id.approver_comment = self.comment
-        else :
-            self.product_supplierinfo_id.action_reject_request()
-            self.product_supplierinfo_id.approver_comment = self.comment
+        self.product_supplierinfo_id.action_pricelist_approval(self.action_type, self.comment)
+    
