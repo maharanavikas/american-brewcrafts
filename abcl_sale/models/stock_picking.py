@@ -65,6 +65,19 @@ class StockPicking(models.Model):
         store=True, readonly=True,
     )
     delivery_route = fields.Text("Delivery Route")
+    validity_from_date = fields.Date("Export Valid From")
+    validity_to_date = fields.Date("Export Valid Upto")
+    alcohol_strength_id = fields.Many2one('alcohol.strength', "Alcohol Strength")
+    days_for_validity_expiry = fields.Integer("Days for Validity Expiry", compute='_compute_days_for_validity_expiry')
+
+    @api.depends('scheduled_date','validity_to_date')
+    def _compute_days_for_validity_expiry(self):
+        for record in self:
+            if record.validity_to_date and record.scheduled_date:
+                delta = record.validity_to_date - record.scheduled_date.date()
+                record.days_for_validity_expiry = delta.days
+            else:
+                record.days_for_validity_expiry = 0
 
     # Gate Pass Fields
     gp_p_no_date = fields.Char("TP No.")

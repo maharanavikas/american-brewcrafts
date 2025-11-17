@@ -48,6 +48,7 @@
         "views/dispatch_checklist_success.xml",
         "views/product_template_views.xml",
         "views/bottled_beer_views.xml",
+        "views/alcohol_strength_views.xml",
     ],
     'assets': {
         'web.assets_frontend': [

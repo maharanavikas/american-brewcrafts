@@ -32,7 +32,7 @@
                     <table class="table table-borderless" style="width: 100%; font-size: 1px; row-gap: 0px; color: black;">
                         <tr>
                             <td><h4 style="color: black;"><b><u>Brewery Transport Permit No.</u> <t t-esc="doc.transport_permit_no"/></b> </h4></td>
-                            <td style="padding-right: 150px;"><h4 style="color: black;"><b><u>Date: <t t-esc="" t-options='{"widget": "date"}'/> </u></b></h4></td>
+                            <td style="padding-right: 150px;"><h4 style="color: black;"><b><u>Date: <t t-esc="doc.scheduled_date" t-options='{"widget": "date"}'/> </u></b></h4></td>
                         </tr>
                     </table>
                 </div>
@@ -48,7 +48,7 @@
                             <td><h4>2</h4></td>
                             <td><h4>Details of License held by him</h4></td>
                             <td><h4>:</h4></td>
-                            <td><h4><t t-esc="doc.company_id.license_details"/></h4></td>
+                            <td><h4><t t-esc="doc.company_id.license_details"/> issued by the Commissioner of Prohibition and Excise, Hyderabad of Telangana State.</h4></td>
                         </tr>
                         <tr>
                             <td><h4>3</h4></td>
@@ -60,7 +60,7 @@
                             <td><h4>4</h4></td>
                             <td><h4>Place of Dispatch with Date &amp; Time</h4></td>
                             <td><h4>:</h4></td>
-                            <td><h4>Mallepally (V), Kondapur (M), Sangareddy District of Telangana State. Dt:- <b><t t-esc="doc.e_pass_dispatch_date_time"/></b></h4></td>
+                            <td><h4>Mallepally (V), Kondapur (M), Sangareddy District of Telangana State. Dt:- <b><t t-esc="doc.scheduled_date" t-options='{"widget": "datetime", "hide_seconds": True}'/></b> Hrs</h4></td>
                         </tr>
                         <tr>
                             <td><h4>5</h4></td>
@@ -72,7 +72,7 @@
                             <td><h4>6</h4></td>
                             <td><h4>Prohibition time and date of arrival of Consignment to the Destination</h4></td>
                             <td><h4>:</h4></td>
-                            <td><h4>() days.</h4></td>
+                            <td><h4>(<t t-esc="doc.days_for_validity_expiry"/>) days.</h4></td>
                         </tr>
                         <tr>
                             <td><h4>7</h4></td>
@@ -89,7 +89,12 @@
                             <td><h4>8</h4></td>
                             <td><h4>Strength Make, Company's Name</h4></td>
                             <td><h4>:</h4></td>
-                            <td><h4></h4></td>
+                            <td>
+                                <h4><t t-esc="doc.alcohol_strength_id.name"/>,</h4><br/>
+                                <t t-foreach="doc.move_ids" t-as="product">
+                                    <h4><t t-esc="product.name"/></h4>
+                                </t>
+                            </td>
                         </tr>
                         <tr>
                             <td><h4>9</h4></td>
@@ -101,7 +106,7 @@
                             <td><h4>10</h4></td>
                             <td><h4>Period of validity of the pass</h4></td>
                             <td><h4>:</h4></td>
-                            <td><h4><b>From: </b></h4></td>
+                            <td><h4><b>From: <t t-esc="doc.validity_from_date" t-options='{"widget": "date"}'/> TO <t t-esc="doc.validity_to_date" t-options='{"widget": "date"}'/></b></h4></td>
                         </tr>
                     </table>
                 </div>
