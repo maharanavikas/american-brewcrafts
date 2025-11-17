@@ -3,8 +3,8 @@
     <data>
         <template id="abcl_account_invoice_layout_striped" inherit_id="web.external_layout_striped">
             <xpath expr="//img[@t-if='company.logo']" position="replace">
-                <!--                <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">-->
-                <t t-if="o and o._name == 'account.move' and o.move_type in ['out_invoice', 'in_invoice'] and o._name == 'stock.picking' and o._name == 'purchase.order' and o._name == 'sale.order' ">
+                               <t t-if="o and o._name == 'account.move' and o.move_type == 'out_invoice'">
+                <!-- <t t-if="o and o._name == 'account.move' and o.move_type in ['out_invoice', 'in_invoice'] and o._name == 'stock.picking' and o._name == 'purchase.order' and o._name == 'sale.order' "> -->
                     <img src="/abcl_accounting/static/src/img/lilasons_logo.png"
                          style="max-width: 250px; height: 150px;"/>
                 </t>
@@ -595,7 +595,7 @@
                             </div>
                         </div>
                     </div> -->
-                    <hr/>
+                    <!-- <hr/> -->
                 </t>
             </xpath>
         </template>
