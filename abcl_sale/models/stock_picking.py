@@ -70,6 +70,16 @@ class StockPicking(models.Model):
     alcohol_strength_id = fields.Many2one('alcohol.strength', "Alcohol Strength")
     days_for_validity_expiry = fields.Integer("Days for Validity Expiry", compute='_compute_days_for_validity_expiry')
 
+    invoice_count = fields.Integer(
+        string="Invoice Count",
+        compute="_compute_invoice_count"
+    )
+
+    def _compute_invoice_count(self):
+        for picking in self:
+            invoice_count = self.env['account.move'].search_count([('stock_picking_id', '=', picking.id), ('move_type', '=', 'out_invoice')])
+            picking.invoice_count = invoice_count
+
     @api.depends('scheduled_date','validity_to_date')
     def _compute_days_for_validity_expiry(self):
         for record in self:
@@ -462,6 +472,25 @@ class StockPicking(models.Model):
         for record in self:
             record.export_permit_doc = record.export_permit_id.export_permit_doc
     
+    def action_view_invoices(self):
+        self.ensure_one()
+        if self.invoice_count == 1:
+            return {
+                'name': 'Invoices',
+                'type': 'ir.actions.act_window',
+                'res_model': 'account.move',
+                'view_mode': 'form',
+                'domain': [('stock_picking_id', '=', self.id)],
+                'res_id': self.env['account.move'].search([('stock_picking_id', '=', self.id)], limit=1).id,
+            }
+        return {
+            'name': 'Invoices',
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'view_mode': 'list,form',
+            'domain': [('stock_picking_id', '=', self.id)],
+            'context': dict(self._context, create=False),
+        }
 
 class StockMove(models.Model):
     _inherit = 'stock.move'

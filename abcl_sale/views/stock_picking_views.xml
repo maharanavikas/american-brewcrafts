@@ -24,6 +24,11 @@
             <field name="sale_id" position="attributes">
                 <attribute name="invisible">picking_type_code == 'incoming'</attribute>
             </field>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="picking_type_code != 'outgoing' or invoice_count == 0">
+                    <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                </button>
+            </xpath>
             <field name="origin" position="after">
                 <field name="export_pass_doc_name" invisible="1"/>
                 <field name="export_pass_doc" filename="export_pass_doc_name" widget="binary" invisible="picking_type_code != 'outgoing' or not sale_id"/>
