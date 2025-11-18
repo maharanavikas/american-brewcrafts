@@ -25,7 +25,7 @@ class MrpProductionSchedule(models.Model):
         additional_10_percent = outgoing_qty + outgoing_qty * (10/100)
         # lesser_10_percent = outgoing_qty - outgoing_qty * (10/100)
 
-        if not actual_quantity > 0:
+        if not actual_quantity >= 0:
             raise UserError(
                 f"Please set a +ve quantity for product {product.name}.")
         elif not actual_quantity <= additional_10_percent:
