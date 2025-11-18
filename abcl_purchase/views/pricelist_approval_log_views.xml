@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <!-- Tree view -->
+    <record id="view_purchase_pricelist_approval_log_tree" model="ir.ui.view">
+        <field name="name">purchase.pricelist.approval.log.tree</field>
+        <field name="model">purchase.pricelist.approval.log</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="pricelist_id"/>
+                <field name="approver_id" optional="hide"/>
+                <field name="approved_on" optional="hide"/>
+                <field name="is_initial" optional="hide"/>
+                <field name="old_price"/>
+                <field name="new_price"/>
+                <field name="req_remark"/>
+                <field name="approve_remark" optional="hide"/>
+                <field name="status"/>
+            </list>
+        </field>
+    </record>
+
     <!-- ACTION -->
     <record id="action_pricelist_approval_log" model="ir.actions.act_window">
         <field name="name">Pricelist Approval Report</field>
