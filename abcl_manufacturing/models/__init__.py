@@ -7,3 +7,4 @@ from . import stock_quant
 from . import mrp_workorder
 from . import res_config_settings
 from . import workcenter_product_combination
+from . import mrp_workcentre

@@ -226,4 +226,8 @@
               groups="sales_team.group_sale_salesman"
               sequence="35"/>
 
+    <record id="group_sale_notifier" model="res.groups">
+        <field name="name">Sales Order Notifier</field>
+    </record>
+
 </odoo>

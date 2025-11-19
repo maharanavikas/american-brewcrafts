@@ -49,6 +49,7 @@
         "views/product_template_views.xml",
         "views/bottled_beer_views.xml",
         "views/alcohol_strength_views.xml",
+        "views/abcl_sale_order_notification_mail.xml",
     ],
     'assets': {
         'web.assets_frontend': [
