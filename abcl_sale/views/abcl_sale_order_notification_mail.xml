@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="email_template_sale_order_notification" model="mail.template">
+            <field name="name">Sales Order Notification Email</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">New Sales Order Confirmed: {{ object.name }}</field>
+            <field name="email_from">{{ object.company_id.email_formatted or '' }}</field>
+            <field name="email_to">{{}}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+            <table>
+                <tbody>
+                    <!-- header -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr>
+                                    <td valign="middle">
+                                        <p style="font-size: 14px;font-weight:bold;">Sales Order Notification</p>
+                                    </td>
+                                    <td valign="middle" align="right">
+                                        <img t-attf-src="/web/binary/company_logo?company={{ user.company_id.id }}"
+                                             style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                             t-att-alt="user.company_id.name"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="text-align:center;">
+                                        <hr width="100%"
+                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- CONTENT -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr>
+                                    <td valign="top" style="font-size: 13px;">
+                                        <div>
+                                            <p>Dear <strong t-out="ctx.get('user_name')"/>,</p>
+                                            <p>We are pleased to inform you that a new sale order has been confirmed.</p>
+                                            <p><strong>Sales Order Details:</strong></p>
+                                            <table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%; margin-bottom: 10px;">
+                                                <tr>
+                                                    <td><b>Order Number</b></td>
+                                                    <td><b>Customer</b></td>
+                                                    <td><b>Order Date</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><t t-out="object.name"/></td>
+                                                    <td><t t-out="object.partner_id.name"/></td>
+                                                    <td><t t-out="object.date_order.strftime('%Y-%m-%d')"/></td>
+                                                </tr>
+                                            </table>
+                                            <table border="1" cellpadding="5" style="border-collapse: collapse; margin-top: 10px; width: 100%;">
+                                                <tr>
+                                                    <td><b>Product</b></td>
+                                                    <td><b>Quantity</b></td>
+                                                </tr>
+                                                <t t-foreach="object.order_line" t-as="line">  
+                                                    <tr>
+                                                        <td><t t-out="line.product_id.name"/></td>
+                                                        <td><t t-out="line.product_uom_qty"/></td>
+                                                    </tr>
+                                                </t>
+                                            </table>    
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="text-align:center;">
+                                        <hr width="100%"
+                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- footer -->
+                    
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr>
+                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                        <t t-out="object.company_id.phone or ''"/>
+                                        <t t-if="object.company_id.email">
+                                            |
+                                            <a t-att-href="'mailto:%s' % object.company_id.email"
+                                               style="text-decoration:none; color: #454748;">
+                                                <t t-out="object.company_id.email or ''"/>
+                                            </a>
+                                        </t>
+                                        <t t-if="object.company_id.website">
+                                            |
+                                            <a t-att-href="'%s' % object.company_id.website"
+                                               style="text-decoration:none; color: #454748;">
+                                                <t t-out="object.company_id.website or ''"/>
+                                            </a>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>    
+            </table>
+            </field>
+        </record>
+    </data>
+</odoo>

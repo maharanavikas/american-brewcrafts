@@ -397,6 +397,12 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).action_confirm()
 
         for order in self:
+            notify_users = self.env.ref('abcl_sale.group_sale_notifier').users
+            for user in notify_users:
+                print("Subscribing user:", user.name)
+                template = self.env.ref('abcl_sale.email_template_sale_order_notification')
+                template.with_context(user_name=user.name,).send_mail(order.id, email_values={'email_to': user.email})
+                
             if order.partner_id:
                 order.message_unsubscribe(partner_ids=[order.partner_id.id])
 

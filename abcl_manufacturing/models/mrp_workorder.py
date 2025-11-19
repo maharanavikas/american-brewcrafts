@@ -90,25 +90,56 @@ class MrpProductionWorkcenterLine(models.Model):
             product = wo.product_id
             qty_needed = wo.qty_producing if wo.qty_producing > 0 else wo.production_id.product_qty
 
-            # 1) Find a valid combination
+            # 1) Find all combinations linked to this workcenter category
             combos = self.env['workcenter.product.combination'].search([
                 ('workcenter_category_id', 'in', workcenter.tag_ids.ids)
             ])
+
+            # Find the combination that includes the current product
             selected_combo = next((c for c in combos if product.id in c.product_ids.ids), None)
 
             # ----------------------------------------------------
-            # CASE 1: Product NOT part of any combination → ALLOW
+            # CASE 1: Product NOT part of any combination
             # ----------------------------------------------------
             if not selected_combo:
-                # No combination applies → no restrictions
-                return
+                active_wos = self.env['mrp.workorder'].search([
+                    ('id', '!=', wo.id),
+                    ('workcenter_id', '=', workcenter.id),
+                    ('qty_producing', '>', 0),
+                    ('state', '=', 'progress'),
+                ])
+
+                # all products that belong to ANY combination
+                combo_products = set(combos.mapped('product_ids').ids)
+
+                # If ANY active WO is a combination product → BLOCK
+                for other in active_wos:
+                    if other.product_id.id in combo_products:
+                        raise ValidationError(_(
+                            "The workcenter '%s' is currently running a restricted product (%s).\n\n"
+                            "A non-combination product cannot be processed at the same time."
+                        ) % (workcenter.name, other.product_id.display_name))
+
+                # Capacity check
+                used_capacity = sum(active_wos.mapped('qty_producing'))
+                capacity = workcenter.default_capacity or 1
+                available = capacity - used_capacity
+
+                if qty_needed > available:
+                    raise ValidationError(_(
+                        "Insufficient capacity in Workcenter '%s'.\n\n"
+                        "Available capacity: %s units\n"
+                        "Requested quantity: %s units"
+                    ) % (workcenter.name, available, qty_needed))
+
+                # Allowed
+                continue
 
             # ----------------------------------------------------
-            # CASE 2: Combination found → Apply restrictions
+            # CASE 2: Product IS part of a combination
             # ----------------------------------------------------
             allowed_products = set(selected_combo.product_ids.ids)
 
-            # 2) Validate other active workorders (in-progress)
             active_wos = self.env['mrp.workorder'].search([
                 ('id', '!=', wo.id),
                 ('workcenter_id', '=', workcenter.id),
@@ -116,33 +147,35 @@ class MrpProductionWorkcenterLine(models.Model):
                 ('state', '=', 'progress'),
             ])
 
+            # Validate all other running products
             for other in active_wos:
                 if other.product_id.id not in allowed_products:
-                    raise ValidationError(
-                        _(
-                            "The product '%s' is not allowed for this workcenter.\n\n"
-                            "Allowed products for this workcenter are:\n%s"
-                        )
-                        % (
-                            product.display_name,
-                            ", ".join(selected_combo.product_ids.mapped("display_name")),
-                        )
+                    # Collect currently running products
+                    running_products = ", ".join(
+                        active_wos.mapped("product_id.display_name")
                     )
 
-            # 3) Capacity check
+                    raise ValidationError(_(
+                        "The product '%s' cannot run in this Workcenter.\n\n"
+                        "Allowed products for this combination:\n%s\n\n"
+                        "Currently running products:\n%s"
+                    ) % (
+                                              product.display_name,
+                                              ", ".join(selected_combo.product_ids.mapped("display_name")),
+                                              running_products or "None"
+                                          ))
+
+            # Capacity check for combination products
             used_capacity = sum(active_wos.mapped('qty_producing'))
             capacity = workcenter.default_capacity or 1
             available = capacity - used_capacity
 
             if qty_needed > available:
-                raise ValidationError(
-                    _(
-                        "Insufficient capacity in Workcenter '%s'.\n\n"
-                        "Available capacity : %s units\n"
-                        "Requested quantity : %s units\n\n"
-                        "Please reduce the production quantity or wait until capacity is free."
-                    ) % (workcenter.name, available, qty_needed)
-                )
+                raise ValidationError(_(
+                    "Insufficient capacity in Workcenter '%s'.\n\n"
+                    "Available capacity: %s units\n"
+                    "Requested quantity: %s units"
+                ) % (workcenter.name, available, qty_needed))
 
     # def action_mark_as_done(self):
     #     res = super(MrpProductionWorkcenterLine, self).action_mark_as_done()

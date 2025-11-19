@@ -14,38 +14,38 @@
                 <separator/>
 
                 <filter name="bbbb650tg" string="Block Buster Beeryani Beer - 650ml (Telangana)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3402, 3058, 2184, 2282]), ('product_id', '=', [20667])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3402, 3058, 2184, 2282]), ('product_id', '=', 20667)]"/>
                 <filter name="bbbb330tg" string="Block Buster Beeryani Beer - 330ml (Telangana)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3058, 2184, 2282, 3403]), ('product_id', '=', [20660])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3058, 2184, 2282, 3403]), ('product_id', '=', 20660)]"/>
                 
                 <filter name="bblb650an" string="Block Buster Lager Beer - 650ml (Andaman)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3441, 3041, 2169, 2265]), ('product_id', '=', [21092])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3441, 3041, 2169, 2265]), ('product_id', '=', 21092)]"/>
                 <filter name="bblb650pud" string="Block Buster Lager Beer - 650ml (Puducherry)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3443, 3041, 2169, 2265]), ('product_id', '=', [21093])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3443, 3041, 2169, 2265]), ('product_id', '=', 21093)]"/>
                 <filter name="bblb650tg" string="Block Buster Lager Beer - 650ml (Telangana)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3442, 3041, 2169, 2265]), ('product_id', '=', [21115])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3442, 3041, 2169, 2265]), ('product_id', '=', 21115)]"/>
                 <filter name="bblb330tg" string="Block Buster Lager Beer - 330ml (Telangana)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3444, 3041, 2169, 2265]), ('product_id', '=', [21114])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3444, 3041, 2169, 2265]), ('product_id', '=', 21114)]"/>
                 <filter name="bblb330goa" string="Block Buster Lager Beer - 330ml (Goa)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3445, 3041, 2169, 2265]), ('product_id', '=', [21094])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3445, 3041, 2169, 2265]), ('product_id', '=', 21094)]"/>
                 <filter name="bblbd50tg" string="Block Buster Lager Beer Draught - 50ltrs (Telangana)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3383, 3041, 2169, 2265]), ('product_id', '=', [20651])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3383, 3041, 2169, 2265]), ('product_id', '=', 20651)]"/>
                 <filter name="bblbd30tg" string="Block Buster Lager Beer Draught - 30ltrs (Telangana)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3384, 3041, 2169, 2265]), ('product_id', '=', [20652])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3384, 3041, 2169, 2265]), ('product_id', '=', 20652)]"/>
 
                 <filter name="bbmcb330tg" string="Block Buster Matinee Cranberry Beer - 330ml (Telangana)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3401, 3044, 2172, 2268]), ('product_id', '=', [20659])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3401, 3044, 2172, 2268]), ('product_id', '=', 20659)]"/>
 
                 <filter name="bbsb650tg" string="Block Buster Strong Beer - 650ml (Telangana)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [2168, 2264, 3040, 3385]), ('product_id', '=', [21118])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [2168, 2264, 3040, 3385]), ('product_id', '=', 21118)]"/>
                 <filter name="bbsb650pud" string="Block Buster Strong Beer - 650ml (Puducherry)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [2168, 2264, 3040, 3386]), ('product_id', '=', [21095])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [2168, 2264, 3040, 3386]), ('product_id', '=', 21095)]"/>
                 <filter name="bbsb650an" string="Block Buster Strong Beer - 650ml (Andaman)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [2168, 2264, 3040, 3387]), ('product_id', '=', [21097])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [2168, 2264, 3040, 3387]), ('product_id', '=', 21097)]"/>
                 <filter name="bbsb650jk" string="Block Buster Strong Beer - 650ml (Jharkhand)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [2168, 2264, 3040, 3388]), ('product_id', '=', [21096])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [2168, 2264, 3040, 3388]), ('product_id', '=', 21096)]"/>
                 <filter name="bbsb650k" string="Block Buster Strong Beer - 650ml (Karnataka)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [2168, 2264, 3040, 3389]), ('product_id', '=', [21098])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [2168, 2264, 3040, 3389]), ('product_id', '=', 21098)]"/>
                 <filter name="bbusb500jh" string="Block Buster Strong Beer - 500ml (Jharkhand)"
                         domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3450, 3040, 2168, 2264]), ("product_id", "=", 21101)]'/>
                 <filter name="bbusb500pd" string="Block Buster Strong Beer - 500ml (Puducherry)"
@@ -53,9 +53,9 @@
                 <filter name="bbusb500tg" string="Block Buster Strong Beer - 500ml (Telangana)"
                         domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3040, 2168, 2264, 3448]), ("product_id", "=", 21117)]'/>
                 <filter name="bbsb330pud" string="Block Buster Strong Beer - 330ml (Puducherry)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3446, 3040, 2168, 2264]), ('product_id', '=', [21116])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3446, 3040, 2168, 2264]), ('product_id', '=', 21116)]"/>
                 <filter name="bbsb330goa" string="Block Buster Strong Beer - 330ml (Goa)"
-                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3447, 3040, 2168, 2264]), ('product_id', '=', [21099])]"/>
+                        domain="['|', ('product_id.bom_line_ids.bom_id', 'in', [3447, 3040, 2168, 2264]), ('product_id', '=', 21099)]"/>
                 <filter name="bbsbd30tg" string="Block Buster Strong Beer Draught - 30ltrs (Telangana)"
                         domain='["|", ("product_id.bom_line_ids.bom_id", "in", [3390, 3040, 2168, 2264]), ("product_id", "=", 20653)]'/>
                 
