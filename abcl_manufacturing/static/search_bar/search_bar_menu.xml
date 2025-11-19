@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="mrp_mps.SearchBarMenu" t-inherit-mode="extension">
+        <xpath expr="//t[1]/t[1]/div[1]" position="attributes">
+            <attribute name="t-att-style">this.env.searchModel.resModel == 'mrp.production.schedule' ? 'max-width: 100% !important' : ''</attribute>
+        </xpath>
+
+        <xpath expr="//t[@t-if=&quot;this.env.searchModel.searchMenuTypes.has('favorite')&quot;]" position="attributes">
+             <attribute name="t-if">this.env.searchModel.resModel != 'mrp.production.schedule' &amp;&amp; this.env.searchModel.searchMenuTypes.has('favorite')</attribute>
+        </xpath>
+    </t>
+
+</templates>
