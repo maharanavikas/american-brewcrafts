@@ -38,6 +38,13 @@ class SaleOrder(models.Model):
 
     approval_line_ids = fields.One2many('sale.quotation.approval.line', 'order_id', string='Approval Lines')
     user_is_approver = fields.Boolean("User is Approver ?", compute="_compute_approval_for_current_user")
+    inter_state_order = fields.Boolean("Inter State Order", compute='_compute_inter_state_order', store=True)
+
+    @api.depends('partner_id', 'company_id')
+    def _compute_inter_state_order(self):
+        for order in self:
+            order.inter_state_order = order.partner_id.state_id == order.company_id.state_id
+    
     # approval_status = fields.Selection([
     #     ('pending', 'Pending Approval'),
     #     ('approved', 'Approved'),

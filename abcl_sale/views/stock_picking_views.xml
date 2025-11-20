@@ -75,24 +75,33 @@
             </xpath>
             <xpath expr="//page[@name='operations']" position="after">
                 <page string="Transport Info" invisible="picking_type_code != 'outgoing' or not sale_id" >
-                    <group>
+                    <group invisible="inter_state_delivery">
                         <group>
                             <field name="import_permit_id"/>
                             <field name="import_permit_date"/>
                             <field name="import_permit_doc" filename="import_permit_doc_name" widget="binary"/>
                             <field name="import_permit_doc_name" invisible='1'/>
-                            <field name="validity_from_date"/>
                         </group>
                         <group>
                             <field name="export_permit_id"/>
                             <field name="export_permit_date"/>
                             <field name="export_permit_doc" filename="export_permit_doc_name" widget="binary"/>
                             <field name="export_permit_doc_name" invisible='1'/>
-                            <field name="validity_to_date"/>
+                        </group>
+                    </group>
+                    <group invisible="not inter_state_delivery">
+                        <group>
+                            <field name="import_permit_id" string="OFS Document"/>
+                            <field name="import_permit_date" string="OFS Date"/>
+                        </group>
+                        <group>
+                            <field name="import_permit_doc" filename="import_permit_doc_name" widget="binary" string="OFS"/>
+                            <field name="import_permit_doc_name" invisible='1'/>
                         </group>
                     </group>
                     <group>
                         <group>
+                            <field name="validity_from_date"/>
                             <field name="transporter"/>
                             <field name="vehicle_type"/>
                             <field name="vehicle_detail_id" invisible="vehicle_type != 'internal'"/>
@@ -100,6 +109,7 @@
                             <field name="alcohol_strength_id" options="{'no_create': True, 'no_edit': True}"/>
                         </group>
                         <group>
+                            <field name="validity_to_date"/>
                             <field name="excise_leaf_no"/>
                             <field name="transport_permit_no"/>
                             <field name="lr_no"/>
