@@ -111,7 +111,7 @@
                         </list>
                     </field>
                 </page>
-                <page name='import_permit' string="Import Permit">
+                <page name='import_permit' string="Import Permit" invisible="inter_state_order">
                     <field name='import_permit_lines'>
                         <list editable="bottom" create="1">
                             <field name="import_permit_doc_name" optional="hide"/>
@@ -126,7 +126,22 @@
                         </list>
                     </field>
                 </page>
-                <page name='export_permit' string="Export Permit">
+                <page name='ofs_permit' string="OFS" invisible="not inter_state_order">
+                    <field name='import_permit_lines'>
+                        <list editable="bottom" create="1">
+                            <field name="import_permit_doc_name" string="OFS Document Name" optional="hide"/>
+                            <field name="import_permit_doc" filename="import_permit_doc_name" widget="binary" string="OFS Document Upload"/>
+                            <field name="order_id" readonly="1" optional="hide"/>
+                            <field name="import_permit_no" string="OFS Document No." readonly="1"/>
+                            <field name="import_permit_date" string="OFS Document Date" readonly="1"/>
+                            <field name="import_permit_status" string="OFS Document Status" readonly="1"/>
+                            <button name="open_import_permit_status_wizard" type="object" string="Update Status"
+                                    class="btn-primary"
+                                    icon="fa-pencil" invisible=" import_permit_status == 'received'"/>
+                        </list>
+                    </field>
+                </page>
+                <page name='export_permit' string="Export Permit" invisible="inter_state_order">
                     <field name='export_permit_lines'>
                         <list editable="bottom" create="1">
                             <field name="export_permit_doc_name" optional="hide"/>

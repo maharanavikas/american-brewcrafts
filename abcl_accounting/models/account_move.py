@@ -37,6 +37,7 @@ class AccountMove(models.Model):
                                     string="Vehicle Type")
     vehicle_detail_id = fields.Many2one('fleet.vehicle', string="Our Vehicle Details")
     stock_picking_id = fields.Many2one('stock.picking', string='Delivery Order', help="Related Delivery Order for this Invoice", domain="[('sale_id', 'in', related_sale_order_ids)]")
+    inter_state_order = fields.Boolean(string="Inter State Order", store=True)
 
     @api.depends('invoice_line_ids.sale_line_ids.order_id')
     def _compute_related_sale_orders(self):
@@ -84,6 +85,7 @@ class AccountMove(models.Model):
             self.export_permit_date = picking.export_permit_date or False
             self.po_no = picking.po_no or ''
             self.po_date = picking.po_date or False
+            self.inter_state_order = picking.inter_state_delivery or False
 
             for inv_line in self.invoice_line_ids:
                 move_line = picking.move_ids_without_package.filtered(
@@ -112,6 +114,7 @@ class AccountMove(models.Model):
             self.export_permit_date = False
             self.po_no = ''
             self.po_date = False
+            self.inter_state_order = False
 
             for inv_line in self.invoice_line_ids:
                 inv_line.batch_number = ''
