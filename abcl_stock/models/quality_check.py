@@ -12,6 +12,7 @@ class QualityCheck(models.Model):
     buyer_id = fields.Many2one('res.users', string='Buyer')
     sent_for_approval = fields.Boolean("Sent for Approval", default=False)
     need_gate_entry = fields.Boolean("Need Gate Entry", compute="_need_gate_entry", help="Indicates if a gate entry is required for this quality check.")
+    vendor_invoice_number = fields.Char("Vendor Invoice Number", related="picking_id.vendor_inovice_no", store=True)
 
     @api.depends('picking_id')
     def _need_gate_entry(self):
@@ -19,6 +20,7 @@ class QualityCheck(models.Model):
             if record.point_id.picking_type_ids.code == 'incoming':
                 if record.picking_id.gate_entry_number == False:
                     record.need_gate_entry = False
+                    record.vendor_invoice_number = record.picking_id.vendor_inovice_no
                 else:
                     record.need_gate_entry = True
             else:
