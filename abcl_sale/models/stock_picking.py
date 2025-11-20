@@ -24,6 +24,7 @@ class StockPicking(models.Model):
     )
     total_qty = fields.Float("Total Quantity", compute='_compute_total_qty', store=False)
     total_bulk_liter = fields.Float("Total Bulk Liter", compute='_compute_bulk_beer_qty', store=False)
+    inter_state_delivery = fields.Boolean(related='sale_id.inter_state_order', string="Inter State Delivery", store=True)
 
     import_permit_id = fields.Many2one("import.permit",string="Import Permit", domain="[('order_id','=',sale_id)]")
     import_permit_date = fields.Date(related="import_permit_id.import_permit_date", string="Import Permit Date", store=True)

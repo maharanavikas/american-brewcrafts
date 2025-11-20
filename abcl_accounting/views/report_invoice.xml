@@ -291,18 +291,35 @@
                                     LR No:
                                     <span t-field="o.lr_no"/>
                                 </div>
-                                <div t-if="o.import_permit_id or o.import_permit_date"
-                                     id="import_permit_not_same_as_shipping">
-                                    Import Permit No &amp; Dt:
-                                    <t t-if="o.import_permit_id">
-                                        <span>
-                                            <span t-field="o.import_permit_id.import_permit_no"/>
-                                        </span>
-                                    </t>
-                                    <t t-if="o.import_permit_date">
-                                        <span t-if="o.import_permit_id">DT:</span>
-                                        <span t-field="o.import_permit_date"/>
-                                    </t>
+                                <div t-if="not o.inter_state_order">
+                                    <div t-if="o.import_permit_id or o.import_permit_date"
+                                        id="import_permit_not_same_as_shipping">
+                                        Import Permit No &amp; Dt:
+                                        <t t-if="o.import_permit_id">
+                                            <span>
+                                                <span t-field="o.import_permit_id.import_permit_no"/>
+                                            </span>
+                                        </t>
+                                        <t t-if="o.import_permit_date">
+                                            <span t-if="o.import_permit_id">DT:</span>
+                                            <span t-field="o.import_permit_date"/>
+                                        </t>
+                                    </div>
+                                </div>      
+                                <div t-if="o.inter_state_order">
+                                    <div t-if="o.import_permit_id or o.import_permit_date"
+                                        id="import_permit_not_same_as_shipping">
+                                        OFS No &amp; Dt:
+                                        <t t-if="o.import_permit_id">
+                                            <span>
+                                                <span t-field="o.import_permit_id.import_permit_no"/>
+                                            </span>
+                                        </t>
+                                        <t t-if="o.import_permit_date">
+                                            <span t-if="o.import_permit_id">DT:</span>
+                                            <span t-field="o.import_permit_date"/>
+                                        </t>
+                                    </div>
                                 </div>
                                 <div t-if="o.export_permit_id or o.export_permit_date"
                                      id="export_permit_not_same_as_shipping">
