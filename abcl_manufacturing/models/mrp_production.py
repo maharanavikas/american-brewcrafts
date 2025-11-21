@@ -214,20 +214,20 @@ class MrpProduction(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         productions = super().create(vals_list)
-        # restrict_mo = self.env['ir.config_parameter'].sudo().get_param('mrp.restrict_manual_mo_creation', 'False') == 'True'
-        # for rec in productions:
-        #     # if not rec._context.get('from_mps', False):
-        #     # if not rec.from_mps:
-        #     if restrict_mo and not rec.from_mps:
-        #         bom_line_exists = self.env['mrp.bom.line'].search_count([('product_id', '=', rec.product_id.id)])
-        #         bom_master_exists = self.env['mrp.bom'].search_count(
-        #             [('product_tmpl_id', '=', rec.product_id.product_tmpl_id.id)])
+        restrict_mo = self.env['ir.config_parameter'].sudo().get_param('mrp.restrict_manual_mo_creation', 'False') == 'True'
+        for rec in productions:
+            # if not rec._context.get('from_mps', False):
+            # if not rec.from_mps:
+            if restrict_mo and not rec.from_mps:
+                bom_line_exists = self.env['mrp.bom.line'].search_count([('product_id', '=', rec.product_id.id)])
+                bom_master_exists = self.env['mrp.bom'].search_count(
+                    [('product_tmpl_id', '=', rec.product_id.product_tmpl_id.id)])
 
-        #         if bom_line_exists or bom_master_exists:
-        #             raise ValidationError(_(
-        #                 "You cannot manually create a Manufacturing Order for '%s' "
-        #                 "because it is already used in a Bill of Materials."
-        #             ) % rec.product_id.display_name)
+                if bom_line_exists or bom_master_exists:
+                    raise ValidationError(_(
+                        "You cannot manually create a Manufacturing Order for '%s' "
+                        "because it is already used in a Bill of Materials."
+                    ) % rec.product_id.display_name)
         return productions
 
     def copy(self, default=None):
