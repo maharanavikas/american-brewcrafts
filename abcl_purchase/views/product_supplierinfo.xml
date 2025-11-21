@@ -9,7 +9,7 @@
                 <field name="minimum_order_qty"/>
             </xpath>
             <xpath expr="(//list/field)[last()]" position="before">
-                <button name="open_vendor_pricelist_change_wizard" string="Change Request" type="object" class="btn-primary"/>
+                <button name="open_vendor_pricelist_change_wizard" string="Change Request" type="object" class="btn-primary" invisible="not active or is_approval_requested"/>
             </xpath>
         </field>
     </record>
