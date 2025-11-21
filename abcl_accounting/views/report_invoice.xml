@@ -118,7 +118,7 @@
             </xpath>
             <xpath expr="//div[hasclass('d-flex')]" position="after">
                 <div class="row p-4" t-if="o and o._name == 'stock.picking' and o.picking_type_id== env.ref('stock.picking_type_out')">
-                    <div class="col-6 mb-4">
+                    <div class="col-6 text-start mb-4">
                         TP No. : <span t-field="o.gp_p_no_date"/>
                     </div>
                     <div class="col-6 text-end mb-4">
@@ -144,25 +144,29 @@
                     </div>
                     <div class="col-6 text-center" style="position:absolute; right: -120px;">
                         <p>
-                            Authorised Signature <br/>
-                            <span class="mt-3">For Lilasons Alcobev Pvt.Ltd.</span>
+                            <strong><span class="mt-3">For Lilasons Alcobev Pvt.Ltd.</span></strong>
+                            <br/><br/><br/>
+                            Authorised Signature
+
                         </p>
                     </div>
                 </div>
                 <div class="row" t-if="o and o._name == 'purchase.order'">
                     <div class="col-6">
-                        <strong>
-                            Buyer's PAN: 
-                            <t t-if="o.partner_id.l10n_in_pan">
-                                <t t-esc="o.partner_id.l10n_in_pan"/>,
-                            </t>
-                        </strong>
+<!--                        <strong>-->
+<!--                            Buyer's PAN: -->
+<!--                            <t t-if="o.partner_id.l10n_in_pan">-->
+<!--                                <t t-esc="o.partner_id.l10n_in_pan"/>,-->
+<!--                            </t>-->
+<!--                        </strong>-->
                         <br/><br/>
                     </div>
                     <div class="col-6 text-center" style="position:absolute; right: -120px;">
                         <p>
-                            Authorised Signature <br/>
-                            <span class="mt-3">For Lilasons Alcobev Pvt.Ltd.</span>
+                            <strong><span class="mt-3">For Lilasons Alcobev Pvt.Ltd.</span></strong>
+                            <br/><br/><br/>
+                            Authorised Signature
+
                         </p>
                     </div>
                 </div>
