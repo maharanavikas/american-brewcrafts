@@ -20,6 +20,7 @@
             </field>
             <field name="operation_id" position="after">
                 <field name="lot_id" readonly="1"/>
+                <field name="vendor_invoice_number" readonly="1" invisible="vendor_invoice_number == False"/>
             </field>
             <field name="partner_id" position="after">
                 <field name="is_check_failed" readonly="1"/>
