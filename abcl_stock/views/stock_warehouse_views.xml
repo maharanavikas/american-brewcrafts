@@ -10,4 +10,9 @@
             </field>
         </field>
     </record>
+<!--    hide storage categories menu-->
+    <record id="stock.menu_storage_categoty_config" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
 </odoo>
