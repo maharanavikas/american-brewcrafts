@@ -94,6 +94,6 @@
         <field name="view_mode">list,form,graph,pivot</field>
     </record>
 
-    <menuitem id="menu_abcl_sale_history" name="Sale Data" parent="sale.menu_sale_report"
-              action="action_abcl_sale_history" sequence="41"/>
+<!--    <menuitem id="menu_abcl_sale_history" name="Sale Data" parent="sale.menu_sale_report"-->
+<!--              action="action_abcl_sale_history" sequence="41"/>-->
 </odoo>

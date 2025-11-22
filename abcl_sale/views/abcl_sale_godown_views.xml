@@ -17,13 +17,13 @@
         <field name="view_mode">list</field>
     </record>
 
-    <menuitem id="menu_abcl_sale_data_config"
-              name="Sales Data"
-              parent="sale.menu_sale_config"
-              sequence="40" />
-    <menuitem id="menu_abcl_sale_godown"
-              name="Sales Godown"
-              parent="menu_abcl_sale_data_config"
-              action="action_abcl_sale_godown"
-              sequence="10"/>
+<!--    <menuitem id="menu_abcl_sale_data_config"-->
+<!--              name="Sales Data"-->
+<!--              parent="sale.menu_sale_config"-->
+<!--              sequence="40" />-->
+<!--    <menuitem id="menu_abcl_sale_godown"-->
+<!--              name="Sales Godown"-->
+<!--              parent="menu_abcl_sale_data_config"-->
+<!--              action="action_abcl_sale_godown"-->
+<!--              sequence="10"/>-->
 </odoo>

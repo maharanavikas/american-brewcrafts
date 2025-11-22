@@ -61,14 +61,14 @@
     </record>
 
     <!-- Menus -->
-    <menuitem id="menu_dispatch_checklist_config"
-              name="Dispatch Checklist"
-              parent="sale.menu_sale_config"
-              sequence="30">
+<!--    <menuitem id="menu_dispatch_checklist_config"-->
+<!--              name="Dispatch Checklist"-->
+<!--              parent="sale.menu_sale_config"-->
+<!--              sequence="30">-->
 
-         <menuitem id="menu_jh_dispatch_checklist"
-              name="All Dispatch Checklist"
-              action="action_dispatch_checklist"
-              sequence="10"/>
-    </menuitem>
+<!--         <menuitem id="menu_jh_dispatch_checklist"-->
+<!--              name="All Dispatch Checklist"-->
+<!--              action="action_dispatch_checklist"-->
+<!--              sequence="10"/>-->
+<!--    </menuitem>-->
 </odoo>
