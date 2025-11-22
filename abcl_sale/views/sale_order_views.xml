@@ -245,4 +245,8 @@
         <field name="name">Sales Order Notifier</field>
     </record>
 
+    <record id="sale.payment_menu" model="ir.ui.menu">
+        <field name="active">false</field>
+    </record>
+
 </odoo>
